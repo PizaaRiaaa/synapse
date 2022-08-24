@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/miHome"
+        android:title="@string/menuHome"
+        android:icon="@drawable/ic_home"/>
+
+    <item android:id="@+id/miChat"
+        android:title="@string/menuChat"
+        android:icon="@drawable/ic_chat"/>
+
+    <item android:id="@+id/placeholder"
+        android:title=""/>
+
+    <item android:id="@+id/miProfile"
+        android:title="@string/menuProfile"
+        android:icon="@drawable/ic_profile"/>
+
+    <item android:id="@+id/miSettings"
+        android:title="@string/menuSettings"
+        android:icon="@drawable/ic_settings"/>
+</menu>

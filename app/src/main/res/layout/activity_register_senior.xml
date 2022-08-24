@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.senior.RegisterSenior">
+
+    <ImageButton
+        android:id="@+id/ibRegisterSeniorBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@color/white"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_back" />
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/ibSeniorProfilePic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/carer_profile_pic"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_senior_profilepic" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ic_senior_choose_profile_pic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/add_profile" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- full name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            android:inputType="textNoSuggestions"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSeniorFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="@string/full_name"
+                android:inputType="textCapWords"
+                android:textCursorDrawable="@color/black"
+                android:padding="20dp"
+                android:textColorHint="@color/grey5"
+                android:textSize="20sp"
+                app:boxStrokeWidthFocused="0dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <!-- DOB dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1.5"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dropdown_dob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:drawableEnd="@drawable/ic_dropdown"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Date of Birth"
+                    android:inputType="none"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey5"
+                    android:textSize="20sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- gender dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                android:textColorHint="@color/grey5">
+
+                <AutoCompleteTextView
+                    android:id="@+id/drop_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:inputType="none"
+                    android:hint="Gender"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey5"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- barangay -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menuDrop"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            android:textColorHint="@color/grey5">
+
+            <AutoCompleteTextView
+                android:id="@+id/drop_barangay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_text_login"
+                android:cursorVisible="false"
+                android:dropDownHeight="200dp"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="Barangay"
+                android:inputType="none"
+                android:padding="20dp"
+                android:textColorHint="@color/grey5"
+                android:textSize="20sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:baselineAligned="false">
+
+        <!-- email address -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="15dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSeniorEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="@string/email_address"
+                android:padding="20dp"
+                android:textColorHint="@color/grey5"
+                android:textSize="20sp"
+                app:boxStrokeWidthFocused="0dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- mobile number -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="@string/mobile_number"
+                    android:inputType="number"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey5"
+                    android:textSize="20sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- password -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconDrawable="@drawable/custom_eye"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/grey4"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRegisterSeniorPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="@string/login_password"
+                android:inputType="textPassword"
+                android:padding="20dp"
+                android:textColorHint="@color/grey5"
+                android:textSize="20sp"
+                app:boxStrokeWidthFocused="0dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignupSenior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button_login"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="@string/signup"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSeniorHaveAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="@string/already_have_account"
+            android:textAlignment="center"
+            android:textColor="@color/grey1"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

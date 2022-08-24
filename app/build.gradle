@@ -1,0 +1,95 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    compileSdk 32
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.example.synapse"
+        minSdk 24
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation platform('com.google.firebase:firebase-bom:30.1.0')
+    implementation 'com.google.firebase:firebase-database-ktx'
+
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-auth:21.0.7'
+    implementation 'com.google.firebase:firebase-database:20.0.5'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.7'
+    implementation 'com.google.firebase:firebase-firestore:24.2.2'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-storage:20.0.1'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    //implementation 'com.android.car.ui:car-ui-lib:2.2.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.google.firebase:firebase-core:21.1.0'
+
+    // circle indicator for on-boarding screen
+    implementation 'me.relex:circleindicator:2.1.6'
+
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:8.0.1'
+
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:8.0.1'
+
+    // FirebaseUI for Firebase Auth
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
+
+    // FirebaseUI for Cloud Storage
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.1'
+
+    // retrieving image for profile pic
+    implementation 'com.squareup.picasso:picasso:2.8'
+
+    // picasso transformation for circular image
+    implementation 'jp.wasabeef:picasso-transformations:2.4.0'
+
+    // cookie bar interactive message on the screen
+    implementation 'org.aviran.cookiebar2:cookiebar2:1.1.5'
+
+    // required to avoid crash on Android 12 API 31
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
+    // volley for HTTP library networking
+    implementation("com.android.volley:volley:1.2.1")
+
+    //implementation 'com.google.firebase:firebase-messaging-directboot:23.0.6'
+    implementation 'com.google.firebase:firebase-messaging:23.0.7'
+
+    implementation 'joda-time:joda-time:2.10.14'
+
+    // map dependencies
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
+
+    implementation 'com.karumi:dexter:6.2.3'
+
+}

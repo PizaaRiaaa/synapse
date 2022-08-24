@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="690dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New Appointment"
+            android:textSize="17sp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey5"
+            android:layout_margin="20dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/ibClose"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_close"
+            android:layout_margin="28dp"
+            android:background="@color/white"
+            android:contentDescription="@string/description_close" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Specialist"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey4"
+            android:textSize="12sp"
+            android:layout_marginStart="20dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_appointment_specialist"
+            style="@style/Widget.App.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_margin="20dp"
+            android:elevation="2dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey4"
+            android:textSize="12sp"
+            android:text="Appointment Type" />
+
+    </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner_appointment_type"
+            style="@style/Widget.App.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_margin="20dp"
+            android:elevation="2dp" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/redhat_display_bold"
+        android:textColor="@color/grey4"
+        android:textSize="12sp"
+        android:text="Doctor's Name (Optional)" />
+
+    <!-- doctor's name -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDrName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textCapWords|textVisiblePassword|textNoSuggestions"
+            android:background="@drawable/rounded_text_login"
+            android:fontFamily="@font/redhat_display_regular"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:textColorHint="@color/grey4"
+            android:hint="e.g. Dr. John Doe "
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- concern -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:layout_margin="20dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etConcern"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine|textVisiblePassword|textNoSuggestions"
+            android:scrollbars="vertical"
+            android:background="@drawable/rounded_text_login"
+            android:fontFamily="@font/redhat_display_regular"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:padding="20dp"
+            android:textColorHint="@color/grey4"
+            android:hint="Type your concern here (optional)..."
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ibTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_set_time"
+            android:contentDescription="@string/description_set_time"
+            android:elevation="2dp"
+            android:src="@drawable/ic_clock" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddSchedule"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:text="@string/text_addSchedule"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_login"
+            android:backgroundTint="@color/light_green"
+            android:layout_margin="10dp"
+            android:layout_weight="3.3"/>
+
+    </LinearLayout>
+
+</LinearLayout>

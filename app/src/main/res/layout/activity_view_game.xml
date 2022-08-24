@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.modules.ViewGame">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"/>
+
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/red_decline_request"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"
+            android:text="Delete"/>
+
+        <ImageButton
+            android:id="@+id/ibHelp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_help" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivGameIC"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="25dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Game"
+            android:textSize="17sp" />
+
+        <Spinner
+            android:id="@+id/spinner_games"
+            style="@style/Widget.App.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_margin="5dp"
+            android:elevation="8dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvDoseSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/grey6"
+            android:layout_margin="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/grey5"
+                android:text="Alarm"
+                android:textSize="19sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeSchedule"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/brown1"
+                android:drawableEnd="@drawable/ic_clock"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="Change"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAlarmSub"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/grey1"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_margin="10dp"
+            android:background="@color/grey6" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/mLlayoutBottomButtons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_login"
+            android:backgroundTint="@color/light_green"
+            android:layout_margin="20dp"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

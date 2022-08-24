@@ -1,0 +1,126 @@
+<resources>
+    <string name="app_name">Synapse</string>
+    <string name="logo">logo</string>
+
+    <!-- on-boarding screen -->
+    <string name="subtitle">Heading</string>
+    <string name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vel libero hendrerit, euismod ligula non, pharetra nisi. In hac habitasse platea dictumst. Mauris elementum non dui et pulvinar.</string>
+    <string name="btnFinish">GET STARTED</string>
+    <string name="tvWelcome">Welcome to Synapse</string>
+
+    <!-- login screen -->
+    <string name="login">Login</string>
+    <string name="login_email">Phone, email or username</string>
+    <string name="login_password">Password</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="btnLogin">LOGIN</string>
+    <string name="btnRegister">Create new account</string>
+    <string name="tvDontHaveAccount">Don\'t have an account? Register!</string>
+    <string name="tvSub_header">Notify your senior loved ones</string>
+
+    <!-- pick role screen -->
+    <string name="join_carer_senior">Join as carer or \n senior citizen</string>
+    <string name="carer">Carer</string>
+    <string name="senior_citizen">Senior</string>
+    <string name="pick_carer">Carer</string>
+    <string name="tvCarer">CARER</string>
+    <string name="tvSenior">SENIOR</string>
+    <string name="btnContinue">CONTINUE</string>
+    <string name="back">back</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="tvRegisterCarer">CARER</string>
+
+    <!-- register screen -->
+    <string name="carer_info">Carer\'s info</string>
+    <string name="full_name">Full Name</string>
+    <string name="email_address">Email</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="signup">SIGNUP</string>
+    <string name="thank_you_for_signing_up">Thank you for \n signing up!</string>
+    <string name="sent_email">We\'re glad yo\'re here! \n Before you start exploring, we \n just sent you the email \n confirmation</string>
+    <string name="mbLogin">LOGIN</string>
+
+    <!-- barangay list -->
+    <string-array name="barangay">
+        <item>Addition Hills</item>
+        <item>Bagong Silang</item>
+        <item>Barangay Drive</item>
+        <item>Barangka Ibaba</item>
+        <item>Barangka Ilaya</item>
+        <item>Barangka Bato</item>
+        <item>Burol</item>
+        <item>Hagdang Bato Itaas</item>
+        <item>Hagdang Bato Libis</item>
+        <item>Harapin Ang Bukas</item>
+        <item>Highway Hills</item>
+        <item>Hulo</item>
+        <item>Mabini-J. Rizal</item>
+        <item>Malamig</item>
+        <item>Mauway</item>
+        <item>Namayan</item>
+        <item>New Zañiga</item>
+        <item>Pag-asa</item>
+        <item>Plainview</item>
+        <item>Pleasant Hills</item>
+        <item>Poblacion</item>
+        <item>San Jose</item>
+        <item>Vergara</item>
+        <item>Wack-Wack Greenhills</item>
+    </string-array>
+
+    <!-- carer home screen -->
+    <string name="tvCarer_home_screen">Carer</string>
+    <string name="edit_carer_profile">edit profile</string>
+    <string name="care_recipient_fullname">Full Name</string>
+    <string name="tv_senior_barangay_city">Barangay, City</string>
+
+    <string name="tv_senior_barangay">Barangay</string>
+    <string name="tv_senior_city">Mandaluyong City</string>
+
+    <string name="tv_userType">UserType</string>
+    <string name="tvSeniorAge">Age</string>
+    <string name="tvAssignedSenior">Assigned Senior</string>
+    <string name="tvNotify">Notify</string>
+    <string name="tvScheduleNotifications">Schedule notifications for your senior loved ones</string>
+    <string name="tvMedication">Medication</string>
+    <string name="tvPhysicalActivity">Physical Activity</string>
+    <string name="tvAppointment">Appointment</string>
+    <string name="tvGames">Games</string>
+    <string name="tvTasks">Tasks</string>
+    <string name="cdLocateSenior">Locate Senior</string>
+    <string name="menuHome">Home</string>
+    <string name="menuChat">Chat</string>
+    <string name="menuProfile">Profile</string>
+    <string name="menuSettings">Settings</string>
+    <string name="tvFullName">Full name</string>
+    <string name="tvAddress">Address</string>
+
+    <!-- send request screen -->
+    <string name="tvSendRequest">Send request</string>
+    <string name="tvDeclineRequest">Decline request</string>
+    <string name="tvSubHeading">to get started send request to your \n senior loved ones and start scheduling \n reminders</string>
+
+    <!-- Set Medicine -->
+    <string name="tv_heading1">Add New Medicine</string>
+    <string name="tv_heading2">Name</string>
+    <string name="tv_heading3">Dose</string>
+    <string name="tv_heading4">Shape</string>
+    <string name="description_close">close</string>
+    <string name="description_pill1">Pill 1</string>
+    <string name="description_pill2">Pill2</string>
+    <string name="description_pill3">Pill3</string>
+    <string name="description_pill4">Pill4</string>
+    <string name="tv_heading5">Color</string>
+    <string name="tv_sub1">Green</string>
+    <string name="tv_sub2">Red</string>
+    <string name="tv_sub3">Brown</string>
+    <string name="tv_sub4">Pink</string>
+    <string name="tv_sub5">Blue</string>
+    <string name="tv_sub6">White</string>
+    <string name="description_set_time">Set Time</string>
+    <string name="text_addSchedule">Add Schedule</string>
+    <string name="description_increment">Increment</string>
+    <string name="description_decrement">Decrement</string>
+    <string name="vertical_line">|</string>
+    <string name="set_appointment">Set Appointment</string>
+</resources>

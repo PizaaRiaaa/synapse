@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/grey6"
+    tools:context=".screen.carer.modules.Appointment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="#F39494"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:paddingEnd="20dp"
+            android:background="#F39494"
+            app:tint="@android:color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/tvSample"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="14dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="@string/set_appointment"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ivCarerProfilePic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#F39494"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnThisWeek"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button_appointment"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="This week"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnThisMonth"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="This month"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:fontFamily="@font/redhat_display_bold"
+            android:background="@drawable/rounded_button_appointment"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnThisYear"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="This year"
+            android:textColor="@color/white"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:background="@drawable/rounded_button_appointment"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSUN"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="SUN"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey1"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMON"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:text="MON"
+            android:textAllCaps="false"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnTUE"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="TUE"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnWED"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="WED"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnTHU"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="THU"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnFRI"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="FRI"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSAT"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="SAT"
+            android:textColor="@color/grey1"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_button"/>
+
+    </LinearLayout>
+
+    <!-- bottom navigation -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- recycle view for all carer users -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginBottom="?actionBarSize"
+            android:id="@+id/recyclerview_appointment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginTop="10dp"/>
+
+        <!-- floating plus icon -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddAppointment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="80dp"
+            android:src="@drawable/ic_plus_white"
+            app:tint="@android:color/white"
+            android:contentDescription="Add medicine" />
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fabCradleMargin="10dp"
+            app:fabCradleRoundedCornerRadius="20dp"
+            android:layout_gravity="bottom">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                app:menu="@menu/bottom_nav_menu"/>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLocateSenior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location"
+            app:layout_anchor="@id/bottomAppBar"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp"
+            android:contentDescription="@string/cdLocateSenior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</LinearLayout>

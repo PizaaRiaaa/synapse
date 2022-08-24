@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".screen.PickRole">
+
+    <ImageButton
+        android:id="@+id/ibBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:src="@drawable/ic_back"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/back" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/redhat_display_semibold"
+        android:text="@string/join_carer_senior"
+        android:textAlignment="center"
+        android:textColor="@color/grey5"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ibPickCarer"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/custom_button_selector"
+            android:src="@drawable/ic_carer_profilepic_whitebg"
+            android:contentDescription="@string/pick_carer" />
+
+        <ImageView
+            android:id="@+id/ibPickSenior"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/custom_button_selector"
+            android:src="@drawable/ic_senior_profilepic_whitebg"
+            android:contentDescription="@string/pick_carer" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:padding="20dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textSize="20sp"
+            android:text="@string/tvCarer"
+            android:textColor="@color/grey5"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:padding="20dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textSize="20sp"
+            android:text="@string/tvSenior"
+            android:textColor="@color/grey5"/>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:fontFamily="@font/redhat_display_bold"
+        android:text="@string/btnContinue"
+        android:textSize="15sp"
+        android:enabled="false"
+        app:icon="@drawable/ic_right_arrow"
+        app:iconGravity="textEnd"
+        app:iconSize="30dp"
+        app:iconTint="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        tools:ignore="NestedWeights">
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="3dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/horizontal_line"/>
+
+        <TextView
+            android:id="@+id/tvAlreadyHaveAnAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="@string/already_have_account"
+            android:textAlignment="center"
+            android:textColor="@color/grey1"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

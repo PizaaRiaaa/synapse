@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.modules.ViewAppointment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"/>
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/red_decline_request"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"
+            android:text="Delete"/>
+
+        <ImageButton
+            android:id="@+id/ibHelp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_help" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_bold"
+            android:paddingBottom="30dp"
+            android:text="Summary"
+            android:textColor="@color/grey7"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:paddingBottom="10dp"
+            android:text="Appointment Info"
+            android:textColor="@color/grey7"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_calendar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="Date &amp; Time"
+                android:textColor="@color/grey7"
+                android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeSchedule"
+                android:layout_width="113dp"
+                android:layout_height="38dp"
+                android:backgroundTint="@color/physical_activity_add_button"
+                android:drawableEnd="@drawable/ic_clock"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="Change"
+                android:textAllCaps="false"
+                android:textSize="11sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDateAndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/redhat_display_medium"
+            android:textColor="@color/grey4"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/grey6" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:paddingBottom="10dp"
+            android:text="Appointment Type"
+            android:textColor="@color/grey7"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/spinner_appointment_type"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:paddingTop="15dp"
+            android:text="Concern"
+            android:textColor="@color/grey7"
+            android:textSize="15sp" />
+
+        <!-- concern -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            android:layout_marginTop="20dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etConcern"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="Type your concern here (optional)..."
+                android:inputType="textMultiLine|textVisiblePassword|textNoSuggestions"
+                android:padding="20dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:scrollbars="vertical"
+                android:textColorHint="@color/grey4"
+                android:textSize="15sp"
+                app:boxStrokeWidthFocused="0dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/grey6" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:paddingBottom="10dp"
+            android:text="Doctor Info"
+            android:textColor="@color/grey7"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivSeniorProfilePic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/carer_profile_pic"
+                android:backgroundTint="@color/carer_profile_pic"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_doctor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="30dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDrName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/grey7"
+                    android:hint="Doctor's Name"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_specialist"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_gravity="center_vertical" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:fontFamily="@font/redhat_display_bold"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_button_login"
+        android:backgroundTint="@color/light_green"
+        android:layout_margin="20dp"/>
+
+
+</LinearLayout>

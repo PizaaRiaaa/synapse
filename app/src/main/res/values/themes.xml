@@ -1,0 +1,105 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Synapse" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/light_green</item>
+        <item name="colorPrimaryVariant">@color/light_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/light_green</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/light_green</item>
+
+        <!-- Full screen -->
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <!-- Prevent items go behind the navigation bar -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+
+        <item name="android:textColorHint">@color/grey7</item>
+
+    </style>
+
+    <!-- Custom card corner for material card -->
+    <style name="CustomCardCorners" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance_custom_corners</item>
+    </style>
+
+    <!-- carer custom material card -->
+    <style name="ShapeAppearanceCarer.CardView" parent="">
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomLeft">20%</item>
+        <item name="cornerSizeBottomRight">20%</item>
+        <item name="cornerSizeTopLeft">20%</item>
+        <item name="cornerSizeTopRight">20%</item>
+    </style>
+
+    <style name="ShapeAppearance_custom_corners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">59dp</item>
+        <item name="cornerSizeTopRight">59dp</item>
+    </style>
+
+    <style name="login_text_color">
+        <item name="android:textColor">@color/grey4</item>
+    </style>
+
+    <!-- rounded imageview right arrow and plus arrow -->
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">30dp</item>
+    </style>
+
+    <!-- custom alert dialog -->
+    <style name="animation1">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="animation2">
+        <item name="android:windowEnterAnimation">@android:anim/accelerate_interpolator</item>
+        <item name="android:windowExitAnimation">@android:anim/decelerate_interpolator</item>
+    </style>
+
+    <!-- shape colors -->
+    <style name="shape_color" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40%</item>
+    </style>
+
+    <!-- custom cookie theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="cookieTitleColor">@color/white</item>
+        <item name="cookieMessageColor">@color/white</item>
+        <item name="cookieActionColor">@color/default_action_color</item>
+        <item name="cookieBackgroundColor">@color/light_green</item>
+        <item name="cookiePadding">24dp</item>
+        <item name="cookieTitleSize">24sp</item>
+        <item name="cookieMessageSize">16sp</item>
+        <item name="cookieActionSize">18sp</item>
+    </style>
+
+    <!-- custom TextInputLayout -->
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/grey5</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+
+    <!-- custom spinner -->
+    <style name="Widget.App.Spinner" parent="@style/Widget.AppCompat.Spinner">
+        <item name="overlapAnchor">true</item>
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:radius">2dp</item>
+    </style>
+</resources>

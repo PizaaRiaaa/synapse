@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.modules.ViewPhysicalActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"/>
+
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/red_decline_request"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"
+            android:text="Delete"/>
+
+        <ImageButton
+            android:id="@+id/ibHelp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_help" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivPhysicalActivityIC"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="25dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Physical Activity"
+            android:textSize="19sp" />
+
+        <Spinner
+            android:id="@+id/spinner_physical_activity"
+            style="@style/Widget.App.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_margin="5dp"
+            android:elevation="8dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvDoseSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/grey5"
+                android:text="Alarm"
+                android:textSize="19sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeSchedule"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/physical_activity_add_button"
+                android:drawableEnd="@drawable/ic_clock"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="Change"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAlarmSub"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Duration"
+            android:textSize="19sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_pick_number"
+            android:elevation="5dp">
+
+            <Button
+                android:id="@+id/btnMinus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_minus_green"
+                android:layout_marginStart="19dp"
+                android:text="|"
+                android:textSize="15sp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/et_stroke" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etDuration"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_background"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/redhat_display_bold"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/grey5" />
+
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_plus_green"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_plus_green"
+                android:text="|"
+                android:textSize="15sp"
+                android:textAlignment="textStart"
+                android:textColor="@color/et_stroke"
+                android:fontFamily="@font/redhat_display_bold"
+                android:layout_marginEnd="19dp"/>
+
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Description"
+            android:textSize="19sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_login"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/light_green" />
+
+    </LinearLayout>
+
+</LinearLayout>

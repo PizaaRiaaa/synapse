@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.ViewPeople">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_back" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="100dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/ivViewProfilePic"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:background="@drawable/carer_profile_pic"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_senior_profilepic" />
+
+        <TextView
+            android:id="@+id/tvViewFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tvFullName"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:textSize="25sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/tvAddress"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey5"
+            android:textSize="15sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSendRequest"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            app:cornerRadius="5dp"
+            android:backgroundTint="@color/green_send_request"
+            android:fontFamily="@font/redhat_display_bold"
+            android:gravity="center"
+            android:text="@string/tvSendRequest"
+            android:textAllCaps="false"
+            android:textSize="15sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeclineRequest"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            app:cornerRadius="5dp"
+            android:backgroundTint="@color/red_decline_request"
+            android:fontFamily="@font/redhat_display_bold"
+            android:gravity="center"
+            android:text="@string/tvDeclineRequest"
+            android:textAllCaps="false"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

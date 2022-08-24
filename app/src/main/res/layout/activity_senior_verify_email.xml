@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_user_profile"
+    tools:context=".screen.senior.SeniorVerifyEmail">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_check"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/thank_you_for_signing_up"
+        android:textColor="@color/light_green"
+        android:fontFamily="@font/redhat_display_semibold"
+        android:textSize="28sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_margin="13dp"
+        android:text="@string/sent_email"
+        android:textColor="@color/grey1"
+        android:fontFamily="@font/redhat_display_regular"
+        android:textSize="18sp"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginNow"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:elevation="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="@string/mbLogin"
+            android:textSize="15sp"/>
+
+
+    </LinearLayout>

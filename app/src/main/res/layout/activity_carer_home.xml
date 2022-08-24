@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_home_screen"
+    tools:context=".screen.carer.CarerHome">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchViewCarer"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/search_view"
+            android:searchIcon="@drawable/ic_black_search"
+            app:queryBackground="@android:color/transparent"
+            app:iconifiedByDefault="false"
+            app:queryHint="Search"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1" />
+
+
+
+        <ImageView
+            android:id="@+id/ivCarerProfilePic"
+            android:layout_width="36dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/carer_profile_pic"
+            android:scaleType="fitCenter"
+            android:contentDescription="Carer profile pic" />
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceCarer.CardView"
+        app:cardBackgroundColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_margin="15dp"
+        android:elevation="2dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            app:cardBackgroundColor="@color/grey4">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="@string/tvAssignedSenior"
+                android:textSize="11sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/redhat_display_bold"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivSeniorProfilePic"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="30dp"
+                android:contentDescription="@string/pick_carer"
+                android:background="@drawable/carer_profile_pic"
+                android:backgroundTint="@color/carer_profile_pic"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSeniorFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:textColor="@color/grey5"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvSeniorBarangay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/redhat_display_medium" />
+
+            <TextView
+                android:id="@+id/tvSeniorCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Mandaluyong City"
+                android:textSize="13sp"
+                android:fontFamily="@font/redhat_display_medium" />
+
+                <TextView
+                    android:id="@+id/tvSeniorAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:textColor="@color/grey5"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_gravity="bottom|end"
+            android:background="@color/grey1"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
+            app:srcCompat="@drawable/ic_right_arrow" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="@string/tvNotify"
+            android:textColor="@color/grey5"
+            android:textSize="19sp"
+            android:drawablePadding="10dp"
+            app:drawableRightCompat="@drawable/ic_bell" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="7dp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textSize="14sp"
+            android:text="@string/tvScheduleNotifications"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <!-- medication module -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardBackgroundColor="@color/medications_bg"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_medications"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="@string/tvMedication"
+                    android:textColor="@color/medication_title" />
+
+                <TextView
+                    android:id="@+id/tvMedicationsTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tvTasks"
+                    android:textColor="@color/medication_subtitle" />
+
+            </LinearLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btnMedication"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom|end"
+                android:background="@color/medication_add_button"
+                android:clickable="true"
+                android:focusable="true"
+                app:contentPadding="9dp"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:srcCompat="@drawable/ic_plus_white" />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- physical activity module -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardBackgroundColor="@color/physical_activity_bg"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_stretching"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/physical_title"
+                android:text="@string/tvPhysicalActivity"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tvTasks"
+                    android:textColor="@color/physical_subtitle" />
+
+            </LinearLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btnPhysicalActivity"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom|end"
+                android:background="@color/physical_activity_add_button"
+                android:clickable="true"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:contentPadding="9dp"
+                app:srcCompat="@drawable/ic_plus_white"
+                android:focusable="true" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <!-- appointment module -->
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/appointment_bg"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_weight="1"
+            android:layout_margin="12dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_appointment"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/appointment_title"
+                android:text="@string/tvAppointment"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/appointment_subtitle"
+                android:text="@string/tvTasks"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btnAppointment"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom|end"
+                android:background="@color/appointment_add_button"
+                android:clickable="true"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:contentPadding="9dp"
+                app:srcCompat="@drawable/ic_plus_white"
+                android:focusable="true" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- game module -->
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/games_bg"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_games"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/games_title"
+                    android:text="@string/tvGames"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/games_subtitle"
+                    android:text="@string/tvTasks"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btnGames"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom|end"
+                android:background="@color/games_add_button"
+                android:clickable="true"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:contentPadding="9dp"
+                app:srcCompat="@drawable/ic_plus_white"
+                android:focusable="true" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- bottom navigation -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+         <com.google.android.material.bottomappbar.BottomAppBar
+         android:id="@+id/bottomAppBar"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         app:fabCradleMargin="10dp"
+         app:fabCradleRoundedCornerRadius="20dp"
+         android:layout_gravity="bottom">
+
+             <com.google.android.material.bottomnavigation.BottomNavigationView
+                 android:id="@+id/bottomNavigationView"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginEnd="16dp"
+                 android:background="@android:color/transparent"
+                 app:menu="@menu/bottom_nav_menu"/>
+
+
+         </com.google.android.material.bottomappbar.BottomAppBar>
+
+        
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLocateSenior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location"
+            app:layout_anchor="@id/bottomAppBar"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp"
+            android:contentDescription="@string/cdLocateSenior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

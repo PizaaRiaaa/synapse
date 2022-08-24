@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- default -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color  name="mtrl_textinput_default_box_stroke_color">@color/et_stroke</color>
+
+    <!-- violet -->
+    <color name="light_violet">#9673F7</color>
+    <color name="mid_violet">#9673F7</color>
+    <color name="dark_violet">#9B5BFA</color>
+
+    <color name="light_green">#3edadd</color>
+    <color name="dark_green">#049599</color>
+
+    <!-- gray -->
+    <color name="horizontal_line_grey">#ECEBEB</color>
+    <color name="et_bgTint">#FCFCFC</color>
+    <color name="bg_light_grey">#F8F8F8</color>
+    <color name="grey_shade4">#EEEEEE</color>
+
+    <color name="et_stroke">#D1D1D1</color>
+    <color name="bt_stroke">#ECEBEB</color>
+    <color name="bt_pickRole_stroke">@color/light_green</color>
+    <color name="horizontal_line">#EFEFEF</color>
+
+    <color name="grey1">#797979</color>
+    <color name="grey3">#BDBDBD</color>
+    <color name="grey4">#7E7E7E</color>
+    <color name="grey5">#565555</color>
+    <color name="grey6">#F3F3F3</color>
+    <color name="grey7">#444141</color>
+
+    <!-- orange -->
+    <color name="orange1">#F39494</color>
+
+    <!-- brown -->
+    <color name="brown1">#D09370</color>
+
+    <!-- red -->
+    <color name="red1">#C66565</color>
+
+    <!-- carer home screen -->
+    <color name="bg_home_screen">#F8F9FC</color>
+    <color name="search_view_stroke">#E9ECF5</color>
+    <color name="carer_profile_pic">#E7E7E7</color>
+    <color name="green_send_request">#3EDD4E</color>
+    <color name="red_decline_request">#D85240</color>
+
+    <!-- reminder modules -->
+    <color name="medications_bg">#DDFFF9</color>
+    <color name="medication_add_button">#3edadd</color>
+    <color name="medication_title">#049599</color>
+    <color name="medication_subtitle">#22B6BA</color>
+
+    <color name="physical_activity_bg">#E7E8FF</color>
+    <color name="physical_activity_add_button">#9673F7</color>
+
+    <color name="physical_title">#A787FF</color>
+    <color name="physical_subtitle">#B297FB</color>
+
+    <color name="appointment_bg">#FFDADA</color>
+    <color name="appointment_add_button">#F39494</color>
+    <color name="appointment_title">#CF6868</color>
+    <color name="appointment_subtitle">#E98D8D</color>
+
+    <color name="games_bg">#FFE0CF</color>
+    <color name="games_add_button">#D09370</color>
+    <color name="games_title">#D0855A</color>
+    <color name="games_subtitle">#D0916E</color>
+
+    <!-- shape color -->
+    <color name="color1">#37E23E</color>
+    <color name="color2">#F26969</color>
+    <color name="color3">#ECC53C</color>
+    <color name="color4">#E479F5</color>
+    <color name="color5">#5E94FF</color>
+    <color name="color6">#EAEDE0</color>
+
+</resources>

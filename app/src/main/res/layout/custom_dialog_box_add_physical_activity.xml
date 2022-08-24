@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="600dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New Physical Activity"
+            android:textSize="17sp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey5"
+            android:layout_margin="20dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_close"
+            android:layout_margin="28dp"
+            android:background="@color/white"
+            android:contentDescription="@string/description_close" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="Activity"
+            android:textColor="@color/grey4"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/spinner_physical_activity"
+            style="@style/Widget.App.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_margin="20dp"
+            android:elevation="8dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:text="Duration"
+            android:textColor="@color/grey4"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_pick_number"
+        android:layout_margin="20dp"
+        android:elevation="8dp">
+
+        <Button
+            android:id="@+id/btnMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_minus_green"
+            android:layout_marginStart="19dp"
+            android:text="@string/vertical_line"
+            android:textSize="15sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/et_stroke" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etDuration"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plus_green"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_plus_green"
+            android:text="@string/vertical_line"
+            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:textColor="@color/et_stroke"
+            android:fontFamily="@font/redhat_display_bold"
+            android:layout_marginEnd="19dp"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ibTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_set_time"
+            android:contentDescription="@string/description_set_time"
+            android:elevation="2dp"
+            android:src="@drawable/ic_clock" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddSchedule"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:text="@string/text_addSchedule"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_login"
+            android:backgroundTint="@color/light_green"
+            android:layout_margin="10dp"
+            android:layout_weight="3.3"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

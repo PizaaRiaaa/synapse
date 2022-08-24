@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_light_grey"
+    tools:context=".screen.senior.SeniorHome">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivSeniorProfilePic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/carer_profile_pic"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tvSeniorName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/black"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:drawableStart="@drawable/ic_greet" />
+
+        <TextClock
+            android:id="@+id/tcTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:fontFamily="@font/redhat_display_regular"
+            android:format12Hour="hh:mm a"
+            android:text="12:00 PM"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_scroll_right"
+        android:drawablePadding="20dp"
+        android:layout_gravity="end"
+        android:textSize="15sp"
+        android:fontFamily="@font/redhat_display_bold"
+        android:layout_marginEnd="20dp"
+        android:text="Swipe right" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="#E9ECF5"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- emergency -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                android:elevation="6dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeColor="@color/grey6"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="30dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_emergency"
+                        android:contentDescription="@string/pick_carer"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:fontFamily="@font/redhat_display_bold"
+                        android:text="Emergency"
+                        android:textColor="@color/red1"
+                        android:textAlignment="center"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- gps -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                android:elevation="6dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="30dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_gps_senior"
+                        android:contentDescription="@string/pick_carer"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/redhat_display_bold"
+                        android:text="Location"
+                        android:textColor="@color/grey5"
+                        android:textAlignment="center"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- search people -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSearchPeople"
+                android:layout_width="160dp"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                android:elevation="6dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="30dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_search_people"
+                        android:contentDescription="@string/pick_carer"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/redhat_display_bold"
+                        android:text="Search"
+                        android:textColor="@color/grey5"
+                        android:textAlignment="center"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- message carer -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                android:elevation="6dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="30dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_message_carer"
+                        android:contentDescription="@string/pick_carer"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/redhat_display_bold"
+                        android:text="Chat"
+                        android:textColor="@color/grey5"
+                        android:textAlignment="center"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- settings -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="140dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                android:elevation="6dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="30dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_senior_settings"
+                        android:contentDescription="@string/pick_carer"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/redhat_display_bold"
+                        android:text="Settings"
+                        android:textColor="@color/grey5"
+                        android:textAlignment="center"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <!-- medication module -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardBackgroundColor="@color/medications_bg"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_medications"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="@string/tvMedication"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/medication_title" />
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- physical activity module -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardBackgroundColor="@color/physical_activity_bg"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_aerobics"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/physical_title"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:text="@string/tvPhysicalActivity"/>
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <!-- appointment module -->
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/appointment_bg"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_margin="12dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_appointment"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="25dp"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/appointment_title"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:text="@string/tvAppointment"/>
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- game module -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnGames"
+            app:cardBackgroundColor="@color/games_bg"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="20dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/ic_games"
+                android:contentDescription="@string/pick_carer"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="25dp"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/games_title"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:text="@string/tvGames"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- bottom navigation -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fabCradleMargin="10dp"
+            app:fabCradleRoundedCornerRadius="20dp"
+            android:layout_gravity="bottom">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                app:menu="@menu/bottom_nav_menu"/>
+
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabLocateSenior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location"
+            app:layout_anchor="@id/bottomAppBar"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp"
+            android:contentDescription="@string/cdLocateSenior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+</LinearLayout>

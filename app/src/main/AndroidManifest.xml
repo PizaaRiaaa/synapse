@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.synapse">
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Synapse"
+        tools:targetApi="31">
+        <activity
+            android:name=".screen.senior.MyLocation"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCDOj8g2wgUR5cz-1xx5CowPMt1vsHPDa8" />
+
+        <activity
+            android:name=".screen.carer.modules.ViewGame"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.modules.Games"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.modules.ViewAppointment"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".screen.carer.modules.Appointment"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".screen.carer.modules.ViewPhysicalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.modules.PhysicalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.modules.ViewMedicine"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.dashboard.MedicationDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.modules.Medication"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.SendRequest"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.SearchPeople"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.ViewPeople"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.ViewPeople"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.SearchPeople"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.games.BrainTrainer"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.dashboard.GameDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.SeniorHome"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.SeniorVerifyEmail"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.CarerHome"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.RegisterSenior"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.RegisterCarer"
+            android:exported="false" />
+        <activity
+            android:name=".screen.PickRole"
+            android:exported="false" />
+        <activity
+            android:name=".screen.carer.CarerVerifyEmail"
+            android:exported="false" />
+        <activity
+            android:name=".screen.Login"
+            android:exported="false" />
+        <activity
+            android:name=".screen.Onboarding"
+            android:exported="false" />
+        <activity
+            android:name=".Splashscreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".screen.util.notifications.AlertReceiver" />
+
+        <service
+            android:name=".screen.util.notifications.FirebaseMessagingService"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+             See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_splash_logo" />
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/dark_green" />
+    </application>
+
+</manifest>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_send_request.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request_to_senior.xml" value="0.271875" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/active_user.xml" value="0.1855" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/edit_text_background_physical_activity.xml" value="0.1915" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.197" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_button_appointment.xml" value="0.206" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_button_login.xml" value="0.197" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_button_physical_activity.xml" value="0.1975" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_button_physical_activity_clicked.xml" value="0.1975" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_button_send_request.xml" value="0.236" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_set_time.xml" value="0.199" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_text_login.xml" value="0.197" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/rounded_textinput_login.xml" value="0.197" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/send_request_banner.xml" value="0.229" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/add_profile.xml" value="0.216" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/animated.xml" value="0.229" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/background.xml" value="0.275" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/border.xml" value="0.2055" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/border_left.xml" value="0.155" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/carer_materialcardview.xml" value="0.2195" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/carer_profile_pic.xml" value="0.1855" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/custom_button_selector.xml" value="0.2055" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/custom_eye.xml" value="0.2035" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/dialog_background.xml" value="0.229" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/dialog_background2.xml" value="0.1685" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/edit_text_background.xml" value="0.208" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/green_button_off.xml" value="0.1995" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/green_button_on.xml" value="0.198" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/ic_back_button_background.xml" value="0.271" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/ic_background.xml" value="0.197" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3255" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/imagebutton_border.xml" value="0.275" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button.xml" value="0.2085" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_appointment.xml" value="0.2" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_appointment_clicked.xml" value="0.193" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_games.xml" value="0.162" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_medication.xml" value="0.173" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_medication_clicked.xml" value="0.246" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_physical_activity.xml" value="0.1725" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_pick_role.xml" value="0.275" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_button_register.xml" value="0.298" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_linearlayout.xml" value="0.1895" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_pick_number.xml" value="0.199" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_text_login.xml" value="0.298" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/search_view.xml" value="0.1855" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/spinner_background.xml" value="0.1915" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/splash_screen_background.xml" value="0.1685" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable/text_field_background.xml" value="0.1675" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_appointment.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_assign_senior.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_brain_trainer.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_email_confirmation.xml" value="0.3625" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_home.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_search_people.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_user_profile.xml" value="0.3625" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_verify_email.xml" value="0.25" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_view_people.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_game_dashboard.xml" value="0.3609375" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_games.xml" value="0.25" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_login.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication.xml" value="0.25" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication_dashboard.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_my_location.xml" value="0.25" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_onboarding.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_physical.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_pick_role.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_register.xml" value="0.3625" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_register_carer.xml" value="0.25" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_register_senior.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_search_carer.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_search_senior.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_send_request.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_home.xml" value="0.2" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_search_people.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_verify_email.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_view_people.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_user_profile.xml" value="0.3572916666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_appointment.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_game.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_medicine.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_physical.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_senior.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/border_left.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box.xml" value="0.22" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_appointment.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_games.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_medication.xml" value="0.3177570093457944" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_physical_activity.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_send_request.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/dropdown_barangay.xml" value="0.2916666666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/dropdown_items.xml" value="0.14184397163120568" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_appointment.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_appointment_type.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_games.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_physical_activity.xml" value="0.2" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_pillcolor.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_pillshape.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_view_appointment_specialist.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/onboarding.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/onboarding_one.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/rounded_button.xml" value="0.23278985507246377" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_appointment.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_games_schedule.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_medication_schedule.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_physical_activity_schedule.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_medication_schedule.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_reqest.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request.xml" value="0.5" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request_senior.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request_to_senior.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_senior_medication_schedule.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/slide_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/splash_screen.xml" value="0.33" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/layout/text_field_background.xml" value="0.3484375" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3614583333333333" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/menu/common_menu.xml" value="0.3614583333333333" />
+        <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/mipmap-anydpi-v26/ic_back_button_round.xml" value="0.192" />
+        <entry key="app/src/main/res/layout/activity_brain_trainer.xml" value="0.11144883485309018" />
+        <entry key="app/src/main/res/layout/activity_game_dashboard.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/layout/activity_senior_home.xml" value="0.24322916666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

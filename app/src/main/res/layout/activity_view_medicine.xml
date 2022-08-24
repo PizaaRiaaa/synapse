@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.modules.ViewMedicine">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/ibBack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_back" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"/>
+
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/red_decline_request"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"
+            android:text="Delete"/>
+
+    <ImageButton
+        android:id="@+id/ibHelp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_help" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivPill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:scaleType="fitCenter"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvPillName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:text="Pill Name"
+                android:textColor="@color/grey3"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/tvPillNameSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:textSize="20sp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/dark_green"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <TextView
+                android:id="@+id/tvDosage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey3"
+                android:text="Pill Dosage"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etDosageSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:textSize="20sp"
+                android:textColor="@color/dark_green"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColorHint="@color/dark_green"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <TextView
+                android:id="@+id/tvPillShape"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey3"
+                android:text="Pill Shape"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/spinner_pillShape"
+                android:layout_gravity="center_vertical"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <TextView
+                android:id="@+id/tvPillColor"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey3"
+                android:text="Pill Color"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/spinner_pillColor"
+                android:layout_gravity="center_vertical"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="25dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Dose"
+            android:textSize="19sp" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvDoseSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <TextView
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Alarm"
+            android:textSize="19sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeSchedule"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/dark_green"
+                android:drawableEnd="@drawable/ic_clock"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="Change"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAlarmSub"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:letterSpacing="0.1"
+            android:textColor="@color/grey3"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Description"
+            android:textSize="19sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvDescriptionSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:letterSpacing="0.1"
+            android:textSize="16sp"
+            android:textColor="@color/grey3"
+            android:fontFamily="@font/redhat_display_semibold"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:text="Quantity"
+            android:textSize="19sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvQuantitySub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:letterSpacing="0.1"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"
+            android:textColor="@color/grey3"
+            android:inputType="number"
+            android:fontFamily="@font/redhat_display_semibold"/>
+           <!-- android:hint="Total 168 capsules | 126 capsules left"-->
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button_login"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/light_green" />
+
+    </LinearLayout>
+
+</LinearLayout>
