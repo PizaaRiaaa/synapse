@@ -27,8 +27,9 @@
             android:layout_height="100dp"
             android:layout_gravity="bottom|center_horizontal"
             android:background="@drawable/carer_profile_pic"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/pick_carer"
-            android:scaleType="fitCenter"
             android:src="@drawable/ic_senior_profilepic" />
 
         <androidx.appcompat.widget.AppCompatImageView

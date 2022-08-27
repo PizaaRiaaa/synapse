@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
@@ -39,7 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -47,6 +45,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -56,20 +55,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import org.aviran.cookiebar2.CookieBar;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
+
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class Medication extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
@@ -88,11 +88,11 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
     Intent intent;
     RequestQueue requestQueue;
     int requestCode;
-    private final Calendar calendar = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
 
-    private AppCompatButton btnWeek;
-    private AppCompatButton btnMonth;
-    private AppCompatButton btnYear;
+    public AppCompatButton btnMon, btnTue, btnWed,
+    btnThu, btnFri, btnSat, btnSun;
+
     private Dialog dialog;
     private TextView tvTime, etName;
 
@@ -118,11 +118,13 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         requestQueue = Volley.newRequestQueue(Medication.this);
 
-        btnWeek = findViewById(R.id.btnThisWeek);
-        btnMonth = findViewById(R.id.btnThisMonth);
-        btnYear = findViewById(R.id.btnThisYear);
-
-        requestCode = (int)calendar.getTimeInMillis()/1000;
+        btnMon = findViewById(R.id.btnMON);
+        btnTue = findViewById(R.id.btnTUE);
+        btnWed = findViewById(R.id.btnWED);
+        btnThu = findViewById(R.id.btnTHU);
+        btnFri = findViewById(R.id.btnFRI);
+        btnSat = findViewById(R.id.btnSAT);
+        btnSun = findViewById(R.id.btnSUN);
 
         FloatingActionButton fabAddMedicine;
         BottomNavigationView bottomNavigationView;
@@ -170,6 +172,9 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         tv5 = dialog.findViewById(R.id.tvBlue);
         tv6 = dialog.findViewById(R.id.tvWhite);
 
+        // uniqueID for scheduling medicine
+        requestCode = (int)calendar.getTimeInMillis()/1000;
+
         // listen for broadcast
         registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
 
@@ -178,14 +183,17 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         recyclerView = findViewById(R.id.recyclerview_medication);
-        recyclerView.setLayoutManager(new GridLayoutManager(Medication.this, 2));
-        //recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
+        //recyclerView.setLayoutManager(new GridLayoutManager(Medication.this, 2));
 
         // load recyclerview
         LoadScheduleForMedication();
 
         //show senior profile picture
         showCarerProfilePic(mUser.getUid());
+
+        // change the background of the current day of the week
+        displayCurrentDay();
 
         // direct user to CareHome screen
         ibBack = findViewById(R.id.ibBack);
@@ -269,19 +277,9 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
         // display time picker
         buttonTimePicker.setOnClickListener(v -> {
-            DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, month);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                     DialogFragment timePicker = new TimePickerFragment();
                     timePicker.show(getSupportFragmentManager(), "time picker");
                     isClicked = true;
-                }
-            };
-            new DatePickerDialog(Medication.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         // perform add schedule
@@ -351,13 +349,17 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         updateTimeText(calendar);
     }
     private void updateTimeText(Calendar c) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }
 
+    public Calendar getCalendar(){
+        return calendar;
+    }
+
     // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
+    public void startAlarm(Calendar c) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         intent = new Intent(this, AlertReceiver.class);
         intent.putExtra("Medication",1);
@@ -368,11 +370,16 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         } else {
             pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
         }
+
+        // check whether the time is earlier than current time. If so, set it to tomorrow. Otherwise, all alarms for earlier time will fire
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
         }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+            // set alarm for everyday
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis() ,
+                    pendingIntent);
     }
 
     // listen if alarm is currently running so we can send notification to senior
@@ -419,17 +426,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         unregisterReceiver(broadcastReceiver);
     }
 
-    // set background for week, month, and year buttons
-    public void setBtnBackground(AppCompatButton btn_1, AppCompatButton btn_2, AppCompatButton btn_3){
-        btn_1.setBackgroundDrawable(AppCompatResources.getDrawable(this, R.drawable.rounded_button_clicked));
-        btn_1.setTextColor(getColor(R.color.light_green));
 
-        btn_2.setBackgroundDrawable(AppCompatResources.getDrawable(this, R.drawable.rounded_button_medication));
-        btn_2.setTextColor(getColor(R.color.white));
-
-        btn_3.setBackgroundDrawable(AppCompatResources.getDrawable(this, R.drawable.rounded_button_medication));
-        btn_3.setTextColor(getResources().getColor(R.color.white));
-    }
 
     // display all schedules for medication
     private void LoadScheduleForMedication() {
@@ -441,194 +438,6 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
                             Query query = ds2.getRef();
 
-                            // display all schedule for this current year
-                            btnYear.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setBtnBackground(btnYear,btnMonth,btnWeek);
-                                    recyclerView.setLayoutManager(new GridLayoutManager(Medication.this, 2));
-                                    FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
-                                    FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
-                                        @RequiresApi(api = Build.VERSION_CODES.O)
-                                        @Override
-                                        protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
-                                            int year = calendar.get(Calendar.YEAR);
-                                            String current_year = String.valueOf(year);
-                                            String scheduleYear = model.getTime().split(" ")[2];
-                                            if(current_year.equals(scheduleYear)){
-                                                String pill_shape = model.getShape();
-                                                switch (pill_shape) {
-                                                    case "Pill1":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill1));
-                                                        break;
-                                                    case "Pill2":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill2));
-                                                        break;
-                                                    case "Pill3":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill3));
-                                                        break;
-                                                    case "Pill4":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill4));
-                                                        break;
-                                                }
-                                                holder.name.setText(model.getName());
-                                                holder.dose.setText("Dose: " + model.getDose());
-                                            }else{
-                                                holder.itemView.setVisibility(View.GONE);
-                                                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                                            }
-
-                                            // open medicine's information and send medicine's Key to another activity
-                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent intent = new Intent(Medication.this, ViewMedicine.class);
-                                                    intent.putExtra("userKey", getRef(position).getKey());
-                                                    startActivity(intent);
-                                                }
-                                            });
-                                        }
-                                        @NonNull
-                                        @Override
-                                        public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
-                                            return new MedicationViewHolder(view);
-                                        }
-                                    };
-                                    adapter.startListening();
-                                    recyclerView.setAdapter(adapter);
-                                }
-                           });
-
-                            // display all schedule for this current month
-                            btnMonth.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setBtnBackground(btnMonth,btnWeek,btnYear);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
-                                    FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
-                                    FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
-                                        @RequiresApi(api = Build.VERSION_CODES.O)
-                                        @Override
-                                        protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
-                                            String current_month = LocalDate.now().getMonth().name().toUpperCase(Locale.ROOT);
-                                            String scheduleMonth = model.getTime().split(" ")[0].toUpperCase(Locale.ROOT);
-
-                                            if(current_month.equals(scheduleMonth)){
-                                                String pill_shape = model.getShape();
-                                                switch (pill_shape) {
-                                                    case "Pill1":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill1));
-                                                        break;
-                                                    case "Pill2":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill2));
-                                                        break;
-                                                    case "Pill3":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill3));
-                                                        break;
-                                                    case "Pill4":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill4));
-                                                        break;
-                                                }
-                                                holder.name.setText(model.getName());
-                                                holder.dose.setText("Dose: " + model.getDose());
-                                            }else{
-                                                holder.itemView.setVisibility(View.GONE);
-                                                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                                            }
-
-                                            // open medicine's information and send medicine's Key to another activity
-                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent intent = new Intent(Medication.this, ViewMedicine.class);
-                                                    intent.putExtra("userKey", getRef(position).getKey());
-                                                    startActivity(intent);
-                                                }
-                                            });
-                                        }
-                                        @NonNull
-                                        @Override
-                                        public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
-                                            return new MedicationViewHolder(view);
-                                        }
-                                    };
-                                    adapter.startListening();
-                                    recyclerView.setAdapter(adapter);
-                                }
-                            });
-
-                            // display all schedule for this current week
-                            btnWeek.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setBtnBackground(btnWeek,btnMonth,btnYear);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
-                                    FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
-                                    FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
-                                        @RequiresApi(api = Build.VERSION_CODES.O)
-                                        @Override
-                                        protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
-                                            Calendar current_calendar = Calendar.getInstance();
-                                            int current_week = current_calendar.get(Calendar.WEEK_OF_YEAR);
-                                            int year = current_calendar.get(Calendar.YEAR);
-                                            String scheduleYear = model.getTime();
-                                            SimpleDateFormat format = new SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH);
-                                            try {
-                                                current_calendar.setTime(Objects.requireNonNull(format.parse(scheduleYear)));
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            int targetWeek = current_calendar.get(Calendar.WEEK_OF_YEAR);
-                                            int targetYear = current_calendar.get(Calendar.YEAR);
-                                            if(current_week == targetWeek && year == targetYear) {
-                                                String pill_shape = model.getShape();
-                                                switch (pill_shape) {
-                                                    case "Pill1":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill1));
-                                                        break;
-                                                    case "Pill2":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill2));
-                                                        break;
-                                                    case "Pill3":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill3));
-                                                        break;
-                                                    case "Pill4":
-                                                        holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill4));
-                                                        break;
-                                                }
-                                                holder.name.setText(model.getName());
-                                                holder.dose.setText("Dose: " + model.getDose());
-
-                                            }else{
-                                                holder.itemView.setVisibility(View.GONE);
-                                                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                                            }
-
-                                            // open medicine's information and send medicine's Key to another activity
-                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent intent = new Intent(Medication.this, ViewMedicine.class);
-                                                    intent.putExtra("userKey", getRef(position).getKey());
-                                                    startActivity(intent);
-                                                }
-                                            });
-                                    }
-                                        @NonNull
-                                        @Override
-                                        public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
-                                            return new MedicationViewHolder(view);
-                                        }
-                                    };
-                                    adapter.startListening();
-                                    recyclerView.setAdapter(adapter);
-                                }
-                            });
-
-
                            FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
                            FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
                                 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -637,24 +446,32 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
                                 protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
 
                                         String pill_shape = model.getShape();
+                                        String dose = model.getDose();
+                                        String get_dose = dose.split(" ")[0];
+
                                         switch (pill_shape) {
                                             case "Pill1":
-                                                holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill1));
+                                                holder.pill_shape.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.pill1_white_recycleview));
                                                 break;
                                             case "Pill2":
-                                                holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill2));
+                                                holder.pill_shape.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.pill2_white_recycleview));
                                                 break;
                                             case "Pill3":
-                                                holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill3));
+                                                holder.pill_shape.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.pill3_white_recycleview));
                                                 break;
                                             case "Pill4":
-                                                holder.pill_shape.setBackground(getDrawable(R.drawable.ic_pill4));
+                                                holder.pill_shape.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.pill4_white_recycleview));
                                                 break;
                                         }
-                                        holder.name.setText(model.getName());
-                                        holder.dose.setText("Dose: " + model.getDose());
 
-                                     // open medicine's information and send medicine's Key to another activity
+                                        holder.name.setText(model.getName());
+                                        if(get_dose == "1"){
+                                            holder.dose.setText(get_dose + " time today");
+                                        }else{
+                                            holder.dose.setText(get_dose + " times today");
+                                        }
+
+                                    // open medicine's information and send medicine's Key to another activity
                                      holder.itemView.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                             public void onClick(View v) {
@@ -802,6 +619,37 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         });
     }
 
+    // change the background the current day to white
+    public void displayCurrentDay(){
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
+        Calendar calendar = Calendar.getInstance();
+        String day = dayFormat.format(calendar.getTime());
+        switch (day){
+            case "Sunday":
+                btnSun.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Saturday":
+                btnSat.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Monday":
+                btnMon.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Tuesday":
+                btnTue.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Wednesday":
+                btnWed.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Thursday":
+                btnThu.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+            case "Friday":
+                btnFri.setBackgroundTintList(AppCompatResources.getColorStateList(this,R.color.white));
+                break;
+        }
+    }
+
+    // custom prompt message
     public void prompMessage(String title, String message, int background){
         CookieBar.build(this)
                 .setTitle(title)

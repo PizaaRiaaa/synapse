@@ -198,7 +198,12 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
             c.add(Calendar.DATE, 1);
         }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent);
     }
 
 
@@ -268,12 +273,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
             }
         }
     };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
-    }
 
     public void showMedicineInfo(String medicineID){
         // userID >

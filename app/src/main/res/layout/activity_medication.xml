@@ -12,31 +12,29 @@
            android:layout_width="match_parent"
            android:layout_height="70dp"
            android:orientation="horizontal"
-           android:background="#3EDADD"
-           android:padding="10dp"
+           android:background="@color/white"
+           android:padding="5dp"
            android:layout_gravity="center_horizontal">
 
            <ImageButton
                android:id="@+id/ibBack"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:layout_marginStart="8dp"
-               android:layout_marginTop="15dp"
-               android:background="@color/light_green"
-               app:tint="@android:color/white"
+               android:layout_marginTop="10dp"
+               android:backgroundTint="@color/white"
                android:contentDescription="@string/back"
                android:src="@drawable/ic_back" />
 
                <TextView
-                   android:id="@+id/tvSample"
+                 android:id="@+id/tvSample"
                  android:layout_width="0dp"
-                 android:layout_margin="15dp"
+                 android:layout_margin="18dp"
                  android:layout_height="30dp"
                  android:layout_weight="1"
                  android:text="Set Medicine"
-                 android:textColor="@color/white"
-                 android:fontFamily="@font/redhat_display_bold"
-                 android:textSize="18sp"/>
+                 android:textColor="@color/grey5"
+                 android:fontFamily="@font/redhat_display_semibold"
+                 android:textSize="20sp"/>
 
             <ImageView
                 android:id="@+id/ivCarerProfilePic"
@@ -51,164 +49,117 @@
 
         </LinearLayout>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="2dp"/>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/grey2"
+        app:cardCornerRadius="10dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/light_green"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnThisWeek"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_button_medication"
-            android:fontFamily="@font/redhat_display_bold"
-            android:text="This week"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnThisMonth"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:text="This month"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:fontFamily="@font/redhat_display_bold"
-            android:background="@drawable/rounded_button"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnThisYear"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="This year"
-            android:textColor="@color/white"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textAllCaps="false"
-            android:background="@drawable/rounded_button"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/grey2"
+            android:layout_gravity="center_horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSUN"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
-            android:layout_margin="10dp"
             android:text="SUN"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey1"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@color/grey5"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnMON"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
-            android:layout_margin="10dp"
             android:text="MON"
             android:textAllCaps="false"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnTUE"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="TUE"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnWED"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="WED"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
+            android:backgroundTint="@color/grey2"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnTHU"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="THU"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnFRI"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="FRI"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSAT"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_margin="10dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="SAT"
-            android:textColor="@color/grey1"
-            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/inter_bold"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/grey2"
             android:background="@drawable/rounded_button"/>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- bottom navigation -->
    <androidx.coordinatorlayout.widget.CoordinatorLayout

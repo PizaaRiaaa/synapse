@@ -177,16 +177,9 @@ public class PhysicalActivity extends AppCompatActivity implements AdapterView.O
 
         // display time picker
         ibTimePicker.setOnClickListener(v -> {
-            DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                 DialogFragment timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(), "time picker");
                 isClicked = true;
-            };
-            new DatePickerDialog(PhysicalActivity.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         // perform add schedule
@@ -273,11 +266,20 @@ public class PhysicalActivity extends AppCompatActivity implements AdapterView.O
         } else {
             pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
         }
+
+
+        //check whether the time is earlier than current time. If so, set it to tomorrow. Otherwise, all alarms for earlier time will fire
         if (c.before(Calendar.getInstance())) {
             c.add(Calendar.DATE, 1);
         }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent);
+
     }
 
     // listen if alarm is currently running so we can send notification to senior

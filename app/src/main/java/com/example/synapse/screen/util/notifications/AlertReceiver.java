@@ -1,5 +1,6 @@
 package com.example.synapse.screen.util.notifications;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +14,8 @@ import com.example.synapse.screen.carer.CarerHome;
 import com.example.synapse.screen.carer.modules.Medication;
 import com.example.synapse.screen.carer.modules.PhysicalActivity;
 
+import java.util.Calendar;
+
 public class AlertReceiver extends BroadcastReceiver {
 
     @Override
@@ -22,6 +25,7 @@ public class AlertReceiver extends BroadcastReceiver {
         int physical = intent.getExtras().getInt("PhysicalActivity");
         int appointment = intent.getExtras().getInt("Appointment");
         int games = intent.getExtras().getInt("Games");
+        Calendar calendar = Calendar.getInstance();
 
         MediaPlayer mp = MediaPlayer.create(context, Settings.System.DEFAULT_RINGTONE_URI);
 
@@ -32,6 +36,7 @@ public class AlertReceiver extends BroadcastReceiver {
             medicineNotificationHelper.getManager().notify(requestCode, nb.build());
 
             context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
+
 
         }else if(physical == 2){
 

@@ -213,12 +213,6 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         }
     };
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
-    }
-
     // decrement and increment for dose input
     public void increment(View v) {
         count++;
@@ -266,7 +260,12 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
             c.add(Calendar.DATE, 1);
         }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent);
     }
 
     public void cancelAlarm(int requestCode){

@@ -214,13 +214,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     };
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(broadcastReceiver != null) unregisterReceiver(broadcastReceiver);
-    }
-
-
-    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);

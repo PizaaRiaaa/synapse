@@ -76,7 +76,7 @@
             <!-- emergency -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="160dp"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
                 android:elevation="6dp"
@@ -116,7 +116,7 @@
             <!-- gps -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="160dp"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
                 android:elevation="6dp"
@@ -156,7 +156,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btnSearchPeople"
                 android:layout_width="160dp"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
                 android:elevation="6dp"
@@ -195,7 +195,7 @@
             <!-- message carer -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="160dp"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
                 android:elevation="6dp"
@@ -234,7 +234,7 @@
             <!-- settings -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="160dp"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="20dp"
                 android:elevation="6dp"
@@ -276,7 +276,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:orientation="horizontal">
@@ -284,7 +284,7 @@
         <!-- medication module -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
             app:strokeColor="@color/white"
@@ -325,7 +325,7 @@
         <!-- physical activity module -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
             app:strokeColor="@color/white"
@@ -367,7 +367,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -375,7 +375,7 @@
         <com.google.android.material.card.MaterialCardView
             app:cardBackgroundColor="@color/appointment_bg"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_margin="12dp"
             app:strokeColor="@color/white"
@@ -417,7 +417,7 @@
             android:id="@+id/btnGames"
             app:cardBackgroundColor="@color/games_bg"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_margin="10dp"
             app:strokeColor="@color/white"

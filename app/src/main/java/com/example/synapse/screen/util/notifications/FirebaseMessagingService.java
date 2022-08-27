@@ -60,7 +60,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
 
         Intent resultIntent = new Intent(this, Medication.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_IMMUTABLE);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
         builder.setContentTitle(remoteMessage.getNotification().getTitle());

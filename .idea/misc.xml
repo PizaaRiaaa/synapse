@@ -3,9 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/pill1_background.xml" value="0.17" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable/splash_screen_background.xml" value="0.17" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_home.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication.xml" value="0.33" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication_dashboard.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_physical.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_register_senior.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_send_request.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_home.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_medicine.xml" value="0.12447916666666667" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_medication.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_medication_schedule.xml" value="0.25" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request_to_senior.xml" value="0.271875" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/splash_screen.xml" value="0.271875" />
         <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/active_user.xml" value="0.1855" />
         <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/edit_text_background_physical_activity.xml" value="0.1915" />
         <entry key="..\:/Users/Ray Ann Martinez/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.197" />

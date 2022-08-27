@@ -25,7 +25,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCDOj8g2wgUR5cz-1xx5CowPMt1vsHPDa8" />
+            android:value="AIzaSyAGjBerlY_7x2ut3CZp-owyker3ANY_jqs" />
 
         <activity
             android:name=".screen.carer.modules.ViewGame"
