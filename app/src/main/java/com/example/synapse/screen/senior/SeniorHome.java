@@ -83,7 +83,6 @@ public class SeniorHome extends AppCompatActivity {
         // set bottomNavigationView to transparent
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-
         // direct user to medication dashboard
         //medicationBtn.setOnClickListener(view -> startActivity(new Intent(SeniorHome.this, MedicationDashboard.class)));
 

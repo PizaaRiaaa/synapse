@@ -476,9 +476,7 @@
                 android:background="@android:color/transparent"
                 app:menu="@menu/bottom_nav_menu"/>
 
-
         </com.google.android.material.bottomappbar.BottomAppBar>
-
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabLocateSenior"
@@ -491,8 +489,5 @@
             android:contentDescription="@string/cdLocateSenior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-
 
 </LinearLayout>

@@ -75,35 +75,36 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class Medication extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
-    private DatabaseReference
-            referenceProfile,
-            referenceCompanion,
-            referenceRequest,
-            referenceReminders;
+    DatabaseReference
+    referenceProfile,
+    referenceCompanion,
+    referenceRequest,
+    referenceReminders;
 
-    private FirebaseUser mUser;
-    private String seniorID;
-    private String token;
+    FirebaseUser mUser;
+    String seniorID;
+    String token;
 
     Intent intent;
     RequestQueue requestQueue;
     int requestCode;
     Calendar calendar = Calendar.getInstance();
 
-    public AppCompatButton btnMon, btnTue, btnWed,
+    AppCompatButton btnMon, btnTue, btnWed,
     btnThu, btnFri, btnSat, btnSun;
+    TextView tv1, tv2, tv3, tv4, tv5, tv6,
+    etDose, etName;
+    ShapeableImageView color1, color2, color3, color4, color5, color6;
+    ImageView pill1, pill2, pill3, pill4;
 
-    private Dialog dialog;
-    private TextView tvTime, etName;
-    private int count = 0;
+    String pillShape = "", color = "", time = "";
 
     RecyclerView recyclerView;
-    private ImageView pill1, pill2, pill3, pill4;
-    private TextView tv1, tv2, tv3, tv4, tv5, tv6, etDose;
-    private ImageView profilePic;
-    private String imageURL;
-    private String pillShape = "", color = "", time = "";
-    private boolean isClicked = false;
+    Dialog dialog;
+    int count = 0;
+    ImageView profilePic;
+    String imageURL;
+    boolean isClicked = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -148,23 +149,23 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         ibMinus = dialog.findViewById(R.id.ibMinus);
         ibAdd = dialog.findViewById(R.id.ibAdd);
         etDose = dialog.findViewById(R.id.etDose);
-        //tvTime = dialog.findViewById(R.id.tvTime);
         btnClose = dialog.findViewById(R.id.btnClose);
         etName = dialog.findViewById(R.id.etName);
         buttonTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
+        recyclerView = findViewById(R.id.recyclerview_medication);
 
         pill1 = dialog.findViewById(R.id.ivPill1);
         pill2 = dialog.findViewById(R.id.ivPill2);
         pill3 = dialog.findViewById(R.id.ivPill3);
         pill4 = dialog.findViewById(R.id.ivPill4);
 
-        ShapeableImageView color1 = dialog.findViewById(R.id.color1);
-        ShapeableImageView color2 = dialog.findViewById(R.id.color2);
-        ShapeableImageView color3 = dialog.findViewById(R.id.color3);
-        ShapeableImageView color4 = dialog.findViewById(R.id.color4);
-        ShapeableImageView color5 = dialog.findViewById(R.id.color5);
-        ShapeableImageView color6 = dialog.findViewById(R.id.color6);
+        color1 = dialog.findViewById(R.id.color1);
+        color2 = dialog.findViewById(R.id.color2);
+        color3 = dialog.findViewById(R.id.color3);
+        color4 = dialog.findViewById(R.id.color4);
+        color5 = dialog.findViewById(R.id.color5);
+        color6 = dialog.findViewById(R.id.color6);
 
         tv1 = dialog.findViewById(R.id.tvGreen);
         tv2 = dialog.findViewById(R.id.tvRed);
@@ -183,17 +184,29 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        recyclerView = findViewById(R.id.recyclerview_medication);
+        // layout for recycle view
         recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
-
-        // load recyclerview
-        LoadScheduleForMedication();
 
         //show senior profile picture
         showCarerProfilePic(mUser.getUid());
 
+        // load recyclerview
+        LoadScheduleForMedication();
+
+        // check what color shape was clicked
+        clickedColorAndShape();
+
         // change the background of the current day of the week
         displayCurrentDay();
+
+        // close the dialog box
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        // display dialog box
+        fabAddMedicine.setOnClickListener(v -> dialog.show());
+
+        // prevent keyboard pop up
+        etDose.setShowSoftInputOnFocus(false);
 
         // direct user to CareHome screen
         ibBack = findViewById(R.id.ibBack);
@@ -202,78 +215,9 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
             finish();
         });
 
-        // close the dialog box
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-
-        // display dialog box
-        fabAddMedicine.setOnClickListener(v -> dialog.show());
-
         // increment and decrement for number picker
         ibMinus.setOnClickListener(this::decrement);
         ibAdd.setOnClickListener(this::increment);
-
-        // prevent keyboard pop up
-        etDose.setShowSoftInputOnFocus(false);
-
-        // check what shape was clicked
-        pill1.setOnClickListener(v -> {
-            pill1.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
-            pill2.setBackground(null); pill3.setBackground(null); pill4.setBackground(null);
-            pillShape = "Pill1";
-        });
-        pill2.setOnClickListener(v -> {
-            pill2.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
-            pill1.setBackground(null); pill3.setBackground(null); pill4.setBackground(null);
-            pillShape = "Pill2";
-        });
-        pill3.setOnClickListener(v -> {
-            pill3.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
-            pill1.setBackground(null); pill2.setBackground(null); pill4.setBackground(null);
-            pillShape = "Pill3";
-        });
-        pill4.setOnClickListener(v -> {
-            pill4.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
-            pill1.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
-            pillShape = "Pill4";
-        });
-
-        // check what color was clicked
-        color1.setOnClickListener(v -> {
-            tv1.setTextColor(getColor(R.color.grey5)); tv2.setTextColor(getColor(R.color.et_stroke));
-            tv3.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
-            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
-            color = "Green";
-        });
-        color2.setOnClickListener(v -> {
-            tv2.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
-            tv3.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
-            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
-            color = "Red";
-        });
-        color3.setOnClickListener(v -> {
-            tv3.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
-            tv2.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
-            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
-            color = "Brown";
-        });
-        color4.setOnClickListener(v -> {
-            tv4.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
-            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
-            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
-            color = "Pink";
-        });
-        color5.setOnClickListener(v -> {
-            tv5.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
-            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
-            tv4.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
-            color = "Blue";
-        });
-        color6.setOnClickListener(v -> {
-            tv6.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
-            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
-            tv4.setTextColor(getColor(R.color.et_stroke)); tv5.setTextColor(getColor(R.color.et_stroke));
-            color = "White";
-        });
 
         // display time picker
         buttonTimePicker.setOnClickListener(v -> {
@@ -326,13 +270,14 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
    }
 
-    // decrement and increment for dose input
+    // increment for dose input
     public void increment(View v) {
         count++;
         etDose.setText("");
         etDose.setText("" + count + " pills");
     }
 
+    // decrement for dose input
     public void decrement(View v) {
         if (count <= 0) count = 0;
         else count--;
@@ -348,6 +293,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         calendar.set(Calendar.SECOND, 0);
         updateTimeText(calendar);
     }
+
     private void updateTimeText(Calendar c) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
        // tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
@@ -426,8 +372,6 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         unregisterReceiver(broadcastReceiver);
     }
 
-
-
     // display all schedules for medication
     private void LoadScheduleForMedication() {
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
@@ -466,7 +410,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
                                         holder.time.setText(model.getTime());
                                         holder.name.setText(model.getName());
-                                        if(get_dose == "1"){
+                                        if(Objects.equals(get_dose, "1")){
                                             holder.dose.setText(get_dose + " time today");
                                         }else{
                                             holder.dose.setText(get_dose + " times today");
@@ -649,6 +593,70 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
                 break;
         }
     }
+
+    // check what color and shape of medicine was clicked
+    public void clickedColorAndShape(){
+        // check what shape was clicked
+        pill1.setOnClickListener(v -> {
+            pill1.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
+            pill2.setBackground(null); pill3.setBackground(null); pill4.setBackground(null);
+            pillShape = "Pill1";
+        });
+        pill2.setOnClickListener(v -> {
+            pill2.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
+            pill1.setBackground(null); pill3.setBackground(null); pill4.setBackground(null);
+            pillShape = "Pill2";
+        });
+        pill3.setOnClickListener(v -> {
+            pill3.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
+            pill1.setBackground(null); pill2.setBackground(null); pill4.setBackground(null);
+            pillShape = "Pill3";
+        });
+        pill4.setOnClickListener(v -> {
+            pill4.setBackground(AppCompatResources.getDrawable(Medication.this, R.drawable.rounded_button_pick_role));
+            pill1.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            pillShape = "Pill4";
+        });
+
+        // check what color was clicked
+        color1.setOnClickListener(v -> {
+            tv1.setTextColor(getColor(R.color.grey5)); tv2.setTextColor(getColor(R.color.et_stroke));
+            tv3.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
+            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
+            color = "Green";
+        });
+        color2.setOnClickListener(v -> {
+            tv2.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
+            tv3.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
+            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
+            color = "Red";
+        });
+        color3.setOnClickListener(v -> {
+            tv3.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
+            tv2.setTextColor(getColor(R.color.et_stroke)); tv4.setTextColor(getColor(R.color.et_stroke));
+            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
+            color = "Brown";
+        });
+        color4.setOnClickListener(v -> {
+            tv4.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
+            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
+            tv5.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
+            color = "Pink";
+        });
+        color5.setOnClickListener(v -> {
+            tv5.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
+            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
+            tv4.setTextColor(getColor(R.color.et_stroke)); tv6.setTextColor(getColor(R.color.et_stroke));
+            color = "Blue";
+        });
+        color6.setOnClickListener(v -> {
+            tv6.setTextColor(getColor(R.color.grey5)); tv1.setTextColor(getColor(R.color.et_stroke));
+            tv2.setTextColor(getColor(R.color.et_stroke)); tv3.setTextColor(getColor(R.color.et_stroke));
+            tv4.setTextColor(getColor(R.color.et_stroke)); tv5.setTextColor(getColor(R.color.et_stroke));
+            color = "White";
+        });
+    }
+
 
     // custom prompt message
     public void prompMessage(String title, String message, int background){

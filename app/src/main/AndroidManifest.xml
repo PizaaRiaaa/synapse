@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
+            android:name=".screen.senior.games.TicTacToe"
+            android:exported="false" />
+        <activity
             android:name=".screen.senior.MyLocation"
             android:exported="false" />
 
@@ -72,7 +75,7 @@
             android:name=".screen.carer.SearchPeople"
             android:exported="false" />
         <activity
-            android:name=".screen.senior.games.BrainTrainer"
+            android:name=".screen.senior.games.MathGame"
             android:exported="false" />
         <activity
             android:name=".screen.senior.dashboard.GameDashboard"

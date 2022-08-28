@@ -73,7 +73,7 @@
         <com.google.android.material.card.MaterialCardView
             style="@style/CustomCardViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white">
 
         <LinearLayout
@@ -159,7 +159,7 @@
                         android:fontFamily="@font/redhat_display_medium"
                         android:inputType="number"
                         android:textAlignment="center"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/grey5" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/ibAdd"
@@ -411,11 +411,10 @@
 
         </LinearLayout>
 
+      </LinearLayout>
 
-    </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    </ScrollView>
-
+   </ScrollView>
 
 </LinearLayout>

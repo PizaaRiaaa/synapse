@@ -10,8 +10,10 @@
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable/rounded_pick_number.xml" value="0.145" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable/splash_screen_background.xml" value="0.17" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_appointment.xml" value="0.3132530120481928" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_brain_trainer.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_home.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_carer_view_people.xml" value="0.12447916666666667" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_game_dashboard.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_games.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication.xml" value="0.33" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_medication_dashboard.xml" value="0.271875" />
@@ -22,6 +24,7 @@
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_send_request.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_home.xml" value="0.2367601246105919" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_senior_view_people.xml" value="0.12447916666666667" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_tic_tac_toe.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_appointment.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_game.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_medication.xml" value="0.271875" />
@@ -156,7 +159,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

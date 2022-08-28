@@ -152,15 +152,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
         // change time
         btnChangeTime.setOnClickListener(v -> {
-            DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                 DialogFragment timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(), "time picker");
-            };
-            new DatePickerDialog(ViewMedicine.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
     }
 
@@ -188,7 +181,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void updateTimeText(Calendar calendar) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         tvAlarm.setText(simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }

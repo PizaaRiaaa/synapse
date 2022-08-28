@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BrainTrainer extends AppCompatActivity {
+public class MathGame extends AppCompatActivity {
 
     /* PROPERTY DECLARATIONS */
     Button startBtn; // initialize the button property outside the onCreate method
@@ -28,6 +28,7 @@ public class BrainTrainer extends AppCompatActivity {
     int scoreCtr = 0; // property that will count the score
     int numberOfQuestions = 0; // property that will hold the total number of questions
     TextView scoreTextView; // property that will hold the score textview
+    TextView tvMathGame;
     Button playAgainBtn; // property that will hold the playAgain button
     ConstraintLayout gameTransitionLayout; // property that will hold the constraint that will give the illusion that no one is beneath the constraint; pantakip sa loob
     androidx.gridlayout.widget.GridLayout gridLayout; // property that will hold the grid layout
@@ -52,9 +53,10 @@ public class BrainTrainer extends AppCompatActivity {
     public void start(View view){
         startBtn.setVisibility(View.INVISIBLE);
         gameTransitionLayout.setVisibility(View.VISIBLE);
+        tvMathGame.setVisibility(View.INVISIBLE);
+
         // call the playAgain function to avoid redundancy
         playAgain(findViewById(R.id.scoreTextViewId)); // we can pass any view; it doesn't matter because we will not use it
-
     }
 
     /* ONCLICK LISTENER THAT WILL LISTEN TO EVERY CLICK OF THE ANSWER BUTTON */
@@ -217,8 +219,9 @@ public class BrainTrainer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brain_trainer);
+        setContentView(R.layout.activity_math_game);
 
+        tvMathGame = findViewById(R.id.tvMathGame);
         startBtn = (Button) findViewById(R.id.startBtnId); // reference of the start button
         remark = (TextView) findViewById(R.id.remarkTextViewId); // reference for the remark textview
         scoreTextView = (TextView) findViewById(R.id.scoreTextViewId); // reference of the score textview
