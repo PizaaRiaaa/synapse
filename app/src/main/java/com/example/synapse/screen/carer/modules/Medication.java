@@ -25,6 +25,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,7 +83,6 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
     private FirebaseUser mUser;
     private String seniorID;
-    private int count = 0;
     private String token;
 
     Intent intent;
@@ -95,6 +95,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
     private Dialog dialog;
     private TextView tvTime, etName;
+    private int count = 0;
 
     RecyclerView recyclerView;
     private ImageView pill1, pill2, pill3, pill4;
@@ -129,7 +130,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         FloatingActionButton fabAddMedicine;
         BottomNavigationView bottomNavigationView;
         ImageButton ibBack, btnClose;
-        Button ibMinus, ibAdd;
+        MaterialButton ibMinus, ibAdd;
         AppCompatImageButton buttonTimePicker;
         AppCompatButton btnAddSchedule;
 
@@ -144,11 +145,11 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         fabAddMedicine = findViewById(R.id.btnAddMedicine);
         profilePic = findViewById(R.id.ivCarerProfilePic);
-        btnClose = dialog.findViewById(R.id.btnClose);
         ibMinus = dialog.findViewById(R.id.ibMinus);
         ibAdd = dialog.findViewById(R.id.ibAdd);
         etDose = dialog.findViewById(R.id.etDose);
-        tvTime = dialog.findViewById(R.id.tvTime);
+        //tvTime = dialog.findViewById(R.id.tvTime);
+        btnClose = dialog.findViewById(R.id.btnClose);
         etName = dialog.findViewById(R.id.etName);
         buttonTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
@@ -184,7 +185,6 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
 
         recyclerView = findViewById(R.id.recyclerview_medication);
         recyclerView.setLayoutManager(new LinearLayoutManager(Medication.this));
-        //recyclerView.setLayoutManager(new GridLayoutManager(Medication.this, 2));
 
         // load recyclerview
         LoadScheduleForMedication();
@@ -202,11 +202,11 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
             finish();
         });
 
-        // display dialog box
-        fabAddMedicine.setOnClickListener(v -> dialog.show());
-
         // close the dialog box
         btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        // display dialog box
+        fabAddMedicine.setOnClickListener(v -> dialog.show());
 
         // increment and decrement for number picker
         ibMinus.setOnClickListener(this::decrement);
@@ -350,7 +350,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
     }
     private void updateTimeText(Calendar c) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-        tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
+       // tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }
 
@@ -464,6 +464,7 @@ public class Medication extends AppCompatActivity implements TimePickerDialog.On
                                                 break;
                                         }
 
+                                        holder.time.setText(model.getTime());
                                         holder.name.setText(model.getName());
                                         if(get_dose == "1"){
                                             holder.dose.setText(get_dose + " time today");

@@ -25,7 +25,7 @@
             android:background="@color/brown1"
             app:tint="@android:color/white"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back_white" />
 
         <TextView
             android:id="@+id/tvSample"

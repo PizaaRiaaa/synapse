@@ -80,7 +80,7 @@
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/redhat_display_semibold"
                 android:text="Pill Name"
-                android:textColor="@color/grey3"
+                android:textColor="@color/grey5"
                 android:textSize="15sp" />
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -105,7 +105,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/redhat_display_semibold"
-                android:textColor="@color/grey3"
+                android:textColor="@color/grey5"
                 android:text="Pill Dosage"
                 android:textSize="15sp" />
 
@@ -132,7 +132,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/redhat_display_semibold"
-                android:textColor="@color/grey3"
+                android:textColor="@color/grey5"
                 android:text="Pill Shape"
                 android:textSize="15sp" />
 
@@ -154,7 +154,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/redhat_display_semibold"
-                android:textColor="@color/grey3"
+                android:textColor="@color/grey5"
                 android:text="Pill Color"
                 android:textSize="15sp" />
 
@@ -172,15 +172,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="25dp"
+        android:layout_margin="20dp"
         android:layout_gravity="center_vertical">
 
         <TextView
-            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="4dp"
             android:fontFamily="@font/redhat_display_bold"
             android:textColor="@color/grey5"
             android:text="Dose"
@@ -214,7 +212,7 @@
             android:layout_marginTop="4dp"
             android:fontFamily="@font/redhat_display_bold"
             android:textColor="@color/grey5"
-            android:text="Alarm"
+            android:text="Time Schedule"
             android:textSize="19sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -256,7 +254,7 @@
             android:layout_marginTop="4dp"
             android:fontFamily="@font/redhat_display_bold"
             android:textColor="@color/grey5"
-            android:text="Description"
+            android:text="Notes"
             android:textSize="19sp" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -273,30 +271,6 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
-
-        <TextView
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey5"
-            android:text="Quantity"
-            android:textSize="19sp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/tvQuantitySub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:letterSpacing="0.1"
-            android:background="@android:color/transparent"
-            android:textSize="16sp"
-            android:textColor="@color/grey3"
-            android:inputType="number"
-            android:fontFamily="@font/redhat_display_semibold"/>
-           <!-- android:hint="Total 168 capsules | 126 capsules left"-->
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnUpdate"

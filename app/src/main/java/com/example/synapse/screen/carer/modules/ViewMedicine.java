@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -24,7 +23,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.DialogFragment;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
@@ -38,6 +36,7 @@ import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -68,10 +67,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     private String pill_color_selected;
     private String pill_shape_selected;
 
-
-    private AppCompatEditText etPillName, etPillDosage, etPillDose,
-                      etPillDescription, etPillQuantity;
-
+    private AppCompatEditText etPillName, etPillDosage, etPillDescription;
+    private int count = 0;
     private Intent intent;
     private final Calendar calendar = Calendar.getInstance();
     private Long request_code;
@@ -82,11 +79,13 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
            time, description, quantity;
 
     RequestQueue requestQueue;
-    MaterialButton btnChangeTime;
+    MaterialCardView btnChangeTime;
     AppCompatButton btnUpdate;
-    TextView tvAlarm, tvDelete;
+    AppCompatEditText etDose;
+    ImageView ibBin;
+    TextView tvAlarm, tvPillName;
     ImageView ivPill;
-
+    MaterialButton ibMinus, ibAdd;
     Spinner pillShapeSpinner, pillColorSpinner;
     ItemPillShapeAdapter adapter;
     ItemPillColorAdapter adapter2;
@@ -94,22 +93,23 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_medicine);
+        setContentView(R.layout.activity_view_medication);
 
         ImageButton btnBack = findViewById(R.id.ibBack);
-        ImageButton btnHelp = findViewById(R.id.ibHelp);
         pillColorSpinner = findViewById(R.id.spinner_pillColor);
         pillShapeSpinner = findViewById(R.id.spinner_pillShape);
         ivPill = findViewById(R.id.ivPill);
         etPillName = findViewById(R.id.tvPillNameSub);
+        tvPillName = findViewById(R.id.tvPillNameHeader);
         etPillDosage = findViewById(R.id.etDosageSub);
-        etPillDose = findViewById(R.id.tvDoseSub);
+        etDose = findViewById(R.id.etDose);
         etPillDescription = findViewById(R.id.tvDescriptionSub);
-        etPillQuantity = findViewById(R.id.tvQuantitySub);
         tvAlarm = findViewById(R.id.tvAlarmSub);
         btnUpdate = findViewById(R.id.btnUpdate);
-        tvDelete = findViewById(R.id.tvDelete);
+        ibBin = findViewById(R.id.ibBin);
         btnChangeTime = findViewById(R.id.btnChangeSchedule);
+        ibMinus = findViewById(R.id.ibMinus);
+        ibAdd = findViewById(R.id.ibAdd);
 
         pillShapeSpinner.setOnItemSelectedListener(ViewMedicine.this);
         adapter = new ItemPillShapeAdapter(ViewMedicine.this, PILL_SHAPES_ICS, PILL_SHAPE_NAMES);
@@ -146,11 +146,9 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         // back button
         btnBack.setOnClickListener(v -> startActivity(new Intent(ViewMedicine.this, Medication.class)));
 
-        // display prompt
-        btnHelp.setOnClickListener(v -> promptMessage(
-                "To update",
-               "Please Select the text below subtitles to update the context",
-                        R.color.red_decline_request));
+        // increment and decrement for number picker
+        ibMinus.setOnClickListener(this::decrement);
+        ibAdd.setOnClickListener(this::increment);
 
         // change time
         btnChangeTime.setOnClickListener(v -> {
@@ -164,6 +162,20 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
             };
             new DatePickerDialog(ViewMedicine.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
+    }
+
+    // decrement and increment for dose input
+    public void increment(View v) {
+        count++;
+        etDose.setText("");
+        etDose.setText("" + count + " pills");
+    }
+
+    public void decrement(View v) {
+        if (count <= 0) count = 0;
+        else count--;
+        etDose.setText("");
+        etDose.setText("" + count + " pills");
     }
 
     // update textview based on user's timepicker input
@@ -307,16 +319,16 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                           quantity = readWriteMedication.getQuantity();
 
                                           etPillName.setText(name);
-                                          etPillDose.setText(dose);
+                                          tvPillName.setText(name);
+                                          etDose.setText(dose);
                                           tvAlarm.setText(time);
                                           etPillDosage.setText(dosage);
                                           etPillDescription.setText(description);
-                                          etPillQuantity.setText(quantity);
 
                                           switch(shape){
                                               case "Pill1":
-                                                  displayPillColor(R.drawable.pill1_green,R.drawable.pill1_red,R.drawable.pill1_brown,
-                                                          R.drawable.pill1_pink,R.drawable.pill1_blue,R.drawable.pill1_white);
+                                                  displayPillColor(R.drawable.pill1_green_horizontal,R.drawable.pill1_red_horizontal,R.drawable.pill1_brown_horizontal,
+                                                          R.drawable.pill1_pink_horizontal,R.drawable.pill1_blue_horizontal,R.drawable.pill1_white_horizontal);
                                                   pillShapeSpinner.setSelection(0);
                                                   break;
                                               case "Pill2":
@@ -325,13 +337,13 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                                   pillShapeSpinner.setSelection(1);
                                                   break;
                                               case "Pill3":
-                                                  displayPillColor(R.drawable.pill3_green,R.drawable.pill3_red,R.drawable.pill3_brown,
-                                                          R.drawable.pill3_pink,R.drawable.pill3_blue,R.drawable.pill3_white);
+                                                  displayPillColor(R.drawable.pill3_green_horizontal,R.drawable.pill3_red_horizontal,R.drawable.pill3_brown_horizontal,
+                                                          R.drawable.pill3_pink_horizontal,R.drawable.pill3_blue_horizontal,R.drawable.pill3_white_horizontal);
                                                   pillShapeSpinner.setSelection(2);
                                                   break;
                                               case "Pill4":
-                                                  displayPillColor(R.drawable.pill4_green,R.drawable.pill4_red,R.drawable.pill4_brown,
-                                                          R.drawable.pill4_pink,R.drawable.pill4_blue,R.drawable.pill4_white);
+                                                  displayPillColor(R.drawable.pill4_green_horizontal,R.drawable.pill4_red_horizontal,R.drawable.pill4_brown_horizontal,
+                                                          R.drawable.pill4_pink_horizontal,R.drawable.pill4_blue_horizontal,R.drawable.pill4_white_horizontal);
                                                   pillShapeSpinner.setSelection(3);
                                                   break;
                                           }
@@ -392,13 +404,12 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
 
         hashMap.put("Name", Objects.requireNonNull(etPillName.getText()).toString());
-        hashMap.put("Dose", Objects.requireNonNull(etPillDose.getText()).toString());
+        hashMap.put("Dose", Objects.requireNonNull(etDose.getText()).toString());
         hashMap.put("Dosage", Objects.requireNonNull(etPillDosage.getText()).toString());
         hashMap.put("Shape", pill_shape_selected);
         hashMap.put("Color", pill_color_selected);
         hashMap.put("Time", tvAlarm.getText().toString());
         hashMap.put("Description", Objects.requireNonNull(etPillDescription.getText()).toString());
-        hashMap.put("Quantity", Objects.requireNonNull(etPillQuantity.getText()).toString());
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -455,8 +466,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                                             }
                                                         });
                                                     }
-
-                                                        promptMessage("Medicine Info","Successfully updated the medicine information", R.color.dark_green);
                                                 }
 
                                                 @Override
@@ -488,11 +497,12 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                 promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
             }
         });
+        promptMessage("Medicine Info","Successfully updated the medicine information", R.color.dark_green);
     }
 
     // delete medicine for both carer and senior nodes
     public void deleteMedicine(){
-               tvDelete.setOnClickListener(v -> {
+               ibBin.setOnClickListener(v -> {
 
                    // userID
                    referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {

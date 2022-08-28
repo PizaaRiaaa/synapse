@@ -6,38 +6,17 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/ic_close"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="end"
+        android:background="@color/white"
+        android:contentDescription="@string/description_close" />
 
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_heading1"
-            android:textSize="17sp"
-            android:fontFamily="@font/redhat_display_regular"
-            android:textColor="@color/grey5"
-            android:layout_margin="20dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/btnClose"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_close"
-            android:layout_margin="28dp"
-            android:background="@color/white"
-            android:contentDescription="@string/description_close" />
-
-    </LinearLayout>
-    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,9 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/tv_heading2"
-            android:fontFamily="@font/redhat_display_bold"
+            android:fontFamily="@font/redhat_display_semibold"
             android:textColor="@color/grey4"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:layout_marginStart="20dp"/>
 
         <EditText
@@ -59,8 +38,8 @@
             android:layout_height="52dp"
             android:layout_margin="20dp"
             android:background="@drawable/edit_text_background"
-            android:textColor="@color/grey5"
-            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/redhat_display_medium"
             android:elevation="5dp"
             android:textAlignment="center"
             android:inputType="textVisiblePassword|textNoSuggestions"/>
@@ -73,9 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:fontFamily="@font/redhat_display_bold"
+            android:fontFamily="@font/redhat_display_semibold"
             android:textColor="@color/grey4"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:text="@string/tv_heading3" />
 
     </LinearLayout>
@@ -89,17 +68,18 @@
         android:layout_margin="20dp"
         android:elevation="5dp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ibMinus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_minus_green"
-            android:layout_marginStart="19dp"
-            android:text="|"
-            android:textSize="15sp"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/et_stroke" />
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            app:cornerRadius="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            app:iconPadding="0dp"
+            app:icon="@drawable/ic_minus_green"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etDose"
@@ -109,34 +89,37 @@
             android:background="@drawable/edit_text_background"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:fontFamily="@font/redhat_display_bold"
+            android:fontFamily="@font/redhat_display_medium"
             android:inputType="number"
             android:textAlignment="center"
-            android:textColor="@color/grey5" />
+            android:textColor="@color/black" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ibAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_plus_green"
-            android:background="@android:color/transparent"
-            android:drawableEnd="@drawable/ic_plus_green"
-            android:text="|"
-            android:textSize="15sp"
-            android:textAlignment="textStart"
-            android:textColor="@color/et_stroke"
-            android:fontFamily="@font/redhat_display_bold"
-            android:layout_marginEnd="19dp"/>
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            app:cornerRadius="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            app:iconPadding="0dp"
+            app:icon="@drawable/ic_plus_green"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"/>
 
     </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:fontFamily="@font/redhat_display_bold"
+        android:fontFamily="@font/redhat_display_semibold"
         android:textColor="@color/grey4"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:text="@string/tv_heading4" />
 
 
@@ -201,14 +184,18 @@
 
    </LinearLayout>
 
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
-        android:fontFamily="@font/redhat_display_bold"
+        android:fontFamily="@font/redhat_display_semibold"
         android:textColor="@color/grey4"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:text="@string/tv_heading5" />
 
     <LinearLayout
@@ -402,6 +389,5 @@
             android:layout_weight="3.3"/>
 
     </LinearLayout>
-
 
 </LinearLayout>

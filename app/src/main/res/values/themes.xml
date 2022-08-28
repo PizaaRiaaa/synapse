@@ -55,6 +55,16 @@
         <item name="android:textColor">@color/grey4</item>
     </style>
 
+    <!-- custom material card -->
+    <style name="CustomCardViewStyle" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
+    </style>
+    <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">50dp</item>
+        <item name="cornerSizeTopLeft">50dp</item>
+    </style>
+
     <!-- rounded imageview right arrow and plus arrow -->
     <style name="roundedImageView" parent="">
         <item name="cornerFamily">rounded</item>
