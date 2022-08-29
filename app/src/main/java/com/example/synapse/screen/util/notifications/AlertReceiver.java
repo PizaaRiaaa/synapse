@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.provider.Settings;
 import androidx.core.app.NotificationCompat;
@@ -15,6 +16,7 @@ import com.example.synapse.screen.carer.modules.Medication;
 import com.example.synapse.screen.carer.modules.PhysicalActivity;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class AlertReceiver extends BroadcastReceiver {
 
@@ -25,28 +27,25 @@ public class AlertReceiver extends BroadcastReceiver {
         int physical = intent.getExtras().getInt("PhysicalActivity");
         int appointment = intent.getExtras().getInt("Appointment");
         int games = intent.getExtras().getInt("Games");
-        Calendar calendar = Calendar.getInstance();
 
-        MediaPlayer mp = MediaPlayer.create(context, Settings.System.DEFAULT_RINGTONE_URI);
+        MediaPlayer mp = MediaPlayer.create(context, R.raw.medicine_reminder);
 
         // check if context is medication, physical activity, appointment or games
         if(medication == 1){
             MedicineNotificationHelper medicineNotificationHelper = new MedicineNotificationHelper(context);
             NotificationCompat.Builder nb = medicineNotificationHelper.getChannelNotification();
             medicineNotificationHelper.getManager().notify(requestCode, nb.build());
-
             context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
 
+             notificationRingtone(context, R.raw.medicine_reminder);
 
         }else if(physical == 2){
 
-            PhysicalActivityNotificationHelper physicalActivityNotificationHelper = new PhysicalActivityNotificationHelper(context, requestCode, mp);
+            PhysicalActivityNotificationHelper physicalActivityNotificationHelper = new PhysicalActivityNotificationHelper(context, requestCode);
             NotificationCompat.Builder nb = physicalActivityNotificationHelper.getChannelNotification();
             physicalActivityNotificationHelper.getManager().notify(requestCode, nb.build());
 
             context.sendBroadcast(new Intent("NOTIFY_PHYSICAL_ACTIVITY"));
-            mp.setLooping(true);
-            mp.start();
 
         }else if(appointment == 3){
             AppointmentNotificationHelper appointmentNotificationHelper = new AppointmentNotificationHelper(context);
@@ -62,8 +61,15 @@ public class AlertReceiver extends BroadcastReceiver {
 
             context.sendBroadcast(new Intent("NOTIFY_GAMES"));
 
-
         }
 
-       }
+      }
+
+      // play custom alarm sound
+     public void notificationRingtone(Context context, int sound){
+          MediaPlayer mp = MediaPlayer.create(context, sound);
+          mp.setLooping(false);
+          mp.start();
+    }
+
 }

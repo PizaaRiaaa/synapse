@@ -24,20 +24,26 @@ public class PhysicalActivityNotificationHelper extends ContextWrapper {
     PendingIntent pendingIntent;
 
 
-    public PhysicalActivityNotificationHelper(Context base, int requestCode, MediaPlayer mp) {
-        super(base);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel();
-        }
+    //public PhysicalActivityNotificationHelper(Context base, int requestCode, MediaPlayer mp) {
+    //    super(base);
+    //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    //        createChannel();
+    //    }
 
-       Intent intent1 = new Intent(base, CarerHome.class);
-       pendingIntent = PendingIntent.getActivity(
-                base,
-                requestCode,
-                intent1,
-                PendingIntent.FLAG_IMMUTABLE);
+    public PhysicalActivityNotificationHelper(Context base, int requestCode) {
+            super(base);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createChannel();
+            }
 
-       mp.stop();
+      // Intent intent1 = new Intent(base, CarerHome.class);
+      // pendingIntent = PendingIntent.getActivity(
+      //          base,
+      //          requestCode,
+      //          intent1,
+      //          PendingIntent.FLAG_IMMUTABLE);
+
+      // mp.stop();
     }
 
     @TargetApi(Build.VERSION_CODES.O)

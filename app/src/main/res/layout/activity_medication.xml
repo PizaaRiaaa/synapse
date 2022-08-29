@@ -34,7 +34,7 @@
                  android:text="Set Medicine"
                  android:textColor="@color/grey5"
                  android:fontFamily="@font/redhat_display_semibold"
-                 android:textSize="20sp"/>
+                 android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/ivCarerProfilePic"
