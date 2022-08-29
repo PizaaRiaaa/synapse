@@ -10,12 +10,13 @@ import com.example.synapse.R;
 import com.example.synapse.screen.senior.SeniorHome;
 import com.example.synapse.screen.senior.games.MathGame;
 import com.example.synapse.screen.senior.games.TicTacToe;
+import com.example.synapse.screen.senior.games.TriviaQuiz;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
 public class GameDashboard extends AppCompatActivity {
 
-    MaterialCardView btnMath,btnTicTacToe;
+    MaterialCardView btnMath,btnTicTacToe,btnTriviaQuiz;
     ImageButton ibBack;
 
     @Override
@@ -23,10 +24,13 @@ public class GameDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_dashboard);
 
+        BottomNavigationView bottomNavigationView;
+
         ibBack = findViewById(R.id.ibBack);
         btnMath = findViewById(R.id.btnMath);
         btnTicTacToe = findViewById(R.id.btnTicTacToe);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        btnTriviaQuiz = findViewById(R.id.btnTriviaQuiz);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         // set bottomNavigationView to transparent
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
@@ -36,6 +40,9 @@ public class GameDashboard extends AppCompatActivity {
 
         // redirect user to tic tac toe screen
         btnTicTacToe.setOnClickListener(v -> startActivity(new Intent(this, TicTacToe.class)));
+
+        // redirect user to trivia quiz screen
+        btnTriviaQuiz.setOnClickListener(v -> startActivity(new Intent(this, TriviaQuiz.class)));
 
         // redirect user to senior home scree
         ibBack.setOnClickListener(v -> startActivity(new Intent(this, SeniorHome.class)));

@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
+            android:name=".screen.senior.games.TriviaQuiz"
+            android:exported="false" />
+        <activity
             android:name=".screen.senior.games.TicTacToe"
             android:exported="false" />
         <activity
