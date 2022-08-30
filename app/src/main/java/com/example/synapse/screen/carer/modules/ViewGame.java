@@ -9,10 +9,9 @@ import androidx.fragment.app.DialogFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.util.ReadWriteGames;
-import com.example.synapse.screen.util.ReadWriteMedication;
-import com.example.synapse.screen.util.ReadWritePhysicalActivity;
-import com.example.synapse.screen.util.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteGames;
+import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemGames;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
@@ -46,7 +45,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import org.aviran.cookiebar2.CookieBar;
 

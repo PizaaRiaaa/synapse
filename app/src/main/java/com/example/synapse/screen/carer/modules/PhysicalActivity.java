@@ -18,8 +18,8 @@ import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerHome;
 import com.example.synapse.screen.util.adapter.ItemPhysicalActivityAdapter;
 import com.example.synapse.screen.util.viewholder.PhysicalActivityViewHolder;
-import com.example.synapse.screen.util.ReadWritePhysicalActivity;
-import com.example.synapse.screen.util.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
@@ -41,7 +41,6 @@ import com.squareup.picasso.Picasso;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;

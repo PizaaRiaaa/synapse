@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,8 +15,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerHome;
-import com.example.synapse.screen.util.ReadWriteAppointment;
-import com.example.synapse.screen.util.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemAppointmentSpecialist;
 import com.example.synapse.screen.util.adapter.ItemAppointmentType;

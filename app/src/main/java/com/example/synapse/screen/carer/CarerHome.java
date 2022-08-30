@@ -8,7 +8,7 @@ import com.example.synapse.screen.carer.modules.Appointment;
 import com.example.synapse.screen.carer.modules.Games;
 import com.example.synapse.screen.carer.modules.Medication;
 import com.example.synapse.screen.carer.modules.PhysicalActivity;
-import com.example.synapse.screen.util.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +25,8 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.aviran.cookiebar2.CookieBar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,26 +68,31 @@ public class CarerHome extends AppCompatActivity {
         referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
         String userID = user.getUid();
 
+        // show top status bar
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         // set bottomNavigationView to transparent
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
+        // display carer's profile picture
         showUserProfile(userID);
+
+        // display assigned senior's information
         showSeniorProfile(userID);
 
-        /* direct user to
-            - medication screen
-            - physical activity screen
-            - appointment screen
-            - games screen  */
+        // redirect user to medication screen
         btnMedication = findViewById(R.id.btnMedication);
         btnMedication.setOnClickListener(v -> startActivity(new Intent(CarerHome.this, Medication.class)));
 
+        // redirect user to physical activity screen
         btnPhysicalActivity = findViewById(R.id.btnPhysicalActivity);
         btnPhysicalActivity.setOnClickListener(v -> startActivity(new Intent(CarerHome.this, PhysicalActivity.class)));
 
+        // redirect user to appointment screen
         btnAppointment = findViewById(R.id.btnAppointment);
         btnAppointment.setOnClickListener(v -> startActivity(new Intent(CarerHome.this, Appointment.class)));
 
+        // redirect user to games screen
         btnGames = findViewById(R.id.btnGames);
         btnGames.setOnClickListener(v -> startActivity(new Intent(CarerHome.this, Games.class)));
     }
@@ -108,7 +114,7 @@ public class CarerHome extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(CarerHome.this, "Something went wrong! Please login again.", Toast.LENGTH_LONG).show();
+                prompMessage("Error","Something went wrong please try again",R.color.dark_green);
             }
         });
    }
@@ -172,7 +178,7 @@ public class CarerHome extends AppCompatActivity {
                              }
                              @Override
                              public void onCancelled(@NonNull DatabaseError error) {
-                                 Toast.makeText(CarerHome.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                 prompMessage("Error","Something went wrong please try again",R.color.dark_green);
                              }
                          });
                    }
@@ -190,10 +196,12 @@ public class CarerHome extends AppCompatActivity {
                                 referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                                         if(snapshot.exists()){
                                             ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                                            String fullName = seniorProfile.fullName;
+                                            String barangay = seniorProfile.address;
                                             assert seniorProfile != null;
+
                                             // get user's age from date of birth
                                             String user_dob = seniorProfile.getDOB();
                                             Calendar cal = Calendar.getInstance();
@@ -203,9 +211,6 @@ public class CarerHome extends AppCompatActivity {
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }
-
-                                            String fullName = seniorProfile.fullName;
-                                            String barangay = seniorProfile.address;
 
                                             tvSeniorFullName.setText(fullName);
                                             tvBarangay.setText("Brgy." + barangay + ",");
@@ -221,7 +226,7 @@ public class CarerHome extends AppCompatActivity {
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        Toast.makeText(CarerHome.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                        prompMessage("Error","Something went wrong please try again",R.color.dark_green);
                                     }
                                 });
                              }
@@ -229,15 +234,26 @@ public class CarerHome extends AppCompatActivity {
                       }
                       @Override
                       public void onCancelled(@NonNull DatabaseError error) {
-                          Toast.makeText(CarerHome.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                          prompMessage("Error","Something went wrong please try again",R.color.dark_green);
                       }
                   });
                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(CarerHome.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
-        }
+                prompMessage("Error","Something went wrong please try again",R.color.dark_green);
+            }
     });
   }
+
+    // custom prompt message
+    public void prompMessage(String title, String message, int background){
+        CookieBar.build(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setBackgroundColor(background)
+                .setCookiePosition(CookieBar.TOP)
+                .setDuration(5000)
+                .show();
+    }
 }

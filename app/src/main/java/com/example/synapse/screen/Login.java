@@ -27,6 +27,7 @@ import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.CarerHome;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorHome;
+import com.example.synapse.screen.util.PromptMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -47,6 +48,7 @@ import java.util.Objects;
 
 public class Login extends AppCompatActivity {
 
+    PromptMessage promptMessage = new PromptMessage();
     private static final String TAG = "loginActivity";
     private DatabaseReference referenceUser, referenceRequest, referenceCompanion;
     private EditText etEmail, etPassword;
@@ -89,13 +91,13 @@ public class Login extends AppCompatActivity {
             String textEmail = etEmail.getText().toString();
             String textPassword = etPassword.getText().toString();
             if(TextUtils.isEmpty(textEmail)){
-                prompMessage("Empty field","Please enter your email", R.color.dark_green);
+                promptMessage.displayMessage("Empty field", "Please enter your email", R.color.dark_green, Login.this);
                 etEmail.requestFocus();
             }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
-                prompMessage("Invalid email", "Please re-enter your email", R.color.dark_green);
+                promptMessage.displayMessage("Invalid email", "Please enter your email", R.color.dark_green, Login.this);
                 etPassword.requestFocus();
             }else if(TextUtils.isEmpty(textPassword)){
-                prompMessage("Empty field", "Please enter your password", R.color.dark_green);
+                promptMessage.displayMessage("Empty field", "Please enter your password", R.color.dark_green, Login.this);
                 etPassword.requestFocus();
             }else{
                 loginUser(textEmail, textPassword);
@@ -127,7 +129,6 @@ public class Login extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                         if(snapshot.exists()){
-                                            Toast.makeText(Login.this, "You are logged in now", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Login.this, CarerHome.class));
                                             finish();
                                         }else{
@@ -137,34 +138,31 @@ public class Login extends AppCompatActivity {
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        Toast.makeText(Login.this, "Semething went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                        promptMessage.defaultErrorMessage(Login.this);
                                     }
                                 });
                                 // else check if carer and senior are already companion
                                 referenceCompanion.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                                         if(snapshot.exists()){
-                                            Toast.makeText(Login.this, "You are logged in now", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Login.this, CarerHome.class));
                                             finish();
                                         }
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        Toast.makeText(Login.this, "Semething went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                        promptMessage.defaultErrorMessage(Login.this);
                                     }
                                 });
                             }else if(userType.equals("Senior")){
-                                Toast.makeText(Login.this, "You are logged in now", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(Login.this, SeniorHome.class));
                                 finish();
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(Login.this, "Something went wrong! Please try again.", Toast.LENGTH_LONG).show();
+                            promptMessage.defaultErrorMessage(Login.this);
                         }
                     });
                 }else{
@@ -176,16 +174,16 @@ public class Login extends AppCompatActivity {
                 try {
                     throw Objects.requireNonNull(task.getException());
                 } catch (FirebaseAuthInvalidUserException e) {
-                    prompMessage("Error","User does not exists. Please try again.", R.color.dark_green);
+                    promptMessage.displayMessage("Error", "User does not exists. Please try again", R.color.dark_green, Login.this);
                     etEmail.requestFocus();
                 } catch (FirebaseAuthInvalidCredentialsException e) {
-                    prompMessage("Error","Invalid credentials. Kindly, check and re-enter.", R.color.dark_green);
+                    promptMessage.displayMessage("Error", "Invalid credentials. Kindly, check and re-enter", R.color.dark_green, Login.this);
                     etPassword.requestFocus();
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
-                    Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-              }
+                    promptMessage.displayMessage("Error", e.getMessage(), R.color.dark_green, Login.this);
+                 }
+               }
             }
         });
     }
@@ -209,17 +207,6 @@ public class Login extends AppCompatActivity {
         alertDialog.show();
     }
 
-    // custom prompt message
-    public void prompMessage(String title, String message, int background){
-        CookieBar.build(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setBackgroundColor(background)
-                .setCookiePosition(CookieBar.TOP)
-                .setDuration(5000)
-                .show();
-    }
-
     // transparent status bar
     public void transparentStatusBar(){
         Window window = getWindow();
@@ -235,6 +222,7 @@ public class Login extends AppCompatActivity {
 
     // change the color of textview "Register"
     public void changeColor(){
+
         // change substring color
         @SuppressLint("CutPasteId") TextView tvRegister = findViewById(R.id.tvRegister);
         String text = "Don't have an account? Register!";
@@ -243,4 +231,5 @@ public class Login extends AppCompatActivity {
         ssb.setSpan(light_green, 23, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvRegister.setText(ssb);
     }
+
  }

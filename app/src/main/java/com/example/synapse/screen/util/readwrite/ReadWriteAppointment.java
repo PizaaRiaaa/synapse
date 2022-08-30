@@ -1,4 +1,4 @@
-package com.example.synapse.screen.util;
+package com.example.synapse.screen.util.readwrite;
 
 public class ReadWriteAppointment {
     private String Specialist;
