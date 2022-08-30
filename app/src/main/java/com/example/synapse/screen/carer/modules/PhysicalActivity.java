@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.CarerHome;
+import com.example.synapse.screen.carer.BottomNavigation;
 import com.example.synapse.screen.util.adapter.ItemPhysicalActivityAdapter;
 import com.example.synapse.screen.util.viewholder.PhysicalActivityViewHolder;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
@@ -150,7 +150,7 @@ public class PhysicalActivity extends AppCompatActivity implements AdapterView.O
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        ibBack.setOnClickListener(v -> startActivity(new Intent(PhysicalActivity.this, CarerHome.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(PhysicalActivity.this, BottomNavigation.class)));
 
         Spinner spinner_physical_activity = dialog.findViewById(R.id.spinner_physical_activity);
         ItemPhysicalActivityAdapter adapter = new ItemPhysicalActivityAdapter(PhysicalActivity.this, physical_activity, physical_activity_ics);
@@ -176,9 +176,9 @@ public class PhysicalActivity extends AppCompatActivity implements AdapterView.O
 
         // display time picker
         ibTimePicker.setOnClickListener(v -> {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
-                isClicked = true;
+                //DialogFragment timePicker = new TimePickerFragment();
+                //timePicker.show(getSupportFragmentManager(), "time picker");
+                //isClicked = true;
         });
 
         // perform add schedule
@@ -622,7 +622,7 @@ public class PhysicalActivity extends AppCompatActivity implements AdapterView.O
                                 }
 
                                 CookieBar.build(PhysicalActivity.this)
-                                        .setTitle("Set Medicine")
+                                        .setTitle("Physical Activity")
                                         .setMessage("Alarm has been set")
                                         .setIcon(R.drawable.ic_cookie_check)
                                         .setBackgroundColor(R.color.dark_green)

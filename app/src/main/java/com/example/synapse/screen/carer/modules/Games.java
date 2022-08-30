@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.CarerHome;
+import com.example.synapse.screen.carer.BottomNavigation;
 import com.example.synapse.screen.util.readwrite.ReadWriteGames;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -171,7 +171,7 @@ public class Games extends AppCompatActivity implements AdapterView.OnItemSelect
         ibClose.setOnClickListener(v -> dialog.dismiss());
 
         // redirect user to games screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(Games.this, CarerHome.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(Games.this, BottomNavigation.class)));
 
         // spinner for games
         spinner_games = dialog.findViewById(R.id.spinner_games);
@@ -183,8 +183,8 @@ public class Games extends AppCompatActivity implements AdapterView.OnItemSelect
 
         // display time picker
         ibTimePicker.setOnClickListener(v -> {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
+               // DialogFragment timePicker = new TimePickerFragment();
+               // timePicker.show(getSupportFragmentManager(), "time picker");
         });
 
         // perform add schedule

@@ -152,8 +152,8 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                     calendar.set(Calendar.MONTH, month);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    DialogFragment timePicker = new TimePickerFragment();
-                    timePicker.show(getSupportFragmentManager(), "time picker");
+                    //DialogFragment timePicker = new TimePickerFragment();
+                    //timePicker.show(getSupportFragmentManager(), "time picker");
                 }
             };
             new DatePickerDialog(ViewPhysicalActivity.this, dateSetListener,

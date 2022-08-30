@@ -151,8 +151,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
         // change time
         btnChangeTime.setOnClickListener(v -> {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
+               // DialogFragment timePicker = new TimePickerFragment();
+               // timePicker.show(getSupportFragmentManager(), "time picker");
         });
     }
 

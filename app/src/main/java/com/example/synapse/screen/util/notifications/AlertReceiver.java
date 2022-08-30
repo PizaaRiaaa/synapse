@@ -1,22 +1,16 @@
 package com.example.synapse.screen.util.notifications;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.provider.Settings;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+
 import androidx.core.app.NotificationCompat;
 
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.CarerHome;
-import com.example.synapse.screen.carer.modules.Medication;
-import com.example.synapse.screen.carer.modules.PhysicalActivity;
-
-import java.util.Calendar;
-import java.util.Objects;
 
 public class AlertReceiver extends BroadcastReceiver {
 
@@ -67,8 +61,15 @@ public class AlertReceiver extends BroadcastReceiver {
 
      }
 
-      // play custom alarm sound
+      // play alarm sound
      public void notificationRingtone(Context context, int sound){
+
+         // default alarm sound
+         Uri alarmTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+         Ringtone ringtoneAlarm = RingtoneManager.getRingtone(context, alarmTone);
+         ringtoneAlarm.play();
+
+         // speech alarm
           MediaPlayer mp = MediaPlayer.create(context, sound);
           mp.setLooping(false);
           mp.start();

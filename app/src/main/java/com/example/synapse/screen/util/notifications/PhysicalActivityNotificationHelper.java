@@ -6,15 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.CarerHome;
-import com.example.synapse.screen.carer.modules.PhysicalActivity;
 
 public class PhysicalActivityNotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";

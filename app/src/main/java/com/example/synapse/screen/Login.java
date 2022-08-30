@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
-import com.example.synapse.screen.carer.CarerHome;
+import com.example.synapse.screen.carer.BottomNavigation;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorHome;
 import com.example.synapse.screen.util.PromptMessage;
@@ -40,8 +39,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.aviran.cookiebar2.CookieBar;
 
 import java.util.Objects;
 
@@ -115,6 +112,7 @@ public class Login extends AppCompatActivity {
                 // get instance of the current user
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 // check if email is verified
+                assert firebaseUser != null;
                 if(firebaseUser.isEmailVerified()){
                     String userID = firebaseUser.getUid();
                     referenceUser.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -129,7 +127,7 @@ public class Login extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, CarerHome.class));
+                                            startActivity(new Intent(Login.this, BottomNavigation.class));
                                             finish();
                                         }else{
                                             startActivity(new Intent(Login.this, SendRequest.class));
@@ -146,7 +144,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, CarerHome.class));
+                                            startActivity(new Intent(Login.this, BottomNavigation.class));
                                             finish();
                                         }
                                     }

@@ -11,12 +11,13 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
+
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.Onboarding;
-import com.example.synapse.screen.carer.CarerHome;
+import com.example.synapse.screen.carer.BottomNavigation;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorHome;
+import com.example.synapse.screen.util.PromptMessage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +29,7 @@ import java.util.Objects;
 @SuppressLint("CustomSplashScreen")
 public class Splashscreen extends AppCompatActivity {
 
-    // firebase reference
+    PromptMessage promptMessage = new PromptMessage();
     private FirebaseAuth mAuth;
     private DatabaseReference referenceUser, referenceRequest, referenceCompanion;
     private String userType, checkStatus;
@@ -103,11 +104,14 @@ public class Splashscreen extends AppCompatActivity {
                                        checkStatus = ds.child("status").getValue().toString();
 
                                        if(checkStatus.equals("pending")){
-                                           startActivity(new Intent(Splashscreen.this, CarerHome.class));
+                                           startActivity(new Intent(Splashscreen.this, BottomNavigation.class));
                                            finish();
                                        }else{ // it means senior decline the carer request
-                                           Toast.makeText(Splashscreen.this, "Sorry but senior decline your request." +
-                                                   " Please send a request again.", Toast.LENGTH_LONG).show();
+                                           promptMessage.displayMessage(
+                                                   "Error",
+                                                   "Sorry but senior decline your request. Please send a request again",
+                                                   R.color.dark_green,
+                                                   Splashscreen.this);
                                            startActivity(new Intent(Splashscreen.this, SendRequest.class));
                                            finish();
                                        }
@@ -120,7 +124,7 @@ public class Splashscreen extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(Splashscreen.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                promptMessage.defaultErrorMessage(Splashscreen.this);
                             }
                         });
 
@@ -129,14 +133,14 @@ public class Splashscreen extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
-                                    startActivity(new Intent(Splashscreen.this, CarerHome.class));
+                                    startActivity(new Intent(Splashscreen.this, BottomNavigation.class));
                                     finish();
                                 }
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(Splashscreen.this, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+                                promptMessage.defaultErrorMessage(Splashscreen.this);
                             }
                         });
                     }
@@ -144,7 +148,7 @@ public class Splashscreen extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(Splashscreen.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    promptMessage.defaultErrorMessage(Splashscreen.this);
                 }
             });
         }

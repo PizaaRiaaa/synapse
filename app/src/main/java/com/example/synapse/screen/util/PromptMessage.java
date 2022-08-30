@@ -6,6 +6,7 @@ import org.aviran.cookiebar2.CookieBar;
 
 public class PromptMessage {
 
+    // display custom message
     public void displayMessage(String title, String message, int color,Activity context){
         CookieBar.build(context)
                 .setTitle(title)
@@ -16,6 +17,7 @@ public class PromptMessage {
                 .show();
     }
 
+    // display default error message
     public void defaultErrorMessage(Activity context){
         CookieBar.build(context)
                 .setTitle("Error")

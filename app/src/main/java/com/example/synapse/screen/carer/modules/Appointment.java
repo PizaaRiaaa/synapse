@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.CarerHome;
+import com.example.synapse.screen.carer.BottomNavigation;
 import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -173,7 +173,7 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
         loadScheduleForAppointments();
 
         // redirect user to CarerHome screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(Appointment.this, CarerHome.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(Appointment.this, BottomNavigation.class)));
 
         // display dialog
         btnAddAppointment.setOnClickListener(v -> dialog.show());
@@ -204,8 +204,8 @@ public class Appointment extends AppCompatActivity implements AdapterView.OnItem
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
+               // DialogFragment timePicker = new TimePickerFragment();
+                //timePicker.show(getSupportFragmentManager(), "time picker");
             };
             new DatePickerDialog(Appointment.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
