@@ -40,6 +40,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.aviran.cookiebar2.CookieBar;
+
+import java.util.Objects;
+
 
 public class Login extends AppCompatActivity {
 
@@ -65,27 +69,11 @@ public class Login extends AppCompatActivity {
         referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
         referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
 
-        // authenticate user
-        btnLogin.setOnClickListener(view -> {
-            String textEmail = etEmail.getText().toString();
-            String textPassword = etPassword.getText().toString();
+        // show status bar
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            if(TextUtils.isEmpty(textEmail)){
-                Toast.makeText(Login.this, "Please enter your email", Toast.LENGTH_LONG).show();
-                etEmail.setError("Email is required");
-                etEmail.requestFocus();
-            }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
-                Toast.makeText(Login.this, "Please re-enter your email", Toast.LENGTH_LONG).show();
-                etEmail.setError("Valid email is required");
-                etPassword.requestFocus();
-            }else if(TextUtils.isEmpty(textPassword)){
-                Toast.makeText(Login.this, "Please enter your password", Toast.LENGTH_LONG).show();
-                etPassword.setError("Password is required");
-                etPassword.requestFocus();
-            }else{
-                loginUser(textEmail, textPassword);
-            }
-     });
+        // make status bar transparent
+        transparentStatusBar();
 
         // proceed to PickRole screen
         tvSwitchToPickRole.setOnClickListener(view -> startActivity(new Intent(Login.this, PickRole.class)));
@@ -94,26 +82,26 @@ public class Login extends AppCompatActivity {
         tvForgotPass.setOnClickListener(view -> startActivity(new Intent(Login.this, CarerVerifyEmail.class)));
 
         // change substring color
-        @SuppressLint("CutPasteId") TextView tvRegister = findViewById(R.id.tvRegister);
-        String text = "Don't have an account? Register!";
-        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
-        ForegroundColorSpan light_green = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.light_green));
-        ssb.setSpan(light_green, 23, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvRegister.setText(ssb);
+        changeColor();
 
-        // show status bar
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // authenticate user
+        btnLogin.setOnClickListener(view -> {
+            String textEmail = etEmail.getText().toString();
+            String textPassword = etPassword.getText().toString();
+            if(TextUtils.isEmpty(textEmail)){
+                prompMessage("Empty field","Please enter your email", R.color.dark_green);
+                etEmail.requestFocus();
+            }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
+                prompMessage("Invalid email", "Please re-enter your email", R.color.dark_green);
+                etPassword.requestFocus();
+            }else if(TextUtils.isEmpty(textPassword)){
+                prompMessage("Empty field", "Please enter your password", R.color.dark_green);
+                etPassword.requestFocus();
+            }else{
+                loginUser(textEmail, textPassword);
+            }
+     });
 
-        // transparent status bar
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.grey4));
-        window.setNavigationBarColor(ContextCompat.getColor(this, R.color.grey4));
     }
 
     // check user credentials
@@ -124,21 +112,15 @@ public class Login extends AppCompatActivity {
             if(task.isSuccessful()){
                 // get instance of the current user
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
                 // check if email is verified
                 if(firebaseUser.isEmailVerified()){
-
                     String userID = firebaseUser.getUid();
-
                     referenceUser.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                             // check if current user is senior, carer or admin
                             userType = snapshot.child("userType").getValue().toString();
-
                             if(userType.equals("Carer")){
-
                                 // check if carer already send request to senior
                                 referenceRequest.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -152,16 +134,12 @@ public class Login extends AppCompatActivity {
                                             startActivity(new Intent(Login.this, SendRequest.class));
                                             finish();
                                         }
-
-
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
                                         Toast.makeText(Login.this, "Semething went wrong! Please try again.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
                                 // else check if carer and senior are already companion
                                 referenceCompanion.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -173,13 +151,11 @@ public class Login extends AppCompatActivity {
                                             finish();
                                         }
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
                                         Toast.makeText(Login.this, "Semething went wrong! Please try again.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
                             }else if(userType.equals("Senior")){
                                 Toast.makeText(Login.this, "You are logged in now", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(Login.this, SeniorHome.class));
@@ -198,12 +174,12 @@ public class Login extends AppCompatActivity {
                 }
             }else {
                 try {
-                    throw task.getException();
+                    throw Objects.requireNonNull(task.getException());
                 } catch (FirebaseAuthInvalidUserException e) {
-                    etEmail.setError("User does not exists. Please register again.");
+                    prompMessage("Error","User does not exists. Please try again.", R.color.dark_green);
                     etEmail.requestFocus();
                 } catch (FirebaseAuthInvalidCredentialsException e) {
-                    etPassword.setError("Invalid credentials. Kindly, check and re-enter.");
+                    prompMessage("Error","Invalid credentials. Kindly, check and re-enter.", R.color.dark_green);
                     etPassword.requestFocus();
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
@@ -214,6 +190,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    // display dialog if user's email is not verified
     private void showAlertDialog(){
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
@@ -230,5 +207,40 @@ public class Login extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    // custom prompt message
+    public void prompMessage(String title, String message, int background){
+        CookieBar.build(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setBackgroundColor(background)
+                .setCookiePosition(CookieBar.TOP)
+                .setDuration(5000)
+                .show();
+    }
+
+    // transparent status bar
+    public void transparentStatusBar(){
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.grey4));
+        window.setNavigationBarColor(ContextCompat.getColor(this, R.color.grey4));
+    }
+
+    // change the color of textview "Register"
+    public void changeColor(){
+        // change substring color
+        @SuppressLint("CutPasteId") TextView tvRegister = findViewById(R.id.tvRegister);
+        String text = "Don't have an account? Register!";
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        ForegroundColorSpan light_green = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.light_green));
+        ssb.setSpan(light_green, 23, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvRegister.setText(ssb);
     }
  }

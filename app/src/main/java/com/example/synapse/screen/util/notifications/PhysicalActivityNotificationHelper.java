@@ -30,7 +30,7 @@ public class PhysicalActivityNotificationHelper extends ContextWrapper {
     //        createChannel();
     //    }
 
-    public PhysicalActivityNotificationHelper(Context base, int requestCode) {
+    public PhysicalActivityNotificationHelper(Context base) {
             super(base);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 createChannel();

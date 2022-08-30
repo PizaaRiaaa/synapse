@@ -136,6 +136,9 @@
                     android:textAlignment="center"
                     android:textColor="@color/grey5"
                     android:textSize="15sp" />
+
             </LinearLayout>
+
         </LinearLayout>
+
 </LinearLayout>
