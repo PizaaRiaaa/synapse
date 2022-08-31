@@ -186,7 +186,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         ibBack = view.findViewById(R.id.ibBack);
 
-
         btnMon = view.findViewById(R.id.btnMON);
         btnTue = view.findViewById(R.id.btnTUE);
         btnWed = view.findViewById(R.id.btnWED);
@@ -238,9 +237,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
 
         // close the dialog box
         btnClose.setOnClickListener(v -> dialog.dismiss());
-
-        // display dialog box
-
 
         // prevent keyboard pop up
         etDose.setShowSoftInputOnFocus(false);
@@ -309,6 +305,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         recyclerView = view.findViewById(R.id.recyclerview_medication);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
+        // display dialog after floating action button was clicked
         fabAddMedicine = (FloatingActionButton) view.findViewById(R.id.btnAddMedicine);
         fabAddMedicine.setOnClickListener(v -> dialog.show());
     }
@@ -328,7 +325,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         etDose.setText("" + count + " pills");
     }
 
-    // update textview based on user's timepicker input
+    // set hour and minute for time picker
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -337,12 +334,14 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         updateTimeText(calendar);
     }
 
+    // update time textview after time was selected
     private void updateTimeText(Calendar c) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         // tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }
 
+    // get the selected time
     public Calendar getCalendar(){
         return calendar;
     }
@@ -381,7 +380,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             seniorID = ds.getKey();
-
                             referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -409,6 +407,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         }
     };
 
+    // we need to destroy broadcast if we register one
     @Override
     public void onDestroy() {
         super.onDestroy();

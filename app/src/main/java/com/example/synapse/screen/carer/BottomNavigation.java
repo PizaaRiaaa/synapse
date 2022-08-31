@@ -17,14 +17,13 @@ public class BottomNavigation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_carer_home);
         binding = ActivityCarerBottomNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         replaceFragment.replaceFragment(new HomeFragment(),BottomNavigation.this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        // set bottomNavigationView to transparent
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
 
