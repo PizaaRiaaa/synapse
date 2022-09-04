@@ -1,13 +1,9 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.fragments;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +102,10 @@ public class HomeFragment extends Fragment {
         tvSeniorFullName = view.findViewById(R.id.tvSeniorFullName);
         tvBarangay = view.findViewById(R.id.tvSeniorBarangay);
         tvSeniorAge = view.findViewById(R.id.tvSeniorAge);
+        btnMedication = view.findViewById(R.id.btnMedication);
+        btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
+        btnAppointment = view.findViewById(R.id.btnAppointment);
+        btnGames = view.findViewById(R.id.btnGames);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
@@ -123,22 +123,16 @@ public class HomeFragment extends Fragment {
         showSeniorProfile(userID);
 
         // redirect user to medication screen
-        btnMedication = view.findViewById(R.id.btnMedication);
-        btnMedication.setOnClickListener(v -> {
-            replaceFragment.replaceFragment(new MedicationFragment(), getActivity());
-        });
+        btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
 
         // redirect user to physical activity screen
-        btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
-        btnPhysicalActivity.setOnClickListener(v -> startActivity(new Intent(getActivity(), PhysicalActivity.class)));
+        btnPhysicalActivity.setOnClickListener(v -> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
 
         // redirect user to appointment screen
-        btnAppointment = view.findViewById(R.id.btnAppointment);
-        btnAppointment.setOnClickListener(v -> startActivity(new Intent(getActivity(), Appointment.class)));
+        btnAppointment.setOnClickListener(v -> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));
 
         // redirect user to games screen
-        btnGames = view.findViewById(R.id.btnGames);
-        btnGames.setOnClickListener(v -> startActivity(new Intent(getActivity(), Games.class)));
+        btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(), getActivity()));
 
         return view;
     }

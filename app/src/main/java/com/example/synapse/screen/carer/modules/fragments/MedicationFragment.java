@@ -1,4 +1,4 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -9,9 +9,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -38,7 +40,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.BottomNavigation;
+import com.example.synapse.screen.carer.modules.view.ViewMedicine;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -72,6 +74,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -83,28 +86,28 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class MedicationFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
     // global variables
-    ReplaceFragment replaceFragment = new ReplaceFragment();
-    PromptMessage promptMessage = new PromptMessage();
+    ReplaceFragment replaceFragment = new ReplaceFragment(); // replacing fragment
+    PromptMessage promptMessage = new PromptMessage(); // custom prompt message
     DatabaseReference referenceProfile, referenceCompanion, referenceRequest, referenceReminders;
     FirebaseUser mUser;
-    String seniorID;
-    String token;
+
+    String seniorID, token, pushMedicineID;
+
     Intent intent;
     RequestQueue requestQueue;
     int requestCode;
     Calendar calendar = Calendar.getInstance();
     AppCompatButton btnMon, btnTue, btnWed,
             btnThu, btnFri, btnSat, btnSun;
+    RecyclerView recyclerView;
     TextView tv1, tv2, tv3, tv4, tv5, tv6,
             etDose, etName;
     ShapeableImageView color1, color2, color3, color4, color5, color6;
     ImageView pill1, pill2, pill3, pill4;
     String pillShape = "", color = "", time = "";
-    RecyclerView recyclerView;
     Dialog dialog;
     int count = 0;
     ImageView profilePic;
-    String imageURL;
     boolean isClicked = false;
     FloatingActionButton fabAddMedicine;
 
@@ -161,12 +164,12 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         requestQueue = Volley.newRequestQueue(getActivity());
 
-        BottomNavigationView bottomNavigationView;
         ImageButton ibBack, btnClose;
         MaterialButton ibMinus, ibAdd;
         AppCompatImageButton buttonTimePicker;
         AppCompatButton btnAddSchedule;
 
+        // initialized dialog
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_dialog_box_add_medication);
         dialog.getWindow().setBackgroundDrawable(getActivity().getDrawable(R.drawable.dialog_background2));
@@ -175,8 +178,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         dialog.getWindow().getAttributes().gravity = Gravity.BOTTOM;
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
 
-        bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
-        profilePic = getActivity().findViewById(R.id.ivCarerProfilePic);
+        // ids for dialog
         ibMinus = dialog.findViewById(R.id.ibMinus);
         ibAdd = dialog.findViewById(R.id.ibAdd);
         etDose = dialog.findViewById(R.id.etDose);
@@ -184,8 +186,26 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         etName = dialog.findViewById(R.id.etName);
         buttonTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
-        ibBack = view.findViewById(R.id.ibBack);
+        pill1 = dialog.findViewById(R.id.ivPill1);
+        pill2 = dialog.findViewById(R.id.ivPill2);
+        pill3 = dialog.findViewById(R.id.ivPill3);
+        pill4 = dialog.findViewById(R.id.ivPill4);
+        color1 = dialog.findViewById(R.id.color1);
+        color2 = dialog.findViewById(R.id.color2);
+        color3 = dialog.findViewById(R.id.color3);
+        color4 = dialog.findViewById(R.id.color4);
+        color5 = dialog.findViewById(R.id.color5);
+        color6 = dialog.findViewById(R.id.color6);
+        tv1 = dialog.findViewById(R.id.tvGreen);
+        tv2 = dialog.findViewById(R.id.tvRed);
+        tv3 = dialog.findViewById(R.id.tvBrown);
+        tv4 = dialog.findViewById(R.id.tvPink);
+        tv5 = dialog.findViewById(R.id.tvBlue);
+        tv6 = dialog.findViewById(R.id.tvWhite);
 
+        // view ids for this fragment
+        ibBack = view.findViewById(R.id.ibBack);
+        profilePic = view.findViewById(R.id.ivProfilePic);
         btnMon = view.findViewById(R.id.btnMON);
         btnTue = view.findViewById(R.id.btnTUE);
         btnWed = view.findViewById(R.id.btnWED);
@@ -194,37 +214,17 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
-        pill1 = dialog.findViewById(R.id.ivPill1);
-        pill2 = dialog.findViewById(R.id.ivPill2);
-        pill3 = dialog.findViewById(R.id.ivPill3);
-        pill4 = dialog.findViewById(R.id.ivPill4);
-
-        color1 = dialog.findViewById(R.id.color1);
-        color2 = dialog.findViewById(R.id.color2);
-        color3 = dialog.findViewById(R.id.color3);
-        color4 = dialog.findViewById(R.id.color4);
-        color5 = dialog.findViewById(R.id.color5);
-        color6 = dialog.findViewById(R.id.color6);
-
-        tv1 = dialog.findViewById(R.id.tvGreen);
-        tv2 = dialog.findViewById(R.id.tvRed);
-        tv3 = dialog.findViewById(R.id.tvBrown);
-        tv4 = dialog.findViewById(R.id.tvPink);
-        tv5 = dialog.findViewById(R.id.tvBlue);
-        tv6 = dialog.findViewById(R.id.tvWhite);
-
         // uniqueID for scheduling medicine
         requestCode = (int)calendar.getTimeInMillis()/1000;
 
         // listen for broadcast
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
 
-        // set bottomNavigationView to transparent & show status bar
-        bottomNavigationView.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.transparent));
+        // show status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //show senior profile picture
-        showCarerProfilePic(mUser.getUid());
+        showUserProfile();
 
         // load recyclerview
         LoadScheduleForMedication();
@@ -277,23 +277,19 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                         } else if (!isClicked) {
                             Toast.makeText(getActivity(), "Please pick a schedule for the medicine", Toast.LENGTH_SHORT).show();
                         } else {
-
                             addSchedule();
                             dialog.dismiss();
                         }
-
                     } else {
                         dialog.dismiss();
                         promptMessage.displayMessage("Failed to set a medicine", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request, getActivity());
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     promptMessage.defaultErrorMessage(getActivity());
                 }
             });
-
         });
 
         return view;
@@ -308,6 +304,20 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         // display dialog after floating action button was clicked
         fabAddMedicine = (FloatingActionButton) view.findViewById(R.id.btnAddMedicine);
         fabAddMedicine.setOnClickListener(v -> dialog.show());
+    }
+
+    // prevent error when using back pressed inside fragment
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                    this.setEnabled(false);
+                replaceFragment.replaceFragment(new HomeFragment(), getActivity());
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     // increment for dose input
@@ -344,30 +354,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     // get the selected time
     public Calendar getCalendar(){
         return calendar;
-    }
-
-    // set the alarm manager and listen for broadcast
-    public void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("Medication",1);
-
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
-        }
-
-        // check whether the time is earlier than current time. If so, set it to tomorrow. Otherwise, all alarms for earlier time will fire
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        // set alarm for everyday
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis() ,
-                pendingIntent);
     }
 
     // listen if alarm is currently running so we can send notification to senior
@@ -459,6 +445,15 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                     }
 
                                     // open medicine's information and send medicine's Key to another activity
+
+                                  //  holder.itemView.setOnClickListener(v -> {
+                                  //      Bundle bundle = new Bundle();
+                                  //      bundle.putString("userKey", getRef(position).getKey());
+                                  //      ViewMedicineFragment fragment = new ViewMedicineFragment();
+                                  //      fragment.setArguments(bundle);
+                                  //      replaceFragment.replaceFragment(new ViewMedicineFragment(), getActivity());
+                                  //  });
+
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -490,8 +485,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
 
     // store schedule for medicine
     private void addSchedule() {
-
-        startAlarm(calendar);
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Name", etName.getText().toString());
         hashMap.put("Dose", etDose.getText().toString());
@@ -499,6 +492,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         hashMap.put("Shape", pillShape);
         hashMap.put("Color", color);
         hashMap.put("RequestCode", requestCode);
+        // check the referenceCompanion node so we can retrieve senior's id
         referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -506,13 +500,15 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         seniorID = ds.getKey();
                         assert seniorID != null;
-                        referenceReminders.child(seniorID).child(mUser.getUid()).push().updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                        // create unique key for the medicine
+                        String key = referenceReminders.push().getKey();
+                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).push().updateChildren(hashMap).addOnCompleteListener(task1 -> {
+                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
+
                                             //dialog.dismiss();
                                             CookieBar.build(getActivity())
                                                     .setTitle("Set Medicine")
@@ -522,6 +518,12 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                                     .setCookiePosition(CookieBar.TOP)
                                                     .setDuration(5000)
                                                     .show();
+
+                                            // start alarm and retrieve the unique id of newly created medicine
+                                            // so we can send it to alert receiver. And when user clicked the notification
+                                            // user will be redirected to viewMedicine screen while displaying the right information
+                                            // for the medicine
+                                            startAlarm(calendar, key);
                                         }
                                     });
                                 }
@@ -530,6 +532,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 promptMessage.defaultErrorMessage(getActivity());
@@ -537,66 +540,46 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         });
     }
 
-    // display senior's profile pic
-    private void showCarerProfilePic(String firebaseUser){
-        // check if carer already send request
-        referenceRequest.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
+    // set the alarm manager
+    public void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("Medication",1);
+        intent.putExtra("med_id", key);
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        // check whether the time is earlier than current time. If so, set it to tomorrow.
+        // Otherwise, all alarms for earlier time will fire
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        // alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+        //         calendar.getTimeInMillis() ,
+        //         pendingIntent);
+    }
+
+    // display carer's profile pic
+    private void showUserProfile(){
+        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot ds : snapshot.getChildren()){
-                        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
-                                    Picasso.get()
-                                            .load(imageURL)
-                                            .fit()
-                                            .transform(new CropCircleTransformation())
-                                            .into(profilePic);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                promptMessage.defaultErrorMessage(getActivity());
-                            }
-                        });
-                    }
-                }else{
-                    // check if senior accepted the carer request
-                    referenceCompanion.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                for(DataSnapshot ds : snapshot.getChildren()){
-                                    referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
-                                                Picasso.get()
-                                                        .load(imageURL)
-                                                        .fit()
-                                                        .transform(new CropCircleTransformation())
-                                                        .into(profilePic);
-                                            }
-                                        }
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            promptMessage.defaultErrorMessage(getActivity());
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage.defaultErrorMessage(getActivity());
-                        }
-                    });
+                ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                if(userProfile != null){
+                    Uri uri = mUser.getPhotoUrl();
+                    Picasso.get()
+                            .load(uri)
+                            .transform(new CropCircleTransformation())
+                            .into(profilePic);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 promptMessage.defaultErrorMessage(getActivity());
@@ -696,4 +679,5 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
             color = "White";
         });
     }
+
 }

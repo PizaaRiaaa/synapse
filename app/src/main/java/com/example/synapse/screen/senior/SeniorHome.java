@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.Login;
 import com.example.synapse.screen.senior.dashboard.GameDashboard;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,6 +55,7 @@ public class SeniorHome extends AppCompatActivity {
         FloatingActionButton fabBtnMyLocation = findViewById(R.id.fabLocateSenior);
         MaterialCardView btnGames = findViewById(R.id.btnGames);
         MaterialCardView btnSearchPeople = findViewById(R.id.btnSearchPeople);
+        MaterialCardView btnLogout = findViewById(R.id.btnLogout);
         ivProfilePic = findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = findViewById(R.id.tvSeniorName);
 
@@ -90,6 +92,14 @@ public class SeniorHome extends AppCompatActivity {
 
         // display senior profile picture
         showUserProfile(userID);
+
+        // logout user
+        btnLogout.setOnClickListener(v -> {
+            FirebaseAuth user = FirebaseAuth.getInstance();
+            user.signOut();
+            startActivity(new Intent(this, Login.class));
+            finish();
+        });
 
     }
 

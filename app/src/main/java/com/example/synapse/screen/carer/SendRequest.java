@@ -85,7 +85,7 @@ public class SendRequest extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
 
         btnOk = dialog.findViewById(R.id.btnOk);
-        btnOk.setOnClickListener(view -> startActivity(new Intent(SendRequest.this, BottomNavigation.class)));
+        btnOk.setOnClickListener(view -> startActivity(new Intent(SendRequest.this, MainActivity.class)));
 
         // set layout for recyclerview
         recyclerView = findViewById(R.id.recyclerview_sendRequest);

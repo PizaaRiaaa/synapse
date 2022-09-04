@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_medicine"
-    tools:context=".screen.carer.modules.fragments.MedicationFragment">
+    android:id="@+id/fragment_games"
+    tools:context=".screen.carer.modules.fragments.GamesFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -44,16 +44,15 @@
             android:textSize="17sp"/>
 
         <ImageView
-            android:id="@+id/ivProfilePic"
-            android:layout_width="42dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginEnd="20dp"
+            android:id="@+id/ivCarerProfilePic"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
             android:background="@drawable/carer_profile_pic"
-            android:backgroundTint="@color/carer_profile_pic"
-            android:contentDescription="Carer profile pic"
-            android:scaleType="fitCenter" />
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter"/>
 
     </LinearLayout>
 
@@ -179,23 +178,25 @@
         <!-- recycle view for all carer users -->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginBottom="?actionBarSize"
-            android:id="@+id/recyclerview_medication"
+            android:id="@+id/recyclerview_games"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_marginTop="10dp"/>
 
+
     </LinearLayout>
 
     <!-- floating plus icon -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/btnAddMedicine"
+        android:id="@+id/btnAddGames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="30dp"
+        android:layout_marginBottom="80dp"
         android:src="@drawable/ic_plus_white"
         app:tint="@android:color/white"
         android:contentDescription="Add medicine" />

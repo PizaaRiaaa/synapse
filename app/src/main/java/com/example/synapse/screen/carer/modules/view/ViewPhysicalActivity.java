@@ -1,19 +1,18 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.carer.modules.fragments.PhysicalActivityFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
-import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemPhysicalActivityAdapter;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
@@ -131,7 +130,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         deletePhysicalActivity();
 
         // back button
-        ibBack.setOnClickListener(v -> startActivity(new Intent(ViewPhysicalActivity.this, PhysicalActivity.class)));
+        ibBack.setOnClickListener(v -> finish());
 
         // prevent keyboard pop up
         etDuration.setShowSoftInputOnFocus(false);
@@ -513,7 +512,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                                                         referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                                startActivity(new Intent(ViewPhysicalActivity.this, PhysicalActivity.class));
+                                                                                finish();
                                                                             }
                                                                         });
                                                                     }

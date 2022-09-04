@@ -1,4 +1,4 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,10 +9,12 @@ import androidx.fragment.app.DialogFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.TimePickerFragment;
+import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
 import com.example.synapse.screen.util.readwrite.ReadWriteGames;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
-import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemGames;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
@@ -62,6 +64,8 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
             referenceProfile,
             referenceCompanion;
 
+    PromptMessage promptMessage = new PromptMessage();
+
     private final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
     private final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe,
             R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
@@ -108,8 +112,11 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         // show game information
         showGameInfo(gameID);
 
+        // deleteGame
+        deleteGame();
+
         // spinner for games
-       adapter = new ItemGames(ViewGame.this,
+        adapter = new ItemGames(ViewGame.this,
                 GAMES, GAMES_ICS);
         adapter.notifyDataSetChanged();
         spinner_games.setAdapter(adapter);
@@ -119,25 +126,13 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         btnUpdate.setOnClickListener(v -> updateGame(gameID));
 
         // redirect user to games screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(ViewGame.this, Games.class)));
+        ibBack.setOnClickListener(v -> finish());
 
         // change time
         btnChangeTime.setOnClickListener(v -> {
-            DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, month);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                   // DialogFragment timePicker = new TimePickerFragment();
-                   // timePicker.show(getSupportFragmentManager(), "time picker");
-                }
-            };
-            new DatePickerDialog(ViewGame.this, dateSetListener,
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-
+                    DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
+                    timePicker.show(getSupportFragmentManager(), "time picker");
+                });
     }
 
     @Override
@@ -176,14 +171,13 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
             c.add(Calendar.DATE, 1);
         }
 
-        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
         // set alarm for everyday
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent);
+       // alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+       //         calendar.getTimeInMillis(),
+       //         AlarmManager.INTERVAL_DAY,
+       //         pendingIntent);
     }
-
 
     private void updateTimeText(Calendar c) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat =
@@ -204,7 +198,6 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
     }
-
 
     //  listen if alarm is currently running so we can send notification to senior
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -231,7 +224,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                    promptMessage.defaultErrorMessage(ViewGame.this);
                                 }
                             });
                         }
@@ -239,7 +232,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                        promptMessage.defaultErrorMessage(ViewGame.this);
                     }
                 });
             }
@@ -291,21 +284,21 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewGame.this);
                                     }
                                 });
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewGame.this);
                         }
                     });
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewGame.this);
             }
         });
     }
@@ -325,7 +318,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     // update game for both carer and senior nodes
-    public void updateGame(String medicineID){
+    public void updateGame(String gameID){
 
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
 
@@ -338,7 +331,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
                 for(DataSnapshot ds1 : snapshot.getChildren()){
                     String seniorID = ds1.getKey();
 
-                    referenceReminders.child(mUser.getUid()).child(seniorID).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    referenceReminders.child(mUser.getUid()).child(seniorID).child(gameID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored : snapshot.getChildren()){
@@ -376,7 +369,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                                                     // update both nodes
                                                     if(senior_request_code.equals(carer_request_code)){
-                                                        referenceReminders.child(mUser.getUid()).child(seniorID).child(medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        referenceReminders.child(mUser.getUid()).child(seniorID).child(gameID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -391,7 +384,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewGame.this);
                                                 }
                                             });
                                         }
@@ -399,7 +392,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewGame.this);
                                     }
                                 });
                             }
@@ -407,7 +400,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewGame.this);
                         }
                     });
                 }
@@ -415,21 +408,94 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewGame.this);
             }
         });
 
-        promptMessage("Game Info","Successfully updated the game information", R.color.dark_green);
+        promptMessage.displayMessage("Game Info","Successfully updated the game information", R.color.dark_green, this);
     }
 
-    // custom prompt message
-    public void promptMessage(String title, String msg, int background){
-        CookieBar.build(ViewGame.this)
-                .setTitle(title)
-                .setMessage(msg)
-                .setCookiePosition(CookieBar.TOP)
-                .setBackgroundColor(background)
-                .setDuration(5000)
-                .show();
+    // delete appointment for both carer and senior nodes
+    public void deleteGame(){
+        tvDelete.setOnClickListener(v -> {
+            referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot ds1: snapshot.getChildren()){
+                        String key = ds1.getKey();
+
+                        referenceReminders.child(mUser.getUid()).child(key).child(gameID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                ReadWriteAppointment readWriteAppointment = snapshot.getValue(ReadWriteAppointment.class);
+                                request_code = readWriteAppointment.getRequestCode();
+                                code = request_code.intValue();
+
+                                // cancel the alarm
+                                cancelAlarm(code);
+
+                                referenceReminders.child(mUser.getUid()).child(key).child(gameID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+
+                                            referenceReminders.child(key).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for(DataSnapshot ds2: snapshot.getChildren()){
+                                                        String appointment_key = ds2.getKey();
+
+                                                        referenceReminders.child(key).child(mUser.getUid()).child(appointment_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for(DataSnapshot ignored : snapshot.getChildren()){
+                                                                    ReadWriteAppointment rw = snapshot.getValue(ReadWriteAppointment.class);
+                                                                    Long request_code2 = rw.getRequestCode();
+
+                                                                    if (request_code2.equals(request_code)) {
+                                                                        referenceReminders.child(key).child(mUser.getUid()).child(appointment_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                finish();
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                                promptMessage.defaultErrorMessage(ViewGame.this);
+                                                            }
+                                                        });
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    promptMessage.defaultErrorMessage(ViewGame.this);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                promptMessage.defaultErrorMessage(ViewGame.this);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    promptMessage.defaultErrorMessage(ViewGame.this);
+
+                }
+            });
+        });
     }
 }

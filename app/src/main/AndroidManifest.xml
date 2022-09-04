@@ -20,7 +20,7 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
-            android:name=".Settings"
+            android:name=".screen.carer.modules.view.Sample"
             android:exported="false" />
         <activity
             android:name=".screen.senior.games.TriviaQuiz"
@@ -37,33 +37,20 @@
             android:value="AIzaSyAGjBerlY_7x2ut3CZp-owyker3ANY_jqs" />
 
         <activity
-            android:name=".screen.carer.modules.ViewGame"
+            android:name=".screen.carer.modules.view.ViewGame"
             android:exported="false" />
         <activity
-            android:name=".screen.carer.modules.Games"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.ViewAppointment"
+            android:name=".screen.carer.modules.view.ViewAppointment"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".screen.carer.modules.Appointment"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".screen.carer.modules.ViewPhysicalActivity"
+            android:name=".screen.carer.modules.view.ViewPhysicalActivity"
             android:exported="false" />
         <activity
-            android:name=".screen.carer.modules.PhysicalActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.ViewMedicine"
+            android:name=".screen.carer.modules.view.ViewMedicine"
             android:exported="false" />
         <activity
             android:name=".screen.senior.dashboard.MedicationDashboard"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.Medication"
             android:exported="false" />
         <activity
             android:name=".screen.carer.SendRequest"
@@ -93,7 +80,7 @@
             android:name=".screen.senior.SeniorVerifyEmail"
             android:exported="false" />
         <activity
-            android:name=".screen.carer.BottomNavigation"
+            android:name=".screen.carer.MainActivity"
             android:exported="false" />
         <activity
             android:name=".screen.senior.RegisterSenior"

@@ -23,7 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
-import com.example.synapse.screen.carer.BottomNavigation;
+import com.example.synapse.screen.carer.MainActivity;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorHome;
 import com.example.synapse.screen.util.PromptMessage;
@@ -127,7 +127,7 @@ public class Login extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, BottomNavigation.class));
+                                            startActivity(new Intent(Login.this, MainActivity.class));
                                             finish();
                                         }else{
                                             startActivity(new Intent(Login.this, SendRequest.class));
@@ -144,7 +144,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, BottomNavigation.class));
+                                            startActivity(new Intent(Login.this, MainActivity.class));
                                             finish();
                                         }
                                     }

@@ -1,18 +1,17 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
-import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemAppointmentType;
 import com.example.synapse.screen.util.adapter.ItemViewAppointmentSpecialist;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
@@ -61,6 +60,8 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
             referenceReminders,
             referenceProfile,
             referenceCompanion;
+
+    PromptMessage promptMessage = new PromptMessage();
 
     private final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
             "Ophthalmologist","Dentist","Psychologist","Audiologist"};
@@ -125,14 +126,11 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
 
         // direct user to appointment screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(ViewAppointment.this, Appointment.class)));
+        ibBack.setOnClickListener(v -> finish());
 
         // display appointment id
         showAppointmentInfo(appointmentID);
 
-        // help button
-        btnHelp.setOnClickListener(v ->
-                promptMessage("To Update","Please Select the text below subtitles to update the context", R.color.dark_green));
 
         // delete appointment
         deleteAppointment();
@@ -198,14 +196,14 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                                    promptMessage.defaultErrorMessage(ViewAppointment.this);
                                 }
                             });
                         }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                        promptMessage.defaultErrorMessage(ViewAppointment.this);
                     }
                 });
             }
@@ -332,26 +330,26 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewAppointment.this);
                                     }
                                 });
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewAppointment.this);
                         }
                     });
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewAppointment.this);
             }
         });
     }
 
-    // delete medicine for both carer and senior nodes
+    // delete appointment for both carer and senior nodes
     public void deleteAppointment(){
         tvDelete.setOnClickListener(v -> {
             referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -393,7 +391,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                                                         referenceReminders.child(key).child(mUser.getUid()).child(appointment_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                                startActivity(new Intent(ViewAppointment.this, Appointment.class));
+                                                                                finish();
                                                                             }
                                                                         });
                                                                     }
@@ -402,7 +400,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                                                             @Override
                                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                                promptMessage.defaultErrorMessage(ViewAppointment.this);
                                                             }
                                                         });
                                                     }
@@ -410,7 +408,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewAppointment.this);
                                                 }
                                             });
                                         }
@@ -420,7 +418,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                promptMessage.defaultErrorMessage(ViewAppointment.this);
                             }
                         });
                     }
@@ -428,7 +426,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                    promptMessage.defaultErrorMessage(ViewAppointment.this);
                 }
             });
         });
@@ -498,7 +496,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewAppointment.this);
                                                 }
                                             });
                                         }
@@ -506,7 +504,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewAppointment.this);
                                     }
                                 });
                             }
@@ -514,7 +512,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewAppointment.this);
                         }
                     });
                 }
@@ -522,24 +520,12 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewAppointment.this);
             }
         });
 
-        promptMessage("Physical Activity Info","Successfully updated the physical activity information", R.color.dark_green);
+        promptMessage.displayMessage("Physical Activity Info","Successfully updated the physical activity information", R.color.dark_green, this);
     }
 
-
-
-    // custom prompt message
-    public void promptMessage(String title, String msg, int background){
-        CookieBar.build(ViewAppointment.this)
-                .setTitle(title)
-                .setMessage(msg)
-                .setCookiePosition(CookieBar.TOP)
-                .setBackgroundColor(background)
-                .setDuration(5000)
-                .show();
-    }
 
 }

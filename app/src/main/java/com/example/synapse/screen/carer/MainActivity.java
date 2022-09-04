@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.example.synapse.R;
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding;
-import com.example.synapse.screen.carer.modules.HomeFragment;
+import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
+import com.example.synapse.screen.carer.modules.fragments.SettingsFragment;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.os.Bundle;
 
-public class BottomNavigation extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     ActivityCarerBottomNavigationBinding binding;
     ReplaceFragment replaceFragment = new ReplaceFragment();
@@ -20,7 +21,7 @@ public class BottomNavigation extends AppCompatActivity {
         binding = ActivityCarerBottomNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment.replaceFragment(new HomeFragment(),BottomNavigation.this);
+        replaceFragment.replaceFragment(new HomeFragment(), MainActivity.this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
@@ -30,13 +31,14 @@ public class BottomNavigation extends AppCompatActivity {
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.miHome:
-                    replaceFragment.replaceFragment(new HomeFragment(),BottomNavigation.this);
+                    replaceFragment.replaceFragment(new HomeFragment(), MainActivity.this);
                     break;
                 case R.id.miChat:
                     break;
                 case R.id.miProfile:
                     break;
                 case R.id.miSettings:
+                    replaceFragment.replaceFragment(new SettingsFragment(), MainActivity.this);
                     break;
             }
             return true;

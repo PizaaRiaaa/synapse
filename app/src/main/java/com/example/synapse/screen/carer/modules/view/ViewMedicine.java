@@ -1,12 +1,16 @@
-package com.example.synapse.screen.carer.modules;
+package com.example.synapse.screen.carer.modules.view;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,17 +25,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.fragment.app.DialogFragment;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
+import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.adapter.ItemPillColorAdapter;
 import com.example.synapse.screen.util.adapter.ItemPillShapeAdapter;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
-import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
+import com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -52,6 +58,7 @@ import java.util.Objects;
 
 public class ViewMedicine extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
+    ReplaceFragment replaceFragment = new ReplaceFragment();
     private FirebaseUser mUser;
     private DatabaseReference
             referenceReminders,
@@ -134,7 +141,25 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         medicineID = getIntent().getStringExtra( "userKey");
 
         // display medicine info
-        showMedicineInfo(medicineID);
+        boolean clicked = getIntent().getBooleanExtra("clicked",false);
+        if(clicked){
+            CookieBar.build(this)
+                    .setTitle("Medicine")
+                    .setMessage("Senior's current dose")
+                    .setBackgroundColor(R.color.dark_green)
+                    .setCookiePosition(CookieBar.BOTTOM)
+                    .setDuration(5000)
+                    .show();
+            Uri alarmUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            Ringtone ringtone = RingtoneManager.getRingtone(this, alarmUri);
+            ringtone.stop();
+        }
+        String key = getIntent().getStringExtra("key");
+        if(key != null){
+            showMedicineInfo(key);
+        }else{
+            showMedicineInfo(medicineID);
+        }
 
         // update pill
         btnUpdate.setOnClickListener(v -> updatePill(medicineID));
@@ -143,7 +168,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         deleteMedicine();
 
         // back button
-        btnBack.setOnClickListener(v -> startActivity(new Intent(ViewMedicine.this, Medication.class)));
+        btnBack.setOnClickListener(v -> finish());
 
         // increment and decrement for number picker
         ibMinus.setOnClickListener(this::decrement);
@@ -290,7 +315,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                    referenceReminders.child(mUser.getUid()).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                          for(DataSnapshot ds2: snapshot.getChildren()) {
+                          for(DataSnapshot ignored : snapshot.getChildren()) {
 
                               // userID > seniorID > medicineID
                               referenceReminders.child(mUser.getUid()).child(key1).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -361,6 +386,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
             }
        });
     }
+
     public void displayPillColor(int color1, int color2, int color3, int color4, int color5, int color6) {
         switch (color) {
             case "Green":
@@ -544,7 +570,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                                                                referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                    @Override
                                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                                       startActivity(new Intent(ViewMedicine.this, Medication.class));
+                                                                                       finish();
                                                                                    }
                                                                                });
                                                                            }
