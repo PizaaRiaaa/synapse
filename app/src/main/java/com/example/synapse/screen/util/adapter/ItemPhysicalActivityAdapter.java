@@ -13,12 +13,10 @@ import com.example.synapse.R;
 public class ItemPhysicalActivityAdapter extends BaseAdapter {
     Context context;
     String[] physical_activity_name;
-    int[] physical_activity_ics;
 
-    public ItemPhysicalActivityAdapter(Context context, String[] physical_activity_name, int[] physical_activity_ics){
+    public ItemPhysicalActivityAdapter(Context context, String[] physical_activity_name){
         this.context = context;
         this.physical_activity_name = physical_activity_name;
-        this.physical_activity_ics = physical_activity_ics;
     }
 
     @Override
@@ -40,10 +38,8 @@ public class ItemPhysicalActivityAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_spinner_physical_activity, parent, false);
-            ImageView imageView = convertView.findViewById(R.id.ivPhysicalActivity);
             TextView tv = convertView.findViewById(R.id.tvPhysicalActivityName);
 
-            imageView.setImageResource(physical_activity_ics[position]);
             tv.setText(physical_activity_name[position]);
         }
 

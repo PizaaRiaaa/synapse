@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Color;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -14,7 +15,6 @@ import com.example.synapse.R;
 public class GamesNotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
-
     private NotificationManager mManager;
 
     public GamesNotificationHelper(Context base) {
@@ -43,6 +43,10 @@ public class GamesNotificationHelper extends ContextWrapper {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle("Game Reminder")
                 .setContentText("It's time for your senior to play a game")
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setLights(Color.RED, 3000, 3000)
                 .setSmallIcon(R.drawable.ic_splash_logo);
     }
 }

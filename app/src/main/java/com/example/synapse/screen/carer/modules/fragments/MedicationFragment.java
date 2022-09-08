@@ -500,7 +500,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         seniorID = ds.getKey();
                         assert seniorID != null;
-                        // create unique key for the medicine
+                        // create unique key
                         String key = referenceReminders.push().getKey();
                         referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
@@ -550,7 +550,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
         } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
         }
 
         // check whether the time is earlier than current time. If so, set it to tomorrow.

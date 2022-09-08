@@ -58,7 +58,6 @@ public class MedicineNotificationHelper extends ContextWrapper {
                 .setContentTitle("Medicine Reminder")
                 .setContentText("It's time for your senior to take a medicine")
                 .setAutoCancel(true)
-                .setDefaults(0)
                 .setColorized(true)
                 .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
                 .setLights(Color.RED, 3000, 3000)

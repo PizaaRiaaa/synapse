@@ -22,8 +22,10 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +39,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
@@ -55,6 +59,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,6 +73,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.aviran.cookiebar2.CookieBar;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -75,6 +82,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,26 +102,23 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     private DatabaseReference
             referenceCompanion,
             referenceReminders,
-            referenceRequest,
             referenceProfile;
 
     private FirebaseUser mUser;
     RequestQueue requestQueue;
-    private String token;
-    private int requestCode;
+    int requestCode;
 
     private RecyclerView recyclerView;
     private int count = 0;
     private Dialog dialog;
-    private TextView tvTime;
-    private String time, type_of_activity, seniorID, imageURL;
+    private String token, time, type_of_activity, seniorID, clickedRepeatBtn, key;
     private boolean isClicked = false;
     private ImageView profilePic;
     private final Calendar calendar = Calendar.getInstance();
     private final String[] physical_activity = {"Stretching", "Walking","Yoga","Aerobics"};
-    private final int [] physical_activity_ics = {R.drawable.ic_stretching, R.drawable.ic_walking,
-            R.drawable.ic_yoga, R.drawable.ic_aerobics};
-
+    private GifImageView gifImageView;
+    private MaterialCardView btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever;
+    private TextView tvTime, tv2hours,tv4hours,tvOnceADay, tvNever;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -172,7 +177,6 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-        referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         requestCode = (int)calendar.getTimeInMillis()/1000;
@@ -181,15 +185,26 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         // listen for broadcast
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_PHYSICAL_ACTIVITY"));
 
-        ImageButton ibBack = view.findViewById(R.id.ibBack);
-        Button btnAdd = dialog.findViewById(R.id.btnAdd);
-        Button btnMinus = dialog.findViewById(R.id.btnMinus);
-        profilePic = view.findViewById(R.id.ivCarerProfilePic);
+        // variables for dialog
+        MaterialButton btnAdd = dialog.findViewById(R.id.ibAdd);
+        MaterialButton btnMinus = dialog.findViewById(R.id.ibMinus);
         AppCompatButton btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         tvTime = dialog.findViewById(R.id.tvTime);
         etDuration = dialog.findViewById(R.id.etDuration);
         AppCompatImageButton ibTimePicker = dialog.findViewById(R.id.ibTimePicker);
+        gifImageView = dialog.findViewById(R.id.gifImage);
+        btn2hoursRepeat = dialog.findViewById(R.id.repeat2hours);
+        btn4hoursRepeat = dialog.findViewById(R.id.repeat4hours);
+        btnOnceADay = dialog.findViewById(R.id.repeatOnceADay);
+        btnNever = dialog.findViewById(R.id.repeatNever);
+        tv2hours = dialog.findViewById(R.id.tv2hours);
+        tv4hours = dialog.findViewById(R.id.tv4hours);
+        tvOnceADay = dialog.findViewById(R.id.tvOnceADay);
+        tvNever = dialog.findViewById(R.id.tvRepeatNever);
 
+        // variables for view
+        profilePic = view.findViewById(R.id.ivCarerProfilePic);
+        ImageButton ibBack = view.findViewById(R.id.ibBack);
         btnMon = view.findViewById(R.id.btnMON);
         btnTue = view.findViewById(R.id.btnTUE);
         btnWed = view.findViewById(R.id.btnWED);
@@ -201,38 +216,49 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         // show status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        etDuration.setShowSoftInputOnFocus(false);
+
         ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), MainActivity.class)));
 
         Spinner spinner_physical_activity = dialog.findViewById(R.id.spinner_physical_activity);
-        ItemPhysicalActivityAdapter adapter = new ItemPhysicalActivityAdapter(getActivity(), physical_activity, physical_activity_ics);
+        ItemPhysicalActivityAdapter adapter = new ItemPhysicalActivityAdapter(getActivity(), physical_activity);
         adapter.notifyDataSetChanged();
         spinner_physical_activity.setAdapter(adapter);
         spinner_physical_activity.setOnItemSelectedListener(this);
 
-        // current day
         displayCurrentDay();
 
-        // display carer's profile pic
         showUserProfile();
 
-        // display schedules for physical activity
         loadScheduleForPhysicalActivity();
 
-        // increment and decrement for number picker
         btnMinus.setOnClickListener(this::decrement);
+
         btnAdd.setOnClickListener(this::increment);
 
-        // prevent keyboard pop up
-        etDuration.setShowSoftInputOnFocus(false);
-
-        // display time picker
         ibTimePicker.setOnClickListener(v -> {
             DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
             timePicker.show(getChildFragmentManager(), "time picker");
             isClicked = true;
         });
 
-        // perform add schedule
+        btn2hoursRepeat.setOnClickListener(v -> {
+            clickedRepeatBtn = "2hours";
+            displayClickedRepeatButton(btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever, tv2hours, tv4hours, tvOnceADay, tvNever);
+        });
+        btn4hoursRepeat.setOnClickListener(v -> {
+            clickedRepeatBtn = "4hours";
+            displayClickedRepeatButton(btn4hoursRepeat, btn2hoursRepeat, btnOnceADay, btnNever, tv4hours, tv2hours, tvOnceADay, tvNever);
+        });
+        btnOnceADay.setOnClickListener(v -> {
+            clickedRepeatBtn = "OnceADay";
+            displayClickedRepeatButton(btnOnceADay, btn2hoursRepeat, btn4hoursRepeat, btnNever, tvOnceADay, tv2hours, tv4hours, tvNever);
+        });
+        btnNever.setOnClickListener(v -> {
+            clickedRepeatBtn = "Never";
+            displayClickedRepeatButton(btnNever, btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, tvNever, tv2hours, tv4hours, tvOnceADay);
+        });
+
         btnAddSchedule.setOnClickListener(v -> {
             // check if carer has already assigned senior in companion node
             referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,9 +268,14 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                     if (snapshot.exists()) {
                         String duration = etDuration.getText().toString();
                         if (TextUtils.isEmpty(duration)) {
-                            promptMessage.displayMessage("Empty field", "Please enter the duration of the physical activity",R.color.red_decline_request, getActivity());
+                            //promptMessage.displayMessage("Empty field", "Please enter the duration of the physical activity",R.color.red_decline_request, getActivity());
+                            Toast.makeText(getActivity(), "Please enter the duration of the physical activity", Toast.LENGTH_SHORT).show();
                         }else if(!isClicked){
-                            promptMessage.displayMessage("Empty field", "Please pick a schedule for the physical activity",R.color.red_decline_request, getActivity());
+                            //promptMessage.displayMessage("Empty field", "Please pick a schedule for the physical activity",R.color.red_decline_request, getActivity());
+                            Toast.makeText(getActivity(), "Please pick a schedule for the physical activity", Toast.LENGTH_SHORT).show();
+                        }else if(clickedRepeatBtn == null){
+                            //promptMessage.displayMessage("Choose repetition", "Please pick a repetition for the physical activity", R.color.dark_green, getActivity());
+                            Toast.makeText(getActivity(), "Please pick a repetition for the physical activity", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             addSchedule();
@@ -265,11 +296,21 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         return view;
     }
 
+    // ===============================================================================================================
+
+    // change gif based on selected item on spinner
+    public void displayPhysicalActivity(int gif1){
+        new Handler().postDelayed(() -> {
+            gifImageView.setImageResource(gif1);
+        }, 200);
+
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // layout for recycle view
         recyclerView = view.findViewById(R.id.recyclerview_physical_activity);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // display dialog after floating action button was clicked
         fabAddPhysicalActivity = view.findViewById(R.id.btnAddPhysicalActivity);
@@ -290,10 +331,20 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    // check what item was selected in spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getId() == R.id.spinner_physical_activity){
             type_of_activity = physical_activity[position];
+            if(type_of_activity.equals(physical_activity[0])){
+                displayPhysicalActivity(R.drawable.stretch5);
+            }else if(type_of_activity.equals(physical_activity[1])){
+                displayPhysicalActivity(R.drawable.walking);
+            }else if(type_of_activity.equals(physical_activity[2])){
+                displayPhysicalActivity(R.drawable.yoga1);
+            }else{
+                displayPhysicalActivity(R.drawable.aerobics1);
+            }
         }
     }
 
@@ -301,13 +352,14 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    // decrement and increment for dose input
+    // increment for dose input
     public void increment(View v) {
         count++;
         etDuration.setText("");
         etDuration.setText("" + count + " minutes");
     }
 
+    // decrement for dose input
     public void decrement(View v) {
         if (count <= 0) count = 0;
         else count--;
@@ -323,80 +375,15 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         updateTimeText(calendar);
     }
 
+    // update the textview after selecting the time
     private void updateTimeText(Calendar calendar) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
+                new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }
 
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("PhysicalActivity", 2);
-
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
-        }
-
-
-        //check whether the time is earlier than current time. If so, set it to tomorrow. Otherwise, all alarms for earlier time will fire
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        // set alarm for everyday
-        // alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-        //         calendar.getTimeInMillis(),
-        //         AlarmManager.INTERVAL_DAY,
-        //         pendingIntent);
-
-    }
-
-    // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Physical Activity Reminder",
-                                            "It's time to do your physical activity",
-                                            getActivity());
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
-
-                    }
-                });
-            }
-        }
-    };
-
+    // we need to destroy the broadcast if we register one
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -437,8 +424,9 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                                     }
                                     holder.name.setText(model.getActivity());
                                     holder.duration.setText("Duration: " + model.getDuration());
+                                    holder.time.setText(model.getTime());
 
-                                    // open medicine's information and send medicine's Key to another activity
+                                    // send the key to another activity
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -470,12 +458,11 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
 
     // store schedule for medicine
     private void addSchedule() {
-
-        startAlarm(calendar);
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Activity", type_of_activity);
         hashMap.put("Duration", Objects.requireNonNull(etDuration.getText()).toString());
         hashMap.put("Time", time);
+        hashMap.put("RepeatMode", clickedRepeatBtn);
         hashMap.put("RequestCode", requestCode);
 
         referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -485,12 +472,16 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         seniorID = ds.getKey();
                         assert seniorID != null;
-                        referenceReminders.child(seniorID).child(mUser.getUid()).push().updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                        key = referenceReminders.push().getKey();
+
+                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).push().updateChildren(hashMap).addOnCompleteListener(task1 -> {
+                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
+                                            etDuration.setText("");
+                                            tvTime.setText("Add New Physical Activity");
                                             dialog.dismiss();
                                         }
                                     });
@@ -505,6 +496,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                                         .setDuration(5000)
                                         .show();
 
+                                startAlarm(calendar,key);
                             }
                         });
                     }
@@ -516,6 +508,41 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                 promptMessage.defaultErrorMessage(getActivity());
             }
         });
+    }
+
+    // set the alarm manager and listen for broadcast
+    private void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("PhysicalActivity", 2);
+        intent.putExtra("physical_id", key);
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        //check whether the time is earlier than current time. If so, set it to tomorrow. Otherwise, all alarms for earlier time will fire
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        if(clickedRepeatBtn.equals("OnceADay")){
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        }else if(clickedRepeatBtn.equals("Never")){
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        }else if(clickedRepeatBtn.equals("2hours")){
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+        }
+
+        // set alarm for everyday
+        // alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        //         calendar.getTimeInMillis(),
+        //         AlarmManager.INTERVAL_DAY,
+        //         pendingIntent);
+
     }
 
     // change the background the current day to white
@@ -569,5 +596,67 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
             }
         });
     }
+
+    // change background of clicked repeat's button and textview
+    public void displayClickedRepeatButton(MaterialCardView btnClicked, MaterialCardView btn1,
+                                           MaterialCardView btn2, MaterialCardView btn3, TextView tvClicked, TextView tv1, TextView tv2, TextView tv3){
+        btnClicked.setCardBackgroundColor(getResources().getColor(R.color.dark_violet));
+        tvClicked.setTextColor(getResources().getColor(R.color.white));
+        btn1.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        btn2.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        btn3.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        tv1.setTextColor(getResources().getColor(R.color.grey1));
+        tv2.setTextColor(getResources().getColor(R.color.grey1));
+        tv3.setTextColor(getResources().getColor(R.color.grey1));
+    }
+
+    // listen if alarm is currently running so we can send notification to senior
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+
+                // if(clickedRepeatBtn.equals("OnceADay")){
+
+                //     startAlarm(calendar, key);
+                //     Intent intent_request_code = new Intent(getActivity(), ViewPhysicalActivity.class);
+                //     intent_request_code.putExtra("new_request_code",requestCode);
+                //     promptMessage.displayMessage("requestcode", "" + requestCode,  R.color.dark_green, getActivity());
+                //     Toast.makeText(getActivity(), " " + requestCode, Toast.LENGTH_SHORT).show();
+                // }
+
+                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            seniorID = ds.getKey();
+
+                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                                    token = seniorProfile.getToken();
+                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+                                            "Physical Activity Reminder",
+                                            "It's time to do your physical activity",
+                                            getActivity());
+                                    notificationsSender.SendNotifications();
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    promptMessage.defaultErrorMessage(getActivity());
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        promptMessage.defaultErrorMessage(getActivity());
+
+                    }
+                });
+            }
+        }
+    };
 
 }

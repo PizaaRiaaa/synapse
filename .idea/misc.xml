@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/horizontal_bg_1.xml" value="0.2015" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/horizontal_bg_2.xml" value="0.166" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/horizontal_bg_3.xml" value="0.166" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/drawable-v24/pill1_background.xml" value="0.17" />
@@ -34,7 +35,7 @@
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_game.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_medication.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_medicine.xml" value="0.33" />
-        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_physical.xml" value="0.12447916666666667" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/activity_view_physical.xml" value="0.25" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_medication.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/custom_dialog_box_add_physical_activity.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/dosage_dialog.xml" value="0.2708333333333333" />
@@ -43,10 +44,13 @@
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_carer_home.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_games.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_medication.xml" value="0.25" />
-        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_physical_activity.xml" value="0.33" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_physical_activity.xml" value="0.22" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_settings.xml" value="0.2625" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/fragment_view_medicine.xml" value="0.27708333333333335" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/item_spinner_physical_activity.xml" value="0.27708333333333335" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_games_schedule.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_medication_schedule.xml" value="0.25" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_carer_physical_activity_schedule.xml" value="0.27708333333333335" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/single_view_send_request_to_senior.xml" value="0.271875" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/Synapse/app/src/main/res/layout/slide_layout.xml" value="0.1956521739130435" />

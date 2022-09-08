@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="600dp"
+    android:layout_height="700dp"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
+
 
         <TextView
             android:id="@+id/tvTime"
@@ -38,11 +39,17 @@
 
     </LinearLayout>
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/stretch5"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -62,9 +69,6 @@
             android:layout_margin="20dp"
             android:elevation="8dp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="30dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -76,7 +80,6 @@
             android:textSize="12sp" />
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,19 +87,20 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/rounded_pick_number"
         android:layout_margin="20dp"
-        android:elevation="8dp">
+        android:elevation="5dp">
 
-        <Button
-            android:id="@+id/btnMinus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_minus_green"
-            android:layout_marginStart="19dp"
-            android:text="@string/vertical_line"
-            android:textSize="15sp"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/et_stroke" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ibMinus"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            app:cornerRadius="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            app:iconPadding="0dp"
+            app:icon="@drawable/ic_minus_green"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/etDuration"
@@ -104,30 +108,128 @@
             android:layout_height="52dp"
             android:layout_weight="1"
             android:background="@drawable/edit_text_background"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:fontFamily="@font/redhat_display_medium"
             android:inputType="number"
             android:textAlignment="center"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey5" />
+            android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_plus_green"
-            android:background="@android:color/transparent"
-            android:drawableEnd="@drawable/ic_plus_green"
-            android:text="@string/vertical_line"
-            android:textSize="15sp"
-            android:textAlignment="textStart"
-            android:textColor="@color/et_stroke"
-            android:fontFamily="@font/redhat_display_bold"
-            android:layout_marginEnd="19dp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ibAdd"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            app:cornerRadius="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            app:iconPadding="0dp"
+            app:icon="@drawable/ic_plus_green"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"/>
 
     </LinearLayout>
 
-    <Space
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/redhat_display_bold"
+        android:textColor="@color/grey4"
+        android:layout_marginStart="20dp"
+        android:textSize="15sp"
+        android:drawableEnd="@drawable/ic_repeat"
+        android:drawablePadding="15dp"
+        android:text="Repeat every"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_gravity="center">
+
+        <!-- 2 hours -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/repeat2hours"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/grey2"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv2hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="2 hours"
+                android:textColor="@color/grey1"
+                android:textAlignment="center" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 4 hours -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/repeat4hours"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/grey2"
+            app:cardCornerRadius="20dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/tv4hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/grey1"
+                android:text="4 hours"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- once a day -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/repeatOnceADay"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/grey2"
+            app:cardCornerRadius="20dp"
+            android:layout_weight="1.3">
+            <TextView
+                android:id="@+id/tvOnceADay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="once a day"
+                android:textColor="@color/grey1"
+                android:textAlignment="center" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- repeat never -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/repeatNever"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/grey2"
+            app:cardCornerRadius="20dp"
+            android:layout_weight="1.3">
+            <TextView
+                android:id="@+id/tvRepeatNever"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="never"
+                android:textColor="@color/grey1"
+                android:textAlignment="center" />
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

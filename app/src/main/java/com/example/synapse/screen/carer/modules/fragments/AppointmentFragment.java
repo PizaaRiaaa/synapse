@@ -24,6 +24,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,7 +116,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     private TextView tvTime;
     private TextInputEditText etDrName, etConcern;
     private String time, selected_specialist, token,
-            selected_appointment_type, seniorID, imageURL;
+            selected_appointment_type, seniorID, date;
     private ImageView profilePic;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -288,7 +290,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
             });
         });
 
-
         return view;
     }
 
@@ -335,26 +336,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         time = simpleDateFormat.format(calendar.getTime());
     }
 
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("Appointment", 3);
-
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
-        }
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        // subtract 1 day for appointment reminder
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - (86400000) , pendingIntent);
-    }
-
     // listen if alarm is currently running so we can send notification to senior
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -373,7 +354,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                                     token = seniorProfile.getToken();
                                     FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
                                             "Appointment Reminder",
-                                            "This is a reminder that you have an appointment scheduled for tomorrow",
+                                            "This is a reminder that you have an appointment scheduled for tomorrow ",
                                             getActivity());
                                     notificationsSender.SendNotifications();
                                 }
@@ -393,19 +374,15 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         }
     };
 
-       @Override
-       public void onDestroy() {
-           super.onDestroy();
-           getActivity().unregisterReceiver(broadcastReceiver);
-       }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
 
     // store schedule for appointment
     private void addSchedule() {
-
-        startAlarm(calendar);
-
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Specialist", selected_specialist);
         hashMap.put("AppointmentType", selected_appointment_type);
         hashMap.put("Time", time);
@@ -420,11 +397,13 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         seniorID = ds.getKey();
                         assert seniorID != null;
-                        referenceReminders.child(seniorID).child(mUser.getUid()).push().updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                        // create unique key
+                        String key = referenceReminders.push().getKey();
+                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).push().updateChildren(hashMap).addOnCompleteListener(task1 -> {
+                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             dialog.dismiss();
                                         }
@@ -440,6 +419,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                                         .setDuration(5000)
                                         .show();
 
+                                startAlarm(calendar, key);
                             }
                         });
                     }
@@ -451,6 +431,36 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                 promptMessage.defaultErrorMessage(getActivity());
             }
         });
+    }
+
+    // set the alarm manager and listen for broadcast
+    private void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("Appointment", 3);
+        intent.putExtra("appointment_id", key);
+
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent =
+                    PendingIntent.getBroadcast(getActivity(),
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent =
+                    PendingIntent.getBroadcast(getActivity(),
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        // notify a day before the appointment
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - (86400000) , pendingIntent);
     }
 
     // change the background the current day to white
@@ -590,6 +600,5 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
             }
         });
     }
-
 
 }

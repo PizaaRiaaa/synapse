@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:id="@+id/fragment_physical_activity"
+    android:layout_marginBottom="70dp"
     tools:context=".screen.carer.modules.fragments.PhysicalActivityFragment">
 
    <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -19,10 +20,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
             android:background="@color/white"
-            android:padding="5dp"
-            android:layout_gravity="center_horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageButton
                 android:id="@+id/ibBack"
@@ -36,13 +37,13 @@
             <TextView
                 android:id="@+id/tvSample"
                 android:layout_width="0dp"
-                android:layout_margin="18dp"
                 android:layout_height="30dp"
+                android:layout_margin="18dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/redhat_display_semibold"
                 android:text="Set Physical Activity"
                 android:textColor="@color/grey5"
-                android:fontFamily="@font/redhat_display_semibold"
-                android:textSize="17sp"/>
+                android:textSize="17sp" />
 
             <ImageView
                 android:id="@+id/ivCarerProfilePic"
@@ -53,123 +54,123 @@
                 android:background="@drawable/carer_profile_pic"
                 android:backgroundTint="@color/white"
                 android:contentDescription="@string/pick_carer"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
             android:background="@color/grey2"
-            app:cardCornerRadius="10dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 android:background="@color/grey2"
-                android:layout_gravity="center_horizontal">
+                android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSUN"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="SUN"
-                    android:fontFamily="@font/inter_bold"
-                    android:textColor="@color/grey5"
-                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:fontFamily="@font/inter_bold"
+                    android:text="SUN"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnMON"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/grey2"
+                    android:fontFamily="@font/inter_bold"
                     android:text="MON"
                     android:textAllCaps="false"
-                    android:textColor="@color/grey5"
-                    android:fontFamily="@font/inter_bold"
-                    android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnTUE"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="TUE"
-                    android:textColor="@color/grey5"
-                    android:fontFamily="@font/inter_bold"
-                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:fontFamily="@font/inter_bold"
+                    android:text="TUE"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnWED"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="WED"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:textColor="@color/grey5"
                     android:fontFamily="@font/inter_bold"
+                    android:text="WED"
                     android:textAllCaps="false"
-                    android:background="@drawable/rounded_button"/>
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnTHU"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="THU"
-                    android:textColor="@color/grey5"
-                    android:fontFamily="@font/inter_bold"
-                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:fontFamily="@font/inter_bold"
+                    android:text="THU"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnFRI"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="FRI"
-                    android:textColor="@color/grey5"
-                    android:fontFamily="@font/inter_bold"
-                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:fontFamily="@font/inter_bold"
+                    android:text="FRI"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey5" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSAT"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
                     android:layout_margin="4dp"
-                    android:text="SAT"
-                    android:textColor="@color/grey5"
-                    android:fontFamily="@font/inter_bold"
-                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
-                    android:background="@drawable/rounded_button"/>
+                    android:fontFamily="@font/inter_bold"
+                    android:text="SAT"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey5" />
 
             </LinearLayout>
 
@@ -177,13 +178,11 @@
 
         <!-- recycle view for all carer users -->
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginBottom="?actionBarSize"
             android:id="@+id/recyclerview_physical_activity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_marginTop="10dp"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" />
 
     </LinearLayout>
 
@@ -191,11 +190,14 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddPhysicalActivity"
         android:layout_width="wrap_content"
-        android:layout_height="193dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="30dp"
-        android:contentDescription="Add physical activity"
+        android:layout_height="wrap_content"
+        app:useCompatPadding="true"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Add Physical Activity"
         android:src="@drawable/ic_plus_white"
         app:tint="@android:color/white" />
 
-</FrameLayout>
+</RelativeLayout>
+

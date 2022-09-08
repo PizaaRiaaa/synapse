@@ -70,8 +70,16 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     Spinner spinner_appointment_specialist, spinner_appointment_type;
     RequestQueue requestQueue;
 
-    private String time, selected_specialist, selected_appointment_type, token,
-            seniorID, appointmentType,concern, drName, specialist, appointmentID;
+    private String time;
+    private String selected_specialist;
+    private String selected_appointment_type;
+    private String token;
+    private String seniorID;
+    private String appointmentType;
+    private String concern;
+    private String drName;
+    private String specialist;
+    private String appointmentID;
 
     TextView tvDateAndTime, tvDelete;
     TextInputEditText etConcern, etDrName;
@@ -119,23 +127,21 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         spinner_appointment_type.setAdapter(adapter2);
         spinner_appointment_type.setOnItemSelectedListener(ViewAppointment.this);
 
-        // retrieve appointment's ID
-        appointmentID = getIntent().getStringExtra( "userKey");
-
         // listen for broadcast
         registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
 
-        // direct user to appointment screen
         ibBack.setOnClickListener(v -> finish());
 
-        // display appointment id
-        showAppointmentInfo(appointmentID);
+        // we need  to check if user clicked the notification
+        // then retrieve id first
+        // so we can display the right information with the right key
+        appointmentID = getIntent().getStringExtra( "userKey");
+        String key = getIntent().getStringExtra("key");
+        if(key != null) showAppointmentInfo(key);
+        else showAppointmentInfo(appointmentID);
 
-
-        // delete appointment
         deleteAppointment();
 
-        // update appointment
         btnUpdate.setOnClickListener(v -> updateAppointment(appointmentID));
 
         // change time
@@ -433,9 +439,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     public void updateAppointment(String appointmentID){
-
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Specialist", selected_specialist);
         hashMap.put("AppointmentType", selected_appointment_type);
         hashMap.put("Time", time);
@@ -526,6 +530,5 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
         promptMessage.displayMessage("Physical Activity Info","Successfully updated the physical activity information", R.color.dark_green, this);
     }
-
 
 }

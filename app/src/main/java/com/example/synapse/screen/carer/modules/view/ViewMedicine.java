@@ -2,6 +2,7 @@ package com.example.synapse.screen.carer.modules.view;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -25,14 +26,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
 import com.example.synapse.screen.util.ReplaceFragment;
+import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemPillColorAdapter;
 import com.example.synapse.screen.util.adapter.ItemPillShapeAdapter;
+import com.example.synapse.screen.util.notifications.MedicineNotificationHelper;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
@@ -137,47 +142,28 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         // Show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // retrieve medicine's ID
+        // we need  to check if user clicked the notification
+        // then retrieve id first
+        // so we can display the right information with the right key
         medicineID = getIntent().getStringExtra( "userKey");
-
-        // display medicine info
-        boolean clicked = getIntent().getBooleanExtra("clicked",false);
-        if(clicked){
-            CookieBar.build(this)
-                    .setTitle("Medicine")
-                    .setMessage("Senior's current dose")
-                    .setBackgroundColor(R.color.dark_green)
-                    .setCookiePosition(CookieBar.BOTTOM)
-                    .setDuration(5000)
-                    .show();
-            Uri alarmUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            Ringtone ringtone = RingtoneManager.getRingtone(this, alarmUri);
-            ringtone.stop();
-        }
         String key = getIntent().getStringExtra("key");
-        if(key != null){
-            showMedicineInfo(key);
-        }else{
-            showMedicineInfo(medicineID);
-        }
+        if(key != null) showMedicineInfo(key);
+        else showMedicineInfo(medicineID);
 
-        // update pill
         btnUpdate.setOnClickListener(v -> updatePill(medicineID));
 
-        // delete medicine
         deleteMedicine();
 
         // back button
         btnBack.setOnClickListener(v -> finish());
 
-        // increment and decrement for number picker
         ibMinus.setOnClickListener(this::decrement);
         ibAdd.setOnClickListener(this::increment);
 
         // change time
         btnChangeTime.setOnClickListener(v -> {
-               // DialogFragment timePicker = new TimePickerFragment();
-               // timePicker.show(getSupportFragmentManager(), "time picker");
+                DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
+                timePicker.show(getSupportFragmentManager(), "time picker");
         });
     }
 
@@ -548,7 +534,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                            public void onComplete(@NonNull Task<Void> task) {
 
                                                if(task.isSuccessful()){
-
                                                    // seniorID > carerID
                                                    referenceReminders.child(key).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                        @Override
@@ -560,7 +545,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                                                referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                    @Override
                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                       for(DataSnapshot ds3 : snapshot.getChildren()){
+                                                                       for(DataSnapshot ignored : snapshot.getChildren()){
 
                                                                            //retrieve request code
                                                                            ReadWriteMedication rw = snapshot.getValue(ReadWriteMedication.class);

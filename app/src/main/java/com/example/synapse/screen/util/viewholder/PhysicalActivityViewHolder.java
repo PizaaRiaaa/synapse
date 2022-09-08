@@ -11,6 +11,7 @@ public class PhysicalActivityViewHolder extends RecyclerView.ViewHolder {
 
     public TextView name;
     public TextView duration;
+    public TextView time;
     public ImageView ic_activity;
 
     public PhysicalActivityViewHolder(@NonNull View itemView) {
@@ -19,6 +20,7 @@ public class PhysicalActivityViewHolder extends RecyclerView.ViewHolder {
         name = itemView.findViewById(R.id.tvNameOfPhysicalActivity);
         duration = itemView.findViewById(R.id.tvDuration);
         ic_activity = itemView.findViewById(R.id.ivPhysicalActivity);
+        time = itemView.findViewById(R.id.tvTimeOfPhysicalActivity);
 
     }
 }

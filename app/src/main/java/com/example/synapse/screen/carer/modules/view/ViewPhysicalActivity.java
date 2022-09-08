@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.DialogFragment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.PhysicalActivityFragment;
+import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
@@ -19,6 +22,7 @@ import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +40,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,6 +50,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.aviran.cookiebar2.CookieBar;
 
@@ -54,35 +60,35 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class ViewPhysicalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
+    private PromptMessage promptMessage = new PromptMessage();
     private FirebaseUser mUser;
     private DatabaseReference
             referenceReminders,
             referenceProfile,
             referenceCompanion;
+    RequestQueue requestQueue;
 
-    private final String[] PHYSICAL_ACTIVITY_NAME = {"Stretching", "Walking","Yoga","Aerobics"};
-    private final int  [] PHYSICAL_ACTIVITY_ICS = {R.drawable.ic_stretching, R.drawable.ic_walking,
-            R.drawable.ic_yoga, R.drawable.ic_aerobics};
-
-    private AppCompatEditText etDuration, etDescription;
-    private ImageView ivPhysicalActivity;
-
-    private Spinner spinner_physical_activity;
+    private final String[] PHYSICAL_ACTIVITY_NAME = {
+            "Stretching", "Walking","Yoga","Aerobics"};
+    private AppCompatEditText etDuration;
     private TextView tvAlarm, tvDelete;
-    private int count = 0;
-
-    private Intent intent;
+    private Spinner spinner_physical_activity;
+    ItemPhysicalActivityAdapter adapter;
     private final Calendar calendar = Calendar.getInstance();
+    private GifImageView gifImageView;
+    private int count = 0, retrieved_request_code;
+    private Intent intent;
     private Long request_code;
     int code, requestCode;
-
     private  String physical_activity_selected, time, token,
             seniorID, physicalActivityID, activity,
-            duration, description;
-    RequestQueue requestQueue;
-    ItemPhysicalActivityAdapter adapter;
+            duration, repeatMode, type_of_activity, clickedRepeatBtn;
+    private MaterialCardView btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever;
+    private TextView tvTime, tv2hours,tv4hours,tvOnceADay, tvNever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,40 +100,40 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         MaterialButton btnChangeTime = findViewById(R.id.btnChangeSchedule);
         AppCompatButton btnUpdate = findViewById(R.id.btnUpdate);
         tvDelete = findViewById(R.id.tvDelete);
-        Button btnAdd = findViewById(R.id.btnAdd);
-        Button btnMinus = findViewById(R.id.btnMinus);
-        ivPhysicalActivity = findViewById(R.id.ivPhysicalActivityIC);
+        MaterialButton btnAdd = findViewById(R.id.btnAdd);
+        MaterialButton btnMinus = findViewById(R.id.btnMinus);
         tvAlarm = findViewById(R.id.tvAlarmSub);
         tvDelete = findViewById(R.id.tvDelete);
         etDuration = findViewById(R.id.etDuration);
-        etDescription = findViewById(R.id.etDescription);
         spinner_physical_activity = findViewById(R.id.spinner_physical_activity);
+        gifImageView = findViewById(R.id.gifImage);
+        btn2hoursRepeat = findViewById(R.id.repeat2hours);
+        btn4hoursRepeat = findViewById(R.id.repeat4hours);
+        btnOnceADay = findViewById(R.id.repeatOnceADay);
+        btnNever = findViewById(R.id.repeatNever);
+        tv2hours = findViewById(R.id.tv2hours);
+        tv4hours = findViewById(R.id.tv4hours);
+        tvOnceADay = findViewById(R.id.tvOnceADay);
+        tvNever = findViewById(R.id.tvRepeatNever);
 
         referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-
         requestQueue = Volley.newRequestQueue(ViewPhysicalActivity.this);
 
-        // spinner
         spinner_physical_activity.setOnItemSelectedListener(ViewPhysicalActivity.this);
-        adapter = new ItemPhysicalActivityAdapter(ViewPhysicalActivity.this, PHYSICAL_ACTIVITY_NAME, PHYSICAL_ACTIVITY_ICS);
+        adapter = new ItemPhysicalActivityAdapter(ViewPhysicalActivity.this, PHYSICAL_ACTIVITY_NAME);
         adapter.notifyDataSetChanged();
         spinner_physical_activity.setAdapter(adapter);
 
-        // retrieve medicine's ID
+        // we need  to check if user clicked the notification
+        // then retrieve id first
+        // so we can display the right information with the right key
         physicalActivityID = getIntent().getStringExtra( "userKey");
-
-        // show physical activity information
-        showPhysicalActivityInfo(physicalActivityID);
-
-        // update physical activity
-        btnUpdate.setOnClickListener(v -> updatePhysicalActivity(physicalActivityID));
-
-        // delete physical activity
-        deletePhysicalActivity();
+        String key = getIntent().getStringExtra("key");
+        if(key != null) showPhysicalActivityInfo(key);
+        else showPhysicalActivityInfo(physicalActivityID);
 
         // back button
         ibBack.setOnClickListener(v -> finish());
@@ -135,35 +141,69 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         // prevent keyboard pop up
         etDuration.setShowSoftInputOnFocus(false);
 
-        // increment and decrement for number picker
+        // help button
+        btnHelp.setOnClickListener(v -> promptMessage.displayMessage(
+                "To Update",
+                "Please Select your  desired information",
+                R.color.dark_green,
+                ViewPhysicalActivity.this));
+
         btnMinus.setOnClickListener(this::decrement);
+
         btnAdd.setOnClickListener(this::increment);
 
-        // help button
-        btnHelp.setOnClickListener(v ->
-                promptMessage("To Update","Please Select the text below subtitles to update the context", R.color.dark_green));
+        btnUpdate.setOnClickListener(v -> updatePhysicalActivity(physicalActivityID));
+
+        deletePhysicalActivity();
+
+        btn2hoursRepeat.setOnClickListener(v -> {
+            clickedRepeatBtn = "2hours";
+            displayClickedRepeatButton(btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever, tv2hours, tv4hours, tvOnceADay, tvNever);
+        });
+        btn4hoursRepeat.setOnClickListener(v -> {
+            clickedRepeatBtn = "4hours";
+            displayClickedRepeatButton(btn4hoursRepeat, btn2hoursRepeat, btnOnceADay, btnNever, tv4hours, tv2hours, tvOnceADay, tvNever);
+        });
+        btnOnceADay.setOnClickListener(v -> {
+            clickedRepeatBtn = "OnceADay";
+            displayClickedRepeatButton(btnOnceADay, btn2hoursRepeat, btn4hoursRepeat, btnNever, tvOnceADay, tv2hours, tv4hours, tvNever);
+        });
+        btnNever.setOnClickListener(v -> {
+            clickedRepeatBtn = "Never";
+            displayClickedRepeatButton(btnNever, btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, tvNever, tv2hours, tv4hours, tvOnceADay);
+        });
+
 
         btnChangeTime.setOnClickListener(v -> {
-            DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, month);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                    //DialogFragment timePicker = new TimePickerFragment();
-                    //timePicker.show(getSupportFragmentManager(), "time picker");
-                }
-            };
-            new DatePickerDialog(ViewPhysicalActivity.this, dateSetListener,
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                    DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
+                    timePicker.show(getSupportFragmentManager(), "time picker");
         });
+    }
+
+    // =============================================================================================
+
+    // change gif based on selected item on spinner
+    public void displayPhysicalActivity(int gif1){
+        new Handler().postDelayed(() -> {
+            gifImageView.setImageResource(gif1);
+        }, 200);
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getId() == R.id.spinner_physical_activity)
-            physical_activity_selected = PHYSICAL_ACTIVITY_NAME[position];
+        if(parent.getId() == R.id.spinner_physical_activity){
+            type_of_activity = PHYSICAL_ACTIVITY_NAME[position];
+            if(type_of_activity.equals(PHYSICAL_ACTIVITY_NAME[0])){
+                displayPhysicalActivity(R.drawable.stretch5);
+            }else if(type_of_activity.equals(PHYSICAL_ACTIVITY_NAME[1])){
+                displayPhysicalActivity(R.drawable.walking);
+            }else if(type_of_activity.equals(PHYSICAL_ACTIVITY_NAME[2])){
+                displayPhysicalActivity(R.drawable.yoga1);
+            }else{
+                displayPhysicalActivity(R.drawable.aerobics1);
+            }
+        }
     }
 
     @Override
@@ -176,6 +216,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
+
                 referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -195,14 +236,14 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                 }
                             });
                         }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                     }
                 });
             }
@@ -223,61 +264,6 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         etDuration.setText("" + count + " minutes");
     }
 
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        updateTimeText(calendar);
-    }
-
-    private void updateTimeText(Calendar c) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
-        tvAlarm.setText(simpleDateFormat.format(calendar.getTime()));
-        time = simpleDateFormat.format(calendar.getTime());
-    }
-
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
-        requestCode = (int)calendar.getTimeInMillis()/1000;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        intent = new Intent(this, AlertReceiver.class);
-        intent.putExtra("PhysicalActivity", 2);
-        PendingIntent pendingIntent;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
-        }
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        // set alarm for everyday
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent);
-    }
-
-    public void cancelAlarm(int requestCode){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        intent = new Intent(this, AlertReceiver.class);
-        PendingIntent pendingIntent;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(this,requestCode, intent, 0);
-        }
-        alarmManager.cancel(pendingIntent);
-        pendingIntent.cancel();
-    }
-
     public void showPhysicalActivityInfo(String physicalActivityID){
         // userID >
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
@@ -290,7 +276,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                     referenceReminders.child(mUser.getUid()).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot ds2: snapshot.getChildren()) {
+                            for(DataSnapshot ignored : snapshot.getChildren()) {
 
                                 // userID > seniorID > medicineID
                                 referenceReminders.child(mUser.getUid()).child(key1).child(physicalActivityID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -303,90 +289,78 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                             activity = readWritePhysicalActivity.getActivity();
                                             duration = readWritePhysicalActivity.getDuration();
                                             time = readWritePhysicalActivity.getTime();
-                                            description = readWritePhysicalActivity.getDescription();
+                                            repeatMode = readWritePhysicalActivity.getRepeatMode();
 
                                             etDuration.setText(duration);
                                             tvAlarm.setText(time);
-                                            if(description != null) etDescription.setText(description);
+
+                                            switch (repeatMode){
+                                                case "2hours":
+                                                    displayClickedRepeatButton(btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever, tv2hours, tv4hours, tvOnceADay, tvNever);
+                                                       break;
+                                                case "4hours":
+                                                    displayClickedRepeatButton(btn4hoursRepeat, btn2hoursRepeat, btnOnceADay, btnNever, tv4hours, tv2hours, tvOnceADay, tvNever);
+                                                    break;
+                                                case "OnceADay":
+                                                    displayClickedRepeatButton(btnOnceADay, btn2hoursRepeat, btn4hoursRepeat, btnNever, tvOnceADay, tv2hours, tv4hours, tvNever);
+                                                    break;
+                                                case "Never":
+                                                    displayClickedRepeatButton(btnNever, btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, tvNever, tv2hours, tv4hours, tvOnceADay);
+                                                    break;
+                                            }
 
                                             switch(activity){
                                                 case "Stretching":
-                                                    displayPhysicalActivityIC(R.drawable.ic_stretching,R.drawable.ic_walking,R.drawable.ic_yoga,
-                                                            R.drawable.ic_aerobics);
                                                     spinner_physical_activity.setSelection(0);
+                                                    displayPhysicalActivity(R.drawable.stretch5);
                                                     break;
                                                 case "Walking":
-                                                    displayPhysicalActivityIC(R.drawable.ic_stretching,R.drawable.ic_walking,R.drawable.ic_yoga,
-                                                            R.drawable.ic_aerobics);
                                                     spinner_physical_activity.setSelection(1);
+                                                    displayPhysicalActivity(R.drawable.walking);
                                                     break;
                                                 case "Yoga":
-                                                    displayPhysicalActivityIC(R.drawable.ic_stretching,R.drawable.ic_walking,R.drawable.ic_yoga,
-                                                            R.drawable.ic_aerobics);
-                                                    spinner_physical_activity.setSelection(2);
+                                                    displayPhysicalActivity(R.drawable.yoga1);
                                                     break;
                                                 case "Aerobics":
-                                                    displayPhysicalActivityIC(R.drawable.ic_stretching,R.drawable.ic_walking,R.drawable.ic_yoga,
-                                                            R.drawable.ic_aerobics);
                                                     spinner_physical_activity.setSelection(3);
+                                                    displayPhysicalActivity(R.drawable.aerobics1);
                                                     break;
-                                            }
+                                           }
                                         }
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                     }
                                 });
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                         }
                     });
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error", "Something went wrong. Please try again!", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
             }
         });
     }
 
-    public void displayPhysicalActivityIC(int image1, int image2, int image3, int image4) {
-        switch (activity) {
-            case "Stretching":
-                ivPhysicalActivity.setBackground(AppCompatResources.getDrawable(this , image1));
-                break;
-            case "Walking":
-                ivPhysicalActivity.setBackground(AppCompatResources.getDrawable(this, image2));
-                break;
-            case "Yoga":
-                ivPhysicalActivity.setBackground(AppCompatResources.getDrawable(this, image3));
-                break;
-            case "Aerobics":
-                ivPhysicalActivity.setBackground(AppCompatResources.getDrawable(this, image4));
-                break;
-        }
-    }
-
     public void updatePhysicalActivity(String physicalActivityID){
-
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Activity", physical_activity_selected);
         hashMap.put("Duration", Objects.requireNonNull(etDuration.getText()).toString());
         hashMap.put("RequestCode", requestCode);
         hashMap.put("Time", tvAlarm.getText().toString());
-        hashMap.put("Description", Objects.requireNonNull(etDescription.getText()).toString());
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds1 : snapshot.getChildren()){
                     String seniorID = ds1.getKey();
-
                     referenceReminders.child(mUser.getUid()).child(seniorID).child(physicalActivityID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -415,7 +389,6 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot ds3 : snapshot.getChildren()){
                                             String senior_medicineID  = ds3.getKey();
-
                                             referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -435,13 +408,11 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                                             }
                                                         });
                                                     }
-
-                                                    promptMessage("Physical Activity Info","Successfully updated the physical activity information", R.color.dark_green);
                                                 }
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                                 }
                                             });
                                         }
@@ -449,7 +420,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                     }
                                 });
                             }
@@ -457,7 +428,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                         }
                     });
                 }
@@ -465,9 +436,16 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
+
             }
         });
+
+        promptMessage.displayMessage(
+                "Physical Activity Info",
+                "Successfully updated the physical activity information",
+                R.color.dark_green,
+                ViewPhysicalActivity.this);
     }
 
     // delete medicine for both carer and senior nodes
@@ -482,34 +460,31 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                         referenceReminders.child(mUser.getUid()).child(key).child(physicalActivityID).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                                 ReadWritePhysicalActivity readWritePhysicalActivity = snapshot.getValue(ReadWritePhysicalActivity.class);
                                 request_code = readWritePhysicalActivity.getRequestCode();
                                 code = request_code.intValue();
-
-                                // cancel the alarm
                                 cancelAlarm(code);
 
                                 referenceReminders.child(mUser.getUid()).child(key).child(physicalActivityID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
 
+                                        if(task.isSuccessful()){
                                             referenceReminders.child(key).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     for(DataSnapshot ds2: snapshot.getChildren()){
-                                                        String medicine_key = ds2.getKey();
+                                                        String activity_key = ds2.getKey();
 
-                                                        referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        referenceReminders.child(key).child(mUser.getUid()).child(activity_key).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                 for(DataSnapshot ignored : snapshot.getChildren()){
-                                                                    ReadWriteMedication rw = snapshot.getValue(ReadWriteMedication.class);
+                                                                    ReadWritePhysicalActivity rw = snapshot.getValue(ReadWritePhysicalActivity.class);
                                                                     Long request_code2 = rw.getRequestCode();
-
                                                                     if (request_code2.equals(request_code)) {
-                                                                        referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                                                        referenceReminders.child(key).child(mUser.getUid()).child(activity_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 finish();
@@ -521,7 +496,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                                                             @Override
                                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                                promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                                             }
                                                         });
                                                     }
@@ -529,7 +504,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                                 }
                                             });
                                         }
@@ -539,7 +514,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                             }
                         });
                     }
@@ -547,20 +522,80 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                 }
             });
         });
     }
 
-    // custom prompt message
-    public void promptMessage(String title, String msg, int background){
-        CookieBar.build(ViewPhysicalActivity.this)
-                .setTitle(title)
-                .setMessage(msg)
-                .setCookiePosition(CookieBar.TOP)
-                .setBackgroundColor(background)
-                .setDuration(5000)
-                .show();
+    // set the alarm manager and listen for broadcast
+    private void startAlarm(Calendar c) {
+        requestCode = (int)calendar.getTimeInMillis()/1000;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra("PhysicalActivity", 2);
+
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        // alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        //         calendar.getTimeInMillis(),
+        //         AlarmManager.INTERVAL_DAY,
+        //         pendingIntent);
     }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        updateTimeText(calendar);
+    }
+
+    private void updateTimeText(Calendar c) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+        tvAlarm.setText(simpleDateFormat.format(calendar.getTime()));
+        time = simpleDateFormat.format(calendar.getTime());
+    }
+
+
+    public void cancelAlarm(int requestCode){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
+    }
+
+    // change background of clicked repeat's button and textview
+    public void displayClickedRepeatButton(MaterialCardView btnClicked, MaterialCardView btn1,
+                                           MaterialCardView btn2, MaterialCardView btn3, TextView tvClicked, TextView tv1, TextView tv2, TextView tv3){
+        btnClicked.setCardBackgroundColor(getResources().getColor(R.color.dark_violet));
+        tvClicked.setTextColor(getResources().getColor(R.color.white));
+        btn1.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        btn2.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        btn3.setCardBackgroundColor(getResources().getColor(R.color.grey2));
+        tv1.setTextColor(getResources().getColor(R.color.grey1));
+        tv2.setTextColor(getResources().getColor(R.color.grey1));
+        tv3.setTextColor(getResources().getColor(R.color.grey1));
+    }
+
 }

@@ -52,12 +52,12 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivPhysicalActivityIC"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp" />
+        android:src="@drawable/stretch5"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,22 +66,12 @@
         android:layout_margin="25dp"
         android:layout_gravity="center_vertical">
 
-        <TextView
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey5"
-            android:text="Physical Activity"
-            android:textSize="19sp" />
-
         <Spinner
             android:id="@+id/spinner_physical_activity"
             style="@style/Widget.App.Spinner"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_margin="5dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
             android:elevation="8dp" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -105,10 +95,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:fontFamily="@font/redhat_display_bold"
-                android:textColor="@color/grey5"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey4"
                 android:text="Alarm"
-                android:textSize="19sp" />
+                android:textSize="17sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnChangeSchedule"
@@ -132,10 +122,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="5dp"
-            android:fontFamily="@font/redhat_display_semibold"
+            android:fontFamily="@font/redhat_display_bold"
             android:letterSpacing="0.1"
-            android:textColor="@color/grey3"
-            android:textSize="16sp" />
+            android:textColor="@color/grey7"
+            android:text="9:00 PM"
+            android:textSize="22sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -146,31 +137,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey5"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/grey4"
             android:text="Duration"
-            android:textSize="19sp" />
+            android:textSize="17sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_margin="2dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
             android:background="@drawable/rounded_pick_number"
             android:elevation="5dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMinus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_minus_green"
-                android:layout_marginStart="19dp"
-                android:text="|"
-                android:textSize="15sp"
-                android:fontFamily="@font/redhat_display_bold"
-                android:textColor="@color/et_stroke" />
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                app:cornerRadius="28dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                app:iconPadding="0dp"
+                app:icon="@drawable/ic_minus_green"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etDuration"
@@ -180,53 +172,129 @@
                 android:background="@drawable/edit_text_background"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:fontFamily="@font/redhat_display_bold"
+                android:fontFamily="@font/redhat_display_medium"
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/grey5" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_plus_green"
-                android:background="@android:color/transparent"
-                android:drawableEnd="@drawable/ic_plus_green"
-                android:text="|"
-                android:textSize="15sp"
-                android:textAlignment="textStart"
-                android:textColor="@color/et_stroke"
-                android:fontFamily="@font/redhat_display_bold"
-                android:layout_marginEnd="19dp"/>
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                app:cornerRadius="28dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                app:iconPadding="0dp"
+                app:icon="@drawable/ic_plus_green"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"/>
 
         </LinearLayout>
-
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp"/>
 
         <TextView
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="4dp"
             android:fontFamily="@font/redhat_display_bold"
-            android:textColor="@color/grey5"
-            android:text="Description"
-            android:textSize="19sp" />
+            android:textColor="@color/grey4"
+            android:textSize="15sp"
+            android:drawableEnd="@drawable/ic_repeat"
+            android:drawablePadding="15dp"
+            android:text="Repeat every"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etDescription"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/redhat_display_semibold"
-            android:letterSpacing="0.1"
-            android:textColor="@color/grey3"
-            android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center">
+
+            <!-- 2 hours -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/repeat2hours"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/grey2"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv2hours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="2 hours"
+                    android:textColor="@color/grey1"
+                    android:textAlignment="center" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 4 hours -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/repeat4hours"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                app:cardBackgroundColor="@color/grey2"
+                app:cardCornerRadius="20dp"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tv4hours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:textColor="@color/grey1"
+                    android:text="4 hours"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- once a day -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/repeatOnceADay"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                app:cardBackgroundColor="@color/grey2"
+                app:cardCornerRadius="20dp"
+                android:layout_weight="1.3">
+                <TextView
+                    android:id="@+id/tvOnceADay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="once a day"
+                    android:textColor="@color/grey1"
+                    android:textAlignment="center" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- repeat never -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/repeatNever"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                app:cardBackgroundColor="@color/grey2"
+                app:cardCornerRadius="20dp"
+                android:layout_weight="1.3">
+                <TextView
+                    android:id="@+id/tvRepeatNever"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="never"
+                    android:textColor="@color/grey1"
+                    android:textAlignment="center" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnUpdate"
@@ -238,6 +306,7 @@
             android:fontFamily="@font/redhat_display_bold"
             android:textColor="@color/white"
             android:background="@drawable/rounded_button_login"
+            android:layout_marginBottom="?actionBarSize"
             android:layout_marginTop="40dp"
             android:backgroundTint="@color/light_green" />
 

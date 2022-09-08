@@ -106,11 +106,12 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
         requestQueue = Volley.newRequestQueue(ViewGame.this);
 
-        // retrieve appointment's ID
+        // retrieve game's ID
         gameID = getIntent().getStringExtra( "userKey");
-
         // show game information
-        showGameInfo(gameID);
+        String key = getIntent().getStringExtra("key");
+        if(key != null) showGameInfo(key);
+        else showGameInfo(gameID);
 
         // deleteGame
         deleteGame();

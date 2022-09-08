@@ -87,6 +87,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
 
+    // gif extension support
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
+
     implementation 'com.karumi:dexter:6.2.3'
 
 }

@@ -307,30 +307,6 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         time = simpleDateFormat.format(calendar.getTime());
     }
 
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("Games", 4);
-
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
-        }
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        // set alarm for everyday
-        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-        //        calendar.getTimeInMillis(),
-        //        AlarmManager.INTERVAL_DAY,
-        //        pendingIntent);
-    }
-
     // listen if alarm is currently running so we can send notification to senior
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -438,11 +414,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
 
     // store schedule for games
     private void addSchedule() {
-
-        startAlarm(calendar);
-
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Game", selected_game);
         hashMap.put("Time", time);
         hashMap.put("RequestCode", requestCode);
@@ -454,11 +426,12 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         seniorID = ds.getKey();
                         assert seniorID != null;
-                        referenceReminders.child(seniorID).child(mUser.getUid()).push().updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                        String key = referenceReminders.push().getKey();
+                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).push().updateChildren(hashMap).addOnCompleteListener(task1 -> {
+                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             dialog.dismiss();
                                         }
@@ -473,6 +446,8 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                                         .setCookiePosition(CookieBar.TOP)
                                         .setDuration(5000)
                                         .show();
+
+                                startAlarm(calendar, key);
                             }
                         });
                     }
@@ -484,6 +459,30 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                 promptMessage.defaultErrorMessage(getActivity());
             }
         });
+    }
+
+    // set the alarm manager and listen for broadcast
+    private void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("Games", 4);
+        intent.putExtra("game_id", key);
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
+        }
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        //        calendar.getTimeInMillis(),
+        //        AlarmManager.INTERVAL_DAY,
+        //        pendingIntent);
     }
 
     // change the background the current day to white
@@ -518,7 +517,6 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
 
     // display carer's profile pic
     private void showUserProfile(){
-        // display carer profile pic
         referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
