@@ -7,14 +7,45 @@
     android:orientation="vertical"
     tools:context=".screen.carer.RegisterCarer">
 
-    <ImageButton
-        android:id="@+id/ibRegisterCarerBack"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@color/white"
-        android:contentDescription="@string/back"
-        android:src="@drawable/ic_back" />
+        android:orientation="horizontal"
+        android:background="@drawable/horizontal_bg_1"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/ibRegisterCarerBack"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back_white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Carer"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"
+            android:textSize="20sp"
+            android:layout_weight="5.5"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/grey3"/>
 
     <FrameLayout
         android:layout_width="120dp"
@@ -41,21 +72,33 @@
 
     </FrameLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="20dp"
+        android:layout_marginBottom="?actionBarSize"
         android:layout_weight="1"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
         <!-- full name -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilFullName"
             android:layout_width="match_parent"
             android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:boxStrokeColor="@color/light_green"
+            app:boxStrokeErrorColor="@color/red_decline_request"
             app:endIconMode="clear_text"
-            app:hintEnabled="false"
+            app:hintEnabled="true"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
 
@@ -63,14 +106,14 @@
                 android:id="@+id/etCarerFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
                 android:hint="@string/full_name"
-                app:boxStrokeWidthFocused="0dp"
-                android:padding="20dp"
+                android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:boxStrokeWidthFocused="0dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,15 +126,16 @@
 
             <!-- DOB dropdown -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDOB"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
                 android:layout_weight="1.5"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
+                android:layout_marginEnd="10dp"
+                app:errorEnabled="true"
                 app:endIconMode="clear_text"
-                app:hintEnabled="false">
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dropdown_dob"
@@ -100,8 +144,8 @@
                     android:background="@drawable/rounded_text_login"
                     android:drawableEnd="@drawable/ic_dropdown"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Date of Birth"
                     android:inputType="none"
+                    android:hint="Date of Birth"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
                     android:textSize="18sp"
@@ -111,12 +155,15 @@
 
             <!-- gender dropdown -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilGender"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                app:hintEnabled="true"
                 app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+                app:boxStrokeErrorColor="@color/mtrl_textinput_default_box_stroke_color"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusTopStart="10dp"
@@ -129,8 +176,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:inputType="none"
                     android:hint="Gender"
+                    android:inputType="none"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
                     android:textSize="18sp"
@@ -142,12 +189,11 @@
 
         <!-- email address -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
+            app:errorEnabled="true"
             app:endIconMode="clear_text"
-            app:hintEnabled="false"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
 
@@ -155,57 +201,56 @@
                 android:id="@+id/etCarerEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword"
+                android:inputType="textVisiblePassword|textEmailAddress"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
                 android:hint="@string/email_address"
                 app:boxStrokeWidthFocused="0dp"
-                android:padding="20dp"
+                android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <!-- address -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_marginBottom="15dp"
+            app:errorEnabled="true"
+            app:endIconMode="clear_text"
+            app:counterMaxLength="30"
+            app:counterEnabled="true"
+            app:hintEnabled="true"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp">
 
-            <!-- address -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_weight="1"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="Address"
+                android:inputType="textCapWords|textVisiblePassword"
+                android:paddingTop="35dp"
+                android:textColorHint="@color/grey4"
+                android:textSize="18sp"
+                app:boxStrokeWidthFocused="0dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:background="@drawable/rounded_text_login"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Address"
-                    app:boxStrokeWidthFocused="0dp"
-                    android:padding="20dp"
-                    android:textColorHint="@color/grey4"
-                    android:textSize="18sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- mobile number -->
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
+            android:id="@+id/tilMobileNumber"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="15dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="11"
+            app:errorEnabled="true"
             app:endIconMode="clear_text"
-            app:hintEnabled="false"
+            app:hintEnabled="true"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
 
@@ -213,27 +258,28 @@
                 android:id="@+id/etCarerMobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword"
+                android:inputType="textVisiblePassword|number"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="@string/mobile_number"
+                android:drawableStart="@drawable/ic_ph_flag"
+                android:drawablePadding="10dp"
+                android:hint="Mobile Number"
                 app:boxStrokeWidthFocused="0dp"
                 android:padding="20dp"
                 android:textColorHint="@color/grey4"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
-
         <!-- password -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="match_parent"
-            android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
+            app:errorEnabled="true"
             app:endIconMode="password_toggle"
             app:endIconDrawable="@drawable/custom_eye"
             app:endIconTint="@color/grey4"
-            app:hintEnabled="false"
+            app:hintEnabled="true"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
 
@@ -245,8 +291,9 @@
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
                 android:hint="@string/login_password"
+                android:maxLength="20"
                 app:boxStrokeWidthFocused="0dp"
-                android:padding="20dp"
+                android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -256,30 +303,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:layout_marginBottom="?actionBarSize"
             android:background="@drawable/rounded_button_login"
             android:fontFamily="@font/redhat_display_bold"
+            android:enabled="true"
             android:text="@string/signup"
             android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center|bottom"
-        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvCarerHaveAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:fontFamily="@font/redhat_display_semibold"
+            android:layout_marginBottom="?actionBarSize"
+            android:fontFamily="@font/redhat_display_regular"
             android:text="@string/already_have_account"
             android:textAlignment="center"
             android:textColor="@color/grey1"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
+
     </LinearLayout>
-    
+
+    </ScrollView>
 
 </LinearLayout>

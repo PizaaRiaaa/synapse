@@ -2,18 +2,14 @@ package com.example.synapse.screen.carer.modules.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.DialogFragment;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.modules.fragments.PhysicalActivityFragment;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.TimePickerFragment;
-import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.adapter.ItemPhysicalActivityAdapter;
@@ -30,10 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
@@ -43,17 +37,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
-import org.aviran.cookiebar2.CookieBar;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -80,15 +67,15 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
     ItemPhysicalActivityAdapter adapter;
     private final Calendar calendar = Calendar.getInstance();
     private GifImageView gifImageView;
-    private int count = 0, retrieved_request_code;
+    private int count = 0;
     private Intent intent;
     private Long request_code;
     int code, requestCode;
-    private  String physical_activity_selected, time, token,
+    String  time, token, key, time1, time2,
             seniorID, physicalActivityID, activity,
             duration, repeatMode, type_of_activity, clickedRepeatBtn;
     private MaterialCardView btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever;
-    private TextView tvTime, tv2hours,tv4hours,tvOnceADay, tvNever;
+    TextView tvTime, tv2hours,tv4hours,tvOnceADay, tvNever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -351,9 +338,8 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
     public void updatePhysicalActivity(String physicalActivityID){
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("Activity", physical_activity_selected);
+        hashMap.put("Activity", type_of_activity);
         hashMap.put("Duration", Objects.requireNonNull(etDuration.getText()).toString());
-        hashMap.put("RequestCode", requestCode);
         hashMap.put("Time", tvAlarm.getText().toString());
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -361,46 +347,47 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds1 : snapshot.getChildren()){
                     String seniorID = ds1.getKey();
+
                     referenceReminders.child(mUser.getUid()).child(seniorID).child(physicalActivityID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot ignored : snapshot.getChildren()){
+                            for(DataSnapshot ignored : snapshot.getChildren()) {
                                 ReadWritePhysicalActivity rw1 = snapshot.getValue(ReadWritePhysicalActivity.class);
                                 Long carer_request_code = rw1.getRequestCode();
-                                int i = carer_request_code.intValue();
+                                int int_request_code = rw1.getRequestCode().intValue();
 
-                                String time1 = rw1.getTime();
-                                String time2 = tvAlarm.getText().toString();
-
-                                if(!time1.equals(time2)){
+                                time1 = rw1.getTime();
+                                time2 = tvAlarm.getText().toString();
+                                if (!time1.equals(time2)) {
 
                                     // if the alarm was updated by the user, then we need to cancel the old alarm
-                                    cancelAlarm(i);
+                                    cancelAlarm(int_request_code);
 
                                     // store the new requestCode
                                     hashMap.put("RequestCode", requestCode);
 
                                     // start the new alarm
-                                    startAlarm(calendar);
+                                    startAlarm(calendar, key);
                                 }
 
                                 referenceReminders.child(seniorID).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot ds3 : snapshot.getChildren()){
-                                            String senior_medicineID  = ds3.getKey();
-                                            referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        for (DataSnapshot ds3 : snapshot.getChildren()) {
+                                            String senior_physicalID = ds3.getKey();
+
+                                            referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_physicalID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    ReadWriteMedication rw2 = snapshot.getValue(ReadWriteMedication.class);
+                                                    ReadWritePhysicalActivity rw2 = snapshot.getValue(ReadWritePhysicalActivity.class);
                                                     Long senior_request_code = rw2.getRequestCode();
 
                                                     // update both nodes
-                                                    if(senior_request_code.equals(carer_request_code)){
+                                                    if (senior_request_code.equals(carer_request_code)) {
                                                         referenceReminders.child(mUser.getUid()).child(seniorID).child(physicalActivityID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_physicalID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                     }
@@ -423,8 +410,8 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                         promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
                                     }
                                 });
+                                }
                             }
-                        }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -529,11 +516,12 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
     }
 
     // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c) {
+    private void startAlarm(Calendar c, String key) {
         requestCode = (int)calendar.getTimeInMillis()/1000;
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         intent = new Intent(this, AlertReceiver.class);
         intent.putExtra("PhysicalActivity", 2);
+        intent.putExtra("physical_view_id", key);
 
         PendingIntent pendingIntent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {

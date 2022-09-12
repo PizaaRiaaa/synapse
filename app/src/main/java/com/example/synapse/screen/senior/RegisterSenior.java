@@ -8,11 +8,13 @@ import com.example.synapse.R;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.PickRole;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
+import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -34,7 +36,9 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -50,40 +54,78 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class RegisterSenior extends AppCompatActivity {
 
+    PromptMessage promptMessage = new PromptMessage();
+    private static final String TAG_1 = "RegisterActivity";
     private static final String TAG = "";
-    private EditText etFullName,etEmail, etPassword, etMobileNumber;
     private ImageView ivProfilePic;
     private TextInputEditText dropdown_dob;
     private DatePickerDialog datePickerDialog;
-    private static final String TAG_1 = "RegisterActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
     private final String imageURL = "";
     private Uri uriImage;
     private StorageReference storageReference;
-    private String token;
+
+    AutoCompleteTextView autocompleteBarangay;
+    AutoCompleteTextView autocompleteGender;
+
+    private TextInputEditText
+            etFullName,
+            etEmail,
+            etPassword,
+            etMobileNumber;
+
+    private TextInputLayout
+            tilFullName,
+            tilDOB,
+            tilGender,
+            tilEmail,
+            tilAddress,
+            tilMobileNumber,
+            tilPassword;
+
+    String  token,
+            textFullName,
+            textEmail,
+            textPassword,
+            textMobileNumber,
+            textDOB,
+            textAddress,
+            textGender,
+            textToken,
+            userType,
+            textDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_senior);
 
+        autocompleteBarangay = findViewById(R.id.drop_barangay);
+        autocompleteGender = findViewById(R.id.drop_gender);
+        AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
+        Button btnSignup = findViewById(R.id.btnSignupSenior);
         etFullName = findViewById(R.id.etSeniorFullName);
         etEmail = findViewById(R.id.etSeniorEmail);
         etPassword = findViewById(R.id.etRegisterSeniorPassword);
         etMobileNumber = findViewById(R.id.etSeniorMobileNumber);
         ivProfilePic = findViewById(R.id.ibSeniorProfilePic);
-        AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
         dropdown_dob = findViewById(R.id.dropdown_dob);
-        AutoCompleteTextView autocompleteBarangay = findViewById(R.id.drop_barangay);
-        AutoCompleteTextView autocompleteGender = findViewById(R.id.drop_gender);
-        Button btnSignup = findViewById(R.id.btnSignupSenior);
-
+        tilFullName = findViewById(R.id.tilFullName);
+        tilDOB = findViewById(R.id.tilDOB);
+        tilGender = findViewById(R.id.tilGender);
+        tilEmail = findViewById(R.id.tilEmail);
+        tilAddress = findViewById(R.id.menuDrop);
+        tilMobileNumber = findViewById(R.id.tilMobileNumber);
+        tilPassword = findViewById(R.id.tilPassword);
 
         // get user token
         FirebaseMessaging.getInstance().getToken()
@@ -140,53 +182,110 @@ public class RegisterSenior extends AppCompatActivity {
            datePickerDialog.show();
         });
 
-        // dropdown barangay
-       // autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-       //     @Override
-       //     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-       //         autoCompleteTextView.setText((String)parent.getItemAtPosition(position));
-       //     }
-       // });
+        etFullName.addTextChangedListener(textWatcher);
+        dropdown_dob.addTextChangedListener(textWatcher);
+        autocompleteGender.addTextChangedListener(textWatcher);
+        autocompleteBarangay.addTextChangedListener(textWatcher);
+        etEmail.addTextChangedListener(textWatcher);
+        etMobileNumber.addTextChangedListener(textWatcher);
+        etPassword.addTextChangedListener(textWatcher);
 
-        btnSignup.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                // obtain the entered data
-                String textFullName = etFullName.getText().toString();
-                String textEmail = etEmail.getText().toString();
-                String textPassword = etPassword.getText().toString();
-                String textMobileNumber = etMobileNumber.getText().toString();
-                String textDOB = dropdown_dob.getText().toString();
-                String textAddress = autocompleteBarangay.getText().toString();
-                String textGender = autocompleteGender.getText().toString();
-                String textToken = token;
-                String userType = "Senior";
+        btnSignup.setOnClickListener(v -> checkValidation());
 
-                if(TextUtils.isEmpty(textFullName)){
-                    Toast.makeText(RegisterSenior.this, "Please enter your full name", Toast.LENGTH_LONG).show();
-                    etFullName.requestFocus();
-                }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
-                    Toast.makeText(RegisterSenior.this, "Please re-enter your email", Toast.LENGTH_LONG).show();
-                    etEmail.requestFocus();
-                }else if(TextUtils.isEmpty(textMobileNumber)){
-                    Toast.makeText(RegisterSenior.this, "Please re-enter your mobile number", Toast.LENGTH_LONG).show();
-                    etMobileNumber.requestFocus();
-                }else if(textMobileNumber.length() != 11){
-                    Toast.makeText(RegisterSenior.this, "Please re-enter your mobile number", Toast.LENGTH_LONG).show();
-                    etMobileNumber.setError("Mobile no. should be 11 digits");
-                    etMobileNumber.requestFocus();
-                }else if(TextUtils.isEmpty(textPassword)){
-                    Toast.makeText(RegisterSenior.this, "Please re-enter your password", Toast.LENGTH_LONG).show();
-                    etPassword.requestFocus();
-                }else if(uriImage == null){
-                    Toast.makeText(RegisterSenior.this, "Please select your profile picture", Toast.LENGTH_LONG).show();
-                }
-
-                else{ signupUser(textFullName,textEmail,textMobileNumber,textPassword,textDOB,textAddress,textGender,userType,imageURL,textToken);
-                }
-            }
-        });
     }
+
+    public void checkValidation(){
+            // obtain the entered data
+            Date timestamp = Calendar.getInstance().getTime();
+            textToken = token;
+            userType = "Senior";
+            textFullName = etFullName.getText().toString();
+            textEmail = etEmail.getText().toString();
+            textPassword = etPassword.getText().toString();
+            textMobileNumber = etMobileNumber.getText().toString();
+            textDOB = dropdown_dob.getText().toString();
+            textAddress = autocompleteBarangay.getText().toString();
+            textGender = autocompleteGender.getText().toString();
+            textDate = timestamp.toString();
+
+            // validate mobile number using matcher and regex
+            String mobileRegex = "^(09|\\+639)\\d{9}$"; // first no. can be {09 or +639} and rest 9 no. can be any no.
+            Matcher mobileMatcher;
+            Pattern mobilePattern = Pattern.compile(mobileRegex);
+            mobileMatcher = mobilePattern.matcher(etMobileNumber.getText());
+
+            // Password contain at least 6 characters, one digit, and one upper case letter
+            String passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])\\S{6,}$";
+            Matcher passwordMatcher;
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            passwordMatcher = passwordPattern.matcher(etPassword.getText());
+
+            if(checkIfEmpty(etFullName)){
+                tilFullName.setError("This field can't be empty");
+                tilFullName.requestFocus();
+            } else if(checkIfEmpty(dropdown_dob)){
+                tilDOB.setError("This field can't be empty");
+                tilDOB.requestFocus();
+            } else if(TextUtils.isEmpty(autocompleteGender.getText())){
+                tilGender.setError("This field can't be empty");
+                tilGender.requestFocus();
+            } else if(TextUtils.isEmpty(autocompleteBarangay.getText())){
+                tilAddress.setError("This field can't be empty");
+                tilAddress.requestFocus();
+            } else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
+                tilEmail.setError("Invalid email. Please re-enter your email");
+                tilEmail.requestFocus();
+            } else if(checkIfEmpty(etMobileNumber)){
+                tilMobileNumber.setError("This field can't be empty");
+                tilMobileNumber.requestFocus();
+            } else if(etMobileNumber.getText().length() != 11){
+                tilMobileNumber.setError("Mobile no. should be 11 digits. e.g. 09166992880");
+                tilMobileNumber.requestFocus();
+            } else if(!mobileMatcher.find()){
+                tilMobileNumber.setError("Mobile no. is not valid. e.g. 09166992880");
+                tilMobileNumber.requestFocus();
+            } else if(checkIfEmpty(etPassword)){
+                tilPassword.setError("This field can't be empty");
+                tilPassword.requestFocus();
+            } else if(!passwordMatcher.find()){
+                tilPassword.setError("Password must contain at least 6 characters, 1 digit, and 1 upper case");
+                tilPassword.requestFocus();
+            } else if(uriImage == null){
+                promptMessage.displayMessage("Empty profile picture",
+                        "Please select your profile picture", R.color.red_decline_request, RegisterSenior.this);
+            }
+
+            else{
+                signupUser(textFullName,textEmail,textMobileNumber,textPassword,textDOB,textAddress,
+                        textGender,userType,imageURL,textToken, textDate);
+            }
+    }
+
+    public boolean checkIfEmpty(TextInputEditText tit){
+        return TextUtils.isEmpty(tit.getText());
+    }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            tilFullName.setError(null);
+            tilGender.setError(null);
+            tilEmail.setError(null);
+            tilAddress.setError(null);
+            tilDOB.setError(null);
+            tilMobileNumber.setError(null);
+            tilPassword.setError(null);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
 
 
     private String getTodaysDate(){
@@ -224,7 +323,7 @@ public class RegisterSenior extends AppCompatActivity {
 
     // register User using the credentials given
     private void signupUser(String textFullName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress,
-                            String textGender, String userType, String imageURL, String textToken){
+                            String textGender, String userType, String imageURL, String textToken, String textDateCreated){
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -239,7 +338,7 @@ public class RegisterSenior extends AppCompatActivity {
 
                             // enter user data into the firebase realtime database
                             ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail, textMobileNumber, textPassword, textDOB,
-                            textAddress, textGender, userType, imageURL, textToken);
+                            textAddress, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "registered user"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");

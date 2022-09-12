@@ -40,5 +40,5 @@ public class ReadWritePhysicalActivity {
     public void setRepeatMode(String RepeatMode){ this.RepeatMode = RepeatMode; }
 
     public Long getRequestCode(){ return RequestCode; }
-    public void setRequestCode(Long requestCode){ this.RequestCode = requestCode; }
+    public void setRequestCode(Long RequestCode){ this.RequestCode = RequestCode; }
 }

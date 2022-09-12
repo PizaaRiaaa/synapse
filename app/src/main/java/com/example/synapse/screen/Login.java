@@ -84,23 +84,25 @@ public class Login extends AppCompatActivity {
         changeColor();
 
         // authenticate user
-        btnLogin.setOnClickListener(view -> {
-            String textEmail = etEmail.getText().toString();
-            String textPassword = etPassword.getText().toString();
-            if(TextUtils.isEmpty(textEmail)){
-                promptMessage.displayMessage("Empty field", "Please enter your email", R.color.dark_green, Login.this);
-                etEmail.requestFocus();
-            }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
-                promptMessage.displayMessage("Invalid email", "Please enter your email", R.color.dark_green, Login.this);
-                etPassword.requestFocus();
-            }else if(TextUtils.isEmpty(textPassword)){
-                promptMessage.displayMessage("Empty field", "Please enter your password", R.color.dark_green, Login.this);
-                etPassword.requestFocus();
-            }else{
-                loginUser(textEmail, textPassword);
-            }
-     });
+        btnLogin.setOnClickListener(v -> authenticateUser());
 
+    }
+
+    public void authenticateUser(){
+        String textEmail = etEmail.getText().toString();
+        String textPassword = etPassword.getText().toString();
+        if(TextUtils.isEmpty(textEmail)){
+            promptMessage.displayMessage("Empty field", "Please enter your email", R.color.red1, Login.this);
+            etEmail.requestFocus();
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
+            promptMessage.displayMessage("Invalid email", "Please enter your email", R.color.dark_green, Login.this);
+            etPassword.requestFocus();
+        }else if(TextUtils.isEmpty(textPassword)){
+            promptMessage.displayMessage("Empty field", "Please enter your password", R.color.dark_green, Login.this);
+            etPassword.requestFocus();
+        }else{
+            loginUser(textEmail, textPassword);
+        }
     }
 
     // check user credentials

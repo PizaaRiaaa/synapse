@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".screen.MCIpromptMessage">
+
+    <ImageButton
+        android:id="@+id/ibBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:layout_margin="20dp"
+        android:background="@android:color/transparent"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mcitest"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_linear_layout"
+            android:orientation="vertical"
+            android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_marginBottom="30dp"
+            android:textSize="20sp"
+            android:text="Hello there! \n you need to answer and passed \n
+            the MCI test before you can \n register to this app"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnProceed"
+                android:layout_margin="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rounded_button_login"
+                android:fontFamily="@font/inter_bold"
+                android:text="PROCEED"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+</LinearLayout>

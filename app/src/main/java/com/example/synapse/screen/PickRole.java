@@ -31,12 +31,9 @@ public class PickRole extends AppCompatActivity {
 
         ImageButton ivBack;
         TextView tvBack;
-
         Button btnContinue;
-
         ImageView ibCarer;
         ImageView ibSenior;
-
 
         // (back arrow) bring user back to login screen
         ivBack = findViewById(R.id.ibBack);
@@ -46,14 +43,10 @@ public class PickRole extends AppCompatActivity {
         tvBack = findViewById(R.id.tvAlreadyHaveAnAccount);
         tvBack.setOnClickListener(view -> startActivity(new Intent(PickRole.this, Login.class)));
 
-
-
        /*  if ibCarer was pressed, then bring
            user to carer registration screen
-
            ibSenior was pressed, then bring
            user to senior registration screen*/
-
         btnContinue = findViewById(R.id.btnContinue);
         ibCarer = findViewById(R.id.ibPickCarer);
         ibSenior = findViewById(R.id.ibPickSenior);
@@ -71,7 +64,7 @@ public class PickRole extends AppCompatActivity {
             btnContinue.setEnabled(true);
             ibSenior.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.rounded_button_pick_role));
             ibCarer.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.custom_button_selector));
-            btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, RegisterSenior.class)));
+            btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, MCIpromptMessage.class)));
         });
 
 

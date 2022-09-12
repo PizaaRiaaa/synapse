@@ -65,6 +65,8 @@
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
                     android:hint="@string/login_email"
+                    android:drawableStart="@drawable/ic_profile"
+                    android:drawablePadding="15dp"
                     app:boxStrokeWidthFocused="0dp"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
@@ -87,14 +89,16 @@
                     android:id="@+id/etLoginPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
                     android:hint="@string/login_password"
-                    app:boxStrokeWidthFocused="0dp"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawablePadding="15dp"
+                    android:inputType="textPassword"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

@@ -10,7 +10,7 @@
 
     <!-- login screen -->
     <string name="login">Login</string>
-    <string name="login_email">Phone, email or username</string>
+    <string name="login_email">Phone or email</string>
     <string name="login_password">Password</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="btnLogin">LOGIN</string>
@@ -37,7 +37,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="signup">SIGNUP</string>
     <string name="thank_you_for_signing_up">Thank you for \n signing up!</string>
-    <string name="sent_email">We\'re glad yo\'re here! \n Before you start exploring, we \n just sent you the email \n confirmation</string>
+    <string name="sent_email">We\'re glad you\'re here! \n Before you start exploring, we \n just sent you the email \n confirmation</string>
     <string name="mbLogin">LOGIN</string>
 
     <!-- barangay list -->

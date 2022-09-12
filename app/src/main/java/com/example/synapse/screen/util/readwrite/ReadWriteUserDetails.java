@@ -11,11 +11,13 @@ public class ReadWriteUserDetails {
     public String userType;
     public String imageURL;
     public String token;
+    public String date_created;
 
     public ReadWriteUserDetails() { }
 
     public ReadWriteUserDetails(String textFullName, String textEmail, String textMobileNumber, String textPassword,
-                                String textDOB, String textAddress, String textGender, String userType, String imageURL, String token){
+                                String textDOB, String textAddress, String textGender, String userType,
+                                String imageURL, String token, String date_created){
 
         this.fullName = textFullName;
         this.email = textEmail;
@@ -27,6 +29,7 @@ public class ReadWriteUserDetails {
         this.userType = userType;
         this.imageURL = imageURL;
         this.token = token;
+        this.date_created = date_created;
     }
 
     public String getFullName(){ return fullName; }
@@ -52,6 +55,9 @@ public class ReadWriteUserDetails {
 
     public String getImageURL(){ return imageURL; }
     public void setImageURL(String imageURL){ this.imageURL = imageURL; }
+
+    public String getDate_created(){ return date_created; }
+    public void setDate_created(String date_created){ this.date_created = date_created; }
 
     public String getToken(){ return token; }
     public void setToken(String token){ this.token = token; }

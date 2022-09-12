@@ -65,6 +65,16 @@
         <item name="cornerSizeTopLeft">50dp</item>
     </style>
 
+    <style name="CustomCardCorners2" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance_custom_corners2</item>
+    </style>
+
+    <style name="ShapeAppearance_custom_corners2" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">30dp</item>
+        <item name="cornerSizeTopRight">30dp</item>
+    </style>
+
     <!-- rounded imageview right arrow and plus arrow -->
     <style name="roundedImageView" parent="">
         <item name="cornerFamily">rounded</item>

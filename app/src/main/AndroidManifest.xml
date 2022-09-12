@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
+            android:name=".screen.MCIpromptMessage"
+            android:exported="false" />
+        <activity
             android:name=".screen.carer.modules.view.Sample"
             android:exported="false" />
         <activity
