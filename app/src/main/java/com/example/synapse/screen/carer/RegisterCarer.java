@@ -64,6 +64,7 @@ public class RegisterCarer extends AppCompatActivity {
     private StorageReference storageReference;
     private static final String TAG = "RegisterActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private final String imageURL = "";
     private Uri uriImage;
 
     private ImageView ivProfilePic;
@@ -205,7 +206,6 @@ public class RegisterCarer extends AppCompatActivity {
         Date timestamp = Calendar.getInstance().getTime();
         user_token = token;
         userType = "Carer";
-        String imageURL = "";
         textFullName = etFullName.getText().toString();
         textEmail = etEmail.getText().toString().trim();
         textGender = autocompleteGender.getText().toString();
@@ -301,6 +301,7 @@ public class RegisterCarer extends AppCompatActivity {
     // register user using the credentials given
     private void signupUser(String textFullName, String textEmail, String textMobileNumber, String textPassword, String textDOB,
                             String textAddress, String textGender, String userType, String imageURL, String textToken, String textDateCreated){
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         // Create UserProfile
@@ -330,7 +331,7 @@ public class RegisterCarer extends AppCompatActivity {
                                     if(uriImage != null){
 
                                         // save profile pic with userid filename
-                                        StorageReference fileReference = storageReference.child(auth.getCurrentUser().getUid() + "."
+                                        StorageReference fileReference = storageReference.child(firebaseUser.getUid() + "."
                                                 + getFileExtension(uriImage));
 
                                         fileReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

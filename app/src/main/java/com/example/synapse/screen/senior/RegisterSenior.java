@@ -353,7 +353,7 @@ public class RegisterSenior extends AppCompatActivity {
                                     // If user change upload profile pic
                                     if(uriImage != null){
                                         // save the image
-                                        StorageReference fileReference = storageReference.child(Objects.requireNonNull(auth.getCurrentUser()).getUid() + "."
+                                        StorageReference fileReference = storageReference.child(firebaseUser.getUid() + "."
                                                 + getFileExtension(uriImage));
 
                                         fileReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

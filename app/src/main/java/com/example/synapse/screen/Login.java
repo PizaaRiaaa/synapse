@@ -46,11 +46,11 @@ import java.util.Objects;
 public class Login extends AppCompatActivity {
 
     PromptMessage promptMessage = new PromptMessage();
-    private static final String TAG = "loginActivity";
-    private DatabaseReference referenceUser, referenceRequest, referenceCompanion;
-    private EditText etEmail, etPassword;
-    private FirebaseAuth mAuth;
-    private String userType;
+    static final String TAG = "loginActivity";
+    DatabaseReference referenceUser, referenceRequest, referenceCompanion;
+    EditText etEmail, etPassword;
+    FirebaseAuth mAuth;
+    String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity {
 
     }
 
-    public void authenticateUser(){
+   void authenticateUser(){
         String textEmail = etEmail.getText().toString();
         String textPassword = etPassword.getText().toString();
         if(TextUtils.isEmpty(textEmail)){
@@ -105,26 +105,24 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    // check user credentials
-    private void loginUser(String email, String password){
+   void loginUser(String email, String password){
+       // check user credentials
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
             if(task.isSuccessful()){
-                // get instance of the current user
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                // check if email is verified
                 assert firebaseUser != null;
-                if(firebaseUser.isEmailVerified()){
+
+                if(firebaseUser.isEmailVerified()){ // check if user's email is verified
                     String userID = firebaseUser.getUid();
                     referenceUser.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            // check if current user is senior, carer or admin
-                            userType = snapshot.child("userType").getValue().toString();
+
+                            userType = snapshot.child("userType").getValue().toString(); // check if current user is senior, carer or admin
                             if(userType.equals("Carer")){
-                                // check if carer already send request to senior
-                                referenceRequest.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                referenceRequest.child(userID).addListenerForSingleValueEvent(new ValueEventListener() { // check if carer is already send request to senior
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -136,11 +134,13 @@ public class Login extends AppCompatActivity {
                                             finish();
                                         }
                                     }
+
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
                                         promptMessage.defaultErrorMessage(Login.this);
                                     }
                                 });
+
                                 // else check if carer and senior are already companion
                                 referenceCompanion.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -150,38 +150,43 @@ public class Login extends AppCompatActivity {
                                             finish();
                                         }
                                     }
+
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
                                         promptMessage.defaultErrorMessage(Login.this);
                                     }
                                 });
+
                             }else if(userType.equals("Senior")){
                                 startActivity(new Intent(Login.this, SeniorHome.class));
                                 finish();
                             }
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             promptMessage.defaultErrorMessage(Login.this);
                         }
                     });
+
                 }else{
                     firebaseUser.sendEmailVerification();
                     mAuth.signOut();
                     showAlertDialog();
                 }
+
             }else {
                 try {
                     throw Objects.requireNonNull(task.getException());
                 } catch (FirebaseAuthInvalidUserException e) {
-                    promptMessage.displayMessage("Error", "User does not exists. Please try again", R.color.dark_green, Login.this);
+                    promptMessage.displayMessage("Error", "User does not exists. Please try again", R.color.red_decline_request, Login.this);
                     etEmail.requestFocus();
                 } catch (FirebaseAuthInvalidCredentialsException e) {
-                    promptMessage.displayMessage("Error", "Invalid credentials. Kindly, check and re-enter", R.color.dark_green, Login.this);
+                    promptMessage.displayMessage("Error", "Invalid credentials. Kindly, check and re-enter", R.color.red_decline_request, Login.this);
                     etPassword.requestFocus();
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
-                    promptMessage.displayMessage("Error", e.getMessage(), R.color.dark_green, Login.this);
+                    promptMessage.displayMessage("Error", e.getMessage(), R.color.red_decline_request, Login.this);
                  }
                }
             }
@@ -189,7 +194,7 @@ public class Login extends AppCompatActivity {
     }
 
     // display dialog if user's email is not verified
-    private void showAlertDialog(){
+   void showAlertDialog(){
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
         builder.setTitle("Email Not Verified");
@@ -208,7 +213,7 @@ public class Login extends AppCompatActivity {
     }
 
     // transparent status bar
-    public void transparentStatusBar(){
+    void transparentStatusBar(){
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                 | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -221,8 +226,7 @@ public class Login extends AppCompatActivity {
     }
 
     // change the color of textview "Register"
-    public void changeColor(){
-
+    void changeColor(){
         // change substring color
         @SuppressLint("CutPasteId") TextView tvRegister = findViewById(R.id.tvRegister);
         String text = "Don't have an account? Register!";

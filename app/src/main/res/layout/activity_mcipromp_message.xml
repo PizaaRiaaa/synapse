@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context=".screen.MCIpromptMessage">
+    tools:context=".screen.senior.test.MCIpromptMessage">
 
     <ImageButton
         android:id="@+id/ibBack"

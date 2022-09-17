@@ -20,7 +20,13 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
-            android:name=".screen.MCIpromptMessage"
+            android:name=".screen.admin.LoadingScreen"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.test.MCItest"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.test.MCIpromptMessage"
             android:exported="false" />
         <activity
             android:name=".screen.carer.modules.view.Sample"

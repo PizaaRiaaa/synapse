@@ -5,7 +5,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.RegisterCarer;
-import com.example.synapse.screen.senior.RegisterSenior;
+import com.example.synapse.screen.senior.test.MCIpromptMessage;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
