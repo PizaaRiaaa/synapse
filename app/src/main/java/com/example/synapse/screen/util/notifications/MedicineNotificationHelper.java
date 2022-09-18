@@ -2,6 +2,7 @@ package com.example.synapse.screen.util.notifications;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,7 +40,10 @@ public class MedicineNotificationHelper extends ContextWrapper {
     @TargetApi(Build.VERSION_CODES.O)
     private void createChannel() {
         NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
-
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         getManager().createNotificationChannel(channel);
     }
 
@@ -53,13 +57,11 @@ public class MedicineNotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification() {
 
-
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle("Medicine Reminder")
                 .setContentText("It's time for your senior to take a medicine")
                 .setAutoCancel(true)
                 .setColorized(true)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
                 .setLights(Color.RED, 3000, 3000)
                 .setSmallIcon(R.drawable.ic_splash_logo);
 

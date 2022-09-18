@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment {
         referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
         String userID = user.getUid();
 
+
         // show top status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -159,7 +160,7 @@ public class HomeFragment extends Fragment {
     }
 
     // calculate senior's age
-    public int calculateAge(long date){
+    int calculateAge(long date){
         Calendar dob = Calendar.getInstance();
         dob.setTimeInMillis(date);
         Calendar today = Calendar.getInstance();
@@ -171,7 +172,7 @@ public class HomeFragment extends Fragment {
     }
 
     // display assigned senior info
-    private void showSeniorProfile(String firebaseUser){
+    void showSeniorProfile(String firebaseUser){
         // check if carer already send request
         referenceRequest.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

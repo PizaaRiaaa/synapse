@@ -147,7 +147,7 @@ public class Splashscreen extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                 public void onCancelled(@NonNull DatabaseError error) {
                     promptMessage.defaultErrorMessage(Splashscreen.this);
                 }
             });

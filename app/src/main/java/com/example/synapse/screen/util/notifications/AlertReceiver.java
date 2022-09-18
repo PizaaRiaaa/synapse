@@ -46,6 +46,7 @@ public class AlertReceiver extends BroadcastReceiver {
             MedicineNotificationHelper medicineNotificationHelper = new MedicineNotificationHelper(context);
             nb = medicineNotificationHelper.getChannelNotification();
             setContentIntent(context, ViewMedicine.class, "key", med_id);
+
             medicineNotificationHelper.getManager().notify(requestCode, nb.build());
             context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
             notificationRingtone(context, R.raw.medicine_reminder);
