@@ -46,10 +46,9 @@ public class AlertReceiver extends BroadcastReceiver {
             MedicineNotificationHelper medicineNotificationHelper = new MedicineNotificationHelper(context);
             nb = medicineNotificationHelper.getChannelNotification();
             setContentIntent(context, ViewMedicine.class, "key", med_id);
-
             medicineNotificationHelper.getManager().notify(requestCode, nb.build());
             context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
-            notificationRingtone(context, R.raw.medicine_reminder);
+          //  notificationRingtone(context, R.raw.medicine_reminder);
 
         }else if(physical == 2){
             PhysicalActivityNotificationHelper physicalActivityNotificationHelper = new PhysicalActivityNotificationHelper(context);
@@ -57,7 +56,7 @@ public class AlertReceiver extends BroadcastReceiver {
             setContentIntent(context, ViewPhysicalActivity.class, "key", physical_id);
             physicalActivityNotificationHelper.getManager().notify(requestCode, nb.build());
             context.sendBroadcast(new Intent("NOTIFY_PHYSICAL_ACTIVITY"));
-            notificationRingtone(context, R.raw.physical_activity_reminder);
+          // notificationRingtone(context, R.raw.physical_activity_reminder);
 
         }else if(appointment == 3){
             AppointmentNotificationHelper appointmentNotificationHelper = new AppointmentNotificationHelper(context);
@@ -65,7 +64,7 @@ public class AlertReceiver extends BroadcastReceiver {
             setContentIntent(context, ViewAppointment.class, "key", appointment_id);
             appointmentNotificationHelper.getManager().notify(requestCode, nb.build());
             context.sendBroadcast(new Intent("NOTIFY_APPOINTMENT"));
-            notificationRingtone(context, R.raw.appointment_tomorrow_reminder);
+            // notificationRingtone(context, R.raw.appointment_tomorrow_reminder);
 
         }else if(games == 4){
             GamesNotificationHelper gamesNotificationHelper = new GamesNotificationHelper(context);
@@ -73,7 +72,7 @@ public class AlertReceiver extends BroadcastReceiver {
             setContentIntent(context, ViewGame.class, "key", game_id);
             gamesNotificationHelper.getManager().notify(requestCode, nb.build());
             context.sendBroadcast(new Intent("NOTIFY_GAMES"));
-            notificationRingtone(context, R.raw.game_reminder);
+            // notificationRingtone(context, R.raw.game_reminder);
         }
 
      }

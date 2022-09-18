@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.os.Vibrator;
 import androidx.core.app.NotificationCompat;
 
 
+import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -27,10 +29,16 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-      // playing audio and vibration when user se reques
+      // playing audio and vibration when user set reques
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
         r.play();
+        // speech alarm
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.game_reminder);
+        mp.setLooping(false);
+        mp.start();
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             r.setLooping(false);
         }

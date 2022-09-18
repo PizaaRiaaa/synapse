@@ -7,6 +7,7 @@ public class ReadWriteUserDetails {
     public String password;
     public String dob;
     public String address;
+    public String city;
     public String gender;
     public String userType;
     public String imageURL;
@@ -16,8 +17,8 @@ public class ReadWriteUserDetails {
     public ReadWriteUserDetails() { }
 
     public ReadWriteUserDetails(String textFullName, String textEmail, String textMobileNumber, String textPassword,
-                                String textDOB, String textAddress, String textGender, String userType,
-                                String imageURL, String token, String date_created){
+                                String textDOB, String textAddress, String textCity, String textGender,
+                                String userType, String imageURL, String token, String date_created){
 
         this.fullName = textFullName;
         this.email = textEmail;
@@ -25,6 +26,7 @@ public class ReadWriteUserDetails {
         this.password = textPassword;
         this.dob = textDOB;
         this.address = textAddress;
+        this.city = textCity;
         this.gender = textGender;
         this.userType = userType;
         this.imageURL = imageURL;
@@ -46,6 +48,9 @@ public class ReadWriteUserDetails {
 
     public String getAddress(){ return address; }
     public void setAddress(String address){ this.address = address; }
+
+    public String getCity(){ return city; }
+    public void setCity(String city){ this.city = city; }
 
     public String getGender(){ return gender; }
     public void setGender(String gender){ this.gender = gender; }

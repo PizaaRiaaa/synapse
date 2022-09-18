@@ -95,6 +95,7 @@ public class RegisterCarer extends AppCompatActivity {
            textEmail,
            textDOB,
            textAddress,
+           textCity,
            textDateCreated,
            user_token;
 
@@ -213,6 +214,7 @@ public class RegisterCarer extends AppCompatActivity {
         textMobileNumber = etMobileNumber.getText().toString().trim();
         textDOB = dropdown_dob.getText().toString();
         textAddress = etAddress.getText().toString();
+        textCity = "Mandaluyong City";
         textGender = autocompleteGender.getText().toString().trim();
         textDateCreated = timestamp.toString();
 
@@ -266,7 +268,7 @@ public class RegisterCarer extends AppCompatActivity {
 
         } else{
 
-            signupUser(textFullName, textEmail, textMobileNumber, textPassword, textDOB, textAddress,
+            signupUser(textFullName, textEmail, textMobileNumber, textPassword, textDOB, textAddress, textCity,
                     textGender, userType, imageURL, user_token, textDateCreated);
         }
 
@@ -300,7 +302,7 @@ public class RegisterCarer extends AppCompatActivity {
 
     // register user using the credentials given
     private void signupUser(String textFullName, String textEmail, String textMobileNumber, String textPassword, String textDOB,
-                            String textAddress, String textGender, String userType, String imageURL, String textToken, String textDateCreated){
+                            String textAddress, String textCity, String textGender, String userType, String imageURL, String textToken, String textDateCreated){
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -315,7 +317,7 @@ public class RegisterCarer extends AppCompatActivity {
 
                             // enter user data into the firebase realtime database
                             ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail, textMobileNumber, textPassword, textDOB,
-                            textAddress, textGender, userType, imageURL, textToken, textDateCreated);
+                            textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "Registered Users"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
