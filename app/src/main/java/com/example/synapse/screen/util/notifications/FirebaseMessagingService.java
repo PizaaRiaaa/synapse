@@ -11,33 +11,45 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
+import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
      NotificationManager mNotificationManager;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-      // playing audio and vibration when user set reques
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-        r.play();
-        // speech alarm
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.game_reminder);
-        mp.setLooping(false);
-        mp.start();
+        //
+        String title = remoteMessage.getNotification().getTitle();
+        if(title.equals("Medicine Reminder")){
+            playVoiceReminder(R.raw.medicine_reminder);
+        }else if(title.equals("Physical Activity Reminder")){
+           playVoiceReminder(R.raw.physical_activity_reminder);
+        }else if(title.equals("Game Reminder")){
+            playVoiceReminder(R.raw.game_reminder);
+        }else{
+            playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+        }
 
+        // playing audio and vibration when user set reques
+         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+         r.play();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             r.setLooping(false);
@@ -52,27 +64,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "hello");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder.setSmallIcon(R.drawable.icontrans);
             builder.setSmallIcon(resourceImage);
         } else {
-//            builder.setSmallIcon(R.drawable.icon_kritikar);
             builder.setSmallIcon(resourceImage);
         }
 
         Intent resultIntent = new Intent(this, HomeFragment.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_IMMUTABLE);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
         builder.setContentTitle(remoteMessage.getNotification().getTitle());
         builder.setContentText(remoteMessage.getNotification().getBody());
         builder.setContentIntent(pendingIntent);
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getNotification().getBody()));
+        builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
-        builder.setSound(defaultSoundUri);
-        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setPriority(Notification.PRIORITY_MAX|Notification.FLAG_ONLY_ALERT_ONCE);
 
-        mNotificationManager =
-                (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
@@ -87,6 +95,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         // notificationId is a unique int for each notification that you must define
         mNotificationManager.notify(100, builder.build());
+    }
+
+    void playVoiceReminder(int mp3Voice){
+        MediaPlayer mp = MediaPlayer.create(this, mp3Voice);
+        mp.setLooping(false);
+        mp.start();
     }
 }
 

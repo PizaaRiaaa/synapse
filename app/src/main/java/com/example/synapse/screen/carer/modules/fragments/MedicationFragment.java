@@ -46,6 +46,7 @@ import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
+import com.example.synapse.screen.util.notifications.FirebaseMessagingService;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
@@ -361,6 +362,11 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
+
+                //TODO: sent intent to FirebaseMessagingService so we can change speech text based on the notif type
+                Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
+                fcm_intent.putExtra("Medication",1);
+
                 referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -375,6 +381,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                             "Medicine Reminder",
                                             "It's time to take your medicine",
                                             getActivity());
+
                                     notificationsSender.SendNotifications();
                                 }
                                 @Override
