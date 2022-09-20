@@ -39,7 +39,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.MainActivity;
+import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewGame;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
@@ -70,7 +70,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Objects;
+
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
@@ -212,7 +212,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         ibClose.setOnClickListener(v -> dialog.dismiss());
 
         // redirect user to games screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), MainActivity.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), CarerMainActivity.class)));
 
         // spinner for games
         spinner_games = dialog.findViewById(R.id.spinner_games);

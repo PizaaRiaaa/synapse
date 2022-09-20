@@ -11,12 +11,11 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.Onboarding;
-import com.example.synapse.screen.carer.MainActivity;
+import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.SendRequest;
-import com.example.synapse.screen.senior.SeniorHome;
+import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +87,7 @@ public class Splashscreen extends AppCompatActivity {
 
                     // check if current user is senior, carer or admin
                     if(userType.equals("Senior")){
-                        startActivity(new Intent(Splashscreen.this, SeniorHome.class));
+                        startActivity(new Intent(Splashscreen.this, SeniorMainActivity.class));
                         finish();
 
                     }else if(userType.equals("Carer")) {
@@ -104,7 +103,7 @@ public class Splashscreen extends AppCompatActivity {
                                        checkStatus = ds.child("status").getValue().toString();
 
                                        if(checkStatus.equals("pending")){
-                                           startActivity(new Intent(Splashscreen.this, MainActivity.class));
+                                           startActivity(new Intent(Splashscreen.this, CarerMainActivity.class));
                                            finish();
                                        }else{ // it means senior decline the carer request
                                            promptMessage.displayMessage(
@@ -133,7 +132,7 @@ public class Splashscreen extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
-                                    startActivity(new Intent(Splashscreen.this, MainActivity.class));
+                                    startActivity(new Intent(Splashscreen.this, CarerMainActivity.class));
                                     finish();
                                 }
                             }

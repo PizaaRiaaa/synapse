@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.MainActivity;
+import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewAppointment;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
@@ -227,7 +226,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         displayCurrentDay();
 
         // redirect user to CarerHome screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), MainActivity.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), CarerMainActivity.class)));
 
         // display dialog
         btnAddAppointment.setOnClickListener(v -> dialog.show());

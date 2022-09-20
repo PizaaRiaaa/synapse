@@ -89,7 +89,10 @@
             android:name=".screen.senior.SeniorVerifyEmail"
             android:exported="false" />
         <activity
-            android:name=".screen.carer.MainActivity"
+            android:name=".screen.carer.CarerMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screen.senior.SeniorMainActivity"
             android:exported="false" />
         <activity
             android:name=".screen.senior.RegisterSenior"

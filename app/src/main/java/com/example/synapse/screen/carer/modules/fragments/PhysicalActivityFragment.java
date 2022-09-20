@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -44,7 +43,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.MainActivity;
+import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewPhysicalActivity;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
@@ -73,7 +72,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.aviran.cookiebar2.CookieBar;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -218,7 +216,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
 
         etDuration.setShowSoftInputOnFocus(false);
 
-        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), MainActivity.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), CarerMainActivity.class)));
 
         Spinner spinner_physical_activity = dialog.findViewById(R.id.spinner_physical_activity);
         ItemPhysicalActivityAdapter adapter = new ItemPhysicalActivityAdapter(getActivity(), physical_activity);

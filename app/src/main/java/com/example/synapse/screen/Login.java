@@ -16,16 +16,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
-import com.example.synapse.screen.carer.MainActivity;
+import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.SendRequest;
-import com.example.synapse.screen.senior.SeniorHome;
+import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,7 +37,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Objects;
 
 
@@ -127,7 +124,7 @@ public class Login extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, MainActivity.class));
+                                            startActivity(new Intent(Login.this, CarerMainActivity.class));
                                             finish();
                                         }else{
                                             startActivity(new Intent(Login.this, SendRequest.class));
@@ -146,7 +143,7 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.exists()){
-                                            startActivity(new Intent(Login.this, MainActivity.class));
+                                            startActivity(new Intent(Login.this, CarerMainActivity.class));
                                             finish();
                                         }
                                     }
@@ -158,7 +155,7 @@ public class Login extends AppCompatActivity {
                                 });
 
                             }else if(userType.equals("Senior")){
-                                startActivity(new Intent(Login.this, SeniorHome.class));
+                                startActivity(new Intent(Login.this, SeniorMainActivity.class));
                                 finish();
                             }
                         }
