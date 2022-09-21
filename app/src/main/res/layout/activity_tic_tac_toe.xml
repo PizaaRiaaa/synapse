@@ -6,164 +6,133 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@drawable/tic_tac_toe_bg"
     tools:context=".screen.senior.games.TicTacToe">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/winnerTextViewId"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:visibility="invisible"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/winnerTextViewId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:visibility="invisible" />
 
-    <Button
-        android:id="@+id/retryBtnId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center"
-        android:text="Retry"
-        android:visibility="invisible"
-        android:onClick="playAgain" />
+        <Button
+            android:id="@+id/retryBtnId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:onClick="playAgain"
+            android:textColor="@color/white"
+            android:text="Retry"
+            android:visibility="invisible" />
 
 
-    <GridLayout
-        android:id="@+id/boardGridLayoutId"
-        android:layout_width="368dp"
-        android:layout_height="368dp"
-        android:layout_gravity="center"
-        android:columnCount="3"
-        android:rowCount="3"
-        android:background="@drawable/board_background">
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/boardGridLayoutId"
+            android:layout_width="368dp"
+            android:layout_height="368dp"
+            android:layout_gravity="center"
+            android:background="@drawable/board_background"
+            app:columnCount="3"
+            app:rowCount="3">
 
-        <ImageView
-            android:id="@+id/rc1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:onClick="dropIn"
-            android:tag="0"/>
+            <ImageView
+                android:id="@+id/rc1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:onClick="dropIn"
+                android:tag="0" />
 
-        <ImageView
-            android:id="@+id/rc2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="1"/>
+            <ImageView
+                android:id="@+id/rc2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="dropIn"
+                android:tag="1" />
 
-        <ImageView
-            android:id="@+id/rc3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="2"/>
+            <ImageView
+                android:id="@+id/rc3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="dropIn"
+                android:tag="2" />
 
-        <ImageView
-            android:id="@+id/rc4"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:onClick="dropIn"
-            android:tag="3"/>
+            <ImageView
+                android:id="@+id/rc4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="3" />
 
-        <ImageView
-            android:id="@+id/rc5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="4"/>
+            <ImageView
+                android:id="@+id/rc5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="4" />
 
-        <ImageView
-            android:id="@+id/rc6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="5"/>
+            <ImageView
+                android:id="@+id/rc6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="5" />
 
-        <ImageView
-            android:id="@+id/rc7"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:onClick="dropIn"
-            android:tag="6"/>
+            <ImageView
+                android:id="@+id/rc7"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="6" />
 
-        <ImageView
-            android:id="@+id/rc8"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="7"/>
+            <ImageView
+                android:id="@+id/rc8"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="7" />
 
-        <ImageView
-            android:id="@+id/rc9"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="16dp"
-            android:onClick="dropIn"
-            android:tag="8"/>
+            <ImageView
+                android:id="@+id/rc9"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="17dp"
+                android:onClick="dropIn"
+                android:tag="8" />
 
-     </GridLayout>
+        </androidx.gridlayout.widget.GridLayout>
 
     </LinearLayout>
 
-    <!-- bottom navigation -->
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:fabCradleMargin="10dp"
-            app:fabCradleRoundedCornerRadius="20dp"
-            android:layout_gravity="bottom">
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottomNavigationView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                app:menu="@menu/bottom_nav_menu"/>
-
-        </com.google.android.material.bottomappbar.BottomAppBar>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabLocateSenior"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_location"
-            app:layout_anchor="@id/bottomAppBar"
-            android:backgroundTint="@color/white"
-            app:borderWidth="0dp"
-            android:contentDescription="@string/cdLocateSenior" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

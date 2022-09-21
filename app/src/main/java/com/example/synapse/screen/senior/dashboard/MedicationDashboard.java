@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.synapse.R;
-import com.example.synapse.screen.senior.SeniorHome;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
@@ -56,7 +55,7 @@ public class MedicationDashboard extends AppCompatActivity implements TimePicker
         ImageButton ibBack = findViewById(R.id.ibBack);
 
         // direct user to SeniorHome screen
-        ibBack.setOnClickListener(v -> startActivity(new Intent(MedicationDashboard.this, SeniorHome.class)));
+        //ibBack.setOnClickListener(v -> startActivity(new Intent(MedicationDashboard.this, SeniorHome.class)));
 
         // set layout for recyclerview
         recyclerView = findViewById(R.id.recyclerview);

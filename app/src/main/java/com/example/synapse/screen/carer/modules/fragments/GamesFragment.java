@@ -152,7 +152,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_games, container, false);
+        View view = inflater.inflate(R.layout.fragment_carer_games, container, false);
 
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_dialog_box_add_games);

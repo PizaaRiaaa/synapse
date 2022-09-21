@@ -3,53 +3,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".screen.carer.modules.Medication">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
         android:layout_margin="10dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/search_view_stroke"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:id="@+id/medicineBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/horizontal_bg_1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivShapeOfPill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"/>
+
+                <TextView
+                    android:id="@+id/tvNameOfPill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="Levothyroxide"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/white"
+                    android:textSize="29sp" />
+
+                <TextView
+                    android:id="@+id/tvDoseOfPill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="2 times today"
+                    android:textSize="20sp"
+                    android:textAlignment="textStart"
+                    android:textColor="#EFEFEF" />
+
+            </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/ivShapeOfPill"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="20dp"
-                android:src="@drawable/ic_medications"/>
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_clock_white" />
 
             <TextView
-                android:id="@+id/tvNameOfPill"
+                android:id="@+id/tvTimeOfMedicine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name of medicine"
-                android:layout_margin="10dp"
-                android:fontFamily="@font/redhat_display_medium"
-                android:textSize="20sp"
-                android:textColor="@color/dark_green"
-                android:textAlignment="center"/>
-
-            <TextView
-                android:id="@+id/tvDoseOfPill"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Dose times today"
-                android:layout_margin="10dp"
-                android:fontFamily="@font/redhat_display_medium"
-                android:textColor="@color/et_stroke"
-                android:textAlignment="center"/>
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="4:30 PM"
+                android:textSize="35sp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/white" />
 
         </LinearLayout>
+
+        </LinearLayout>
+
 
 
     </com.google.android.material.card.MaterialCardView>

@@ -1,14 +1,43 @@
 package com.example.synapse.screen.senior.modules.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextClock;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.Login;
+import com.example.synapse.screen.senior.SearchPeople;
+import com.example.synapse.screen.util.ReplaceFragment;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +45,15 @@ import com.example.synapse.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    // Global variables
+     static final String TAG = "";
+     DatabaseReference referenceProfile;
+     FirebaseUser mUser;
+     String token;
+     TextView tvSeniorName;
+     AppCompatImageView ivProfilePic;
+     ReplaceFragment replaceFragment = new ReplaceFragment();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +98,104 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_senior_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_senior_home, container, false);
+
+        TextClock currentTime = view.findViewById(R.id.tcTime);
+        MaterialCardView btnMedication = view.findViewById(R.id.btnMedication);
+        MaterialCardView btnGames = view.findViewById(R.id.btnGames);
+        MaterialCardView btnSearchPeople = view.findViewById(R.id.btnSearchPeople);
+        MaterialCardView btnLogout = view.findViewById(R.id.btnLogout);
+        ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
+        tvSeniorName = view.findViewById(R.id.tvSeniorName);
+
+        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = mUser.getUid();
+
+        // Show status bar
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
+
+        // direct user to games dashboard
+        btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(),getActivity()));
+
+        // direct user to search people
+        btnSearchPeople.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchPeople.class)));
+
+        // display current time
+        currentTime.setFormat12Hour("hh:mm a");
+
+        // display senior profile picture
+        showUserProfile(userID);
+
+        // logout user
+        btnLogout.setOnClickListener(v -> {
+            FirebaseAuth user = FirebaseAuth.getInstance();
+            user.signOut();
+            startActivity(new Intent(getActivity(), Login.class));
+            getActivity().getFragmentManager().popBackStack();
+        });
+
+        return view;
+    }
+
+    // retrieve and update token
+    @Override
+    public void onStart() {
+        super.onStart();
+        HashMap hashMap = new HashMap();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // generate token everytime user access the app
+                        // Get new FCM registration token
+                        token = task.getResult();
+                        hashMap.put("token", token);
+                        referenceProfile.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                            }
+                        });
+                        // Log and toast
+                        String msg = token;
+                        Log.d("Token:", msg);
+                    }
+                });
+    }
+
+    // retrieve senior's profile picture
+    public void showUserProfile(String firebaseUser){
+        referenceProfile.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                    if(userProfile != null){
+                        String name = userProfile.fullName;
+                        int firstName = name.indexOf(" ");
+                        tvSeniorName.setText("Hello,\n" + name.substring(0, firstName ).toString());
+
+                        // display carer profile pic
+                        Uri uri = mUser.getPhotoUrl();
+                        Picasso.get()
+                                .load(uri)
+                                .transform(new CropCircleTransformation())
+                                .into(ivProfilePic);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

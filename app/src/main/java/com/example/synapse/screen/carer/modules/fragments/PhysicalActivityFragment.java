@@ -162,7 +162,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_physical_activity, container, false);
+        View view = inflater.inflate(R.layout.fragment_carer_physical_activity, container, false);
 
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_dialog_box_add_physical_activity);

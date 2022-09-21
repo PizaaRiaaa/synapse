@@ -64,12 +64,12 @@ public class TicTacToe extends AppCompatActivity {
             // change the image per click
             if(activePlayer == 0){
                 activePlayer = 1;
-                counter.setImageResource(R.drawable.ic_yellow); // set an image on the imageview
+                counter.setImageResource(R.drawable.ic_zero); // set an image on the imageview
             } else {
                 activePlayer = 0;
-                counter.setImageResource(R.drawable.ic_red); // set an image on the imageview
+                counter.setImageResource(R.drawable.ic_ex); // set an image on the imageview
             }
-            counter.animate().translationYBy(1000).rotation(500).setDuration(500); // paano bababa
+            counter.animate().translationYBy(1000).rotation(1000).setDuration(1000); // paano bababa
 
 
             /* CHECK AGAINST THE WINNING POSITION */

@@ -19,7 +19,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,7 +53,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -75,7 +73,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -86,7 +83,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
  */
 public class MedicationFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
-    // global variables
+    // Global variables
     ReplaceFragment replaceFragment = new ReplaceFragment(); // replacing fragment
     PromptMessage promptMessage = new PromptMessage(); // custom prompt message
     DatabaseReference referenceProfile, referenceCompanion, referenceRequest, referenceReminders;
@@ -156,7 +153,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_medication, container, false);
+        View view = inflater.inflate(R.layout.fragment_carer_medication, container, false);
 
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");

@@ -1,6 +1,5 @@
 package com.example.synapse.screen.util.notifications;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,8 +11,6 @@ import android.net.Uri;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.synapse.R;
-import com.example.synapse.screen.carer.modules.view.Sample;
 import com.example.synapse.screen.carer.modules.view.ViewAppointment;
 import com.example.synapse.screen.carer.modules.view.ViewGame;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;

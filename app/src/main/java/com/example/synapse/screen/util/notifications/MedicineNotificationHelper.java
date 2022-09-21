@@ -1,25 +1,15 @@
 package com.example.synapse.screen.util.notifications;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Vibrator;
 
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
-import com.example.synapse.screen.carer.modules.view.Sample;
-import com.example.synapse.screen.carer.modules.view.ViewAppointment;
-import com.example.synapse.screen.carer.modules.view.ViewMedicine;
 
 import androidx.core.app.NotificationCompat;
 

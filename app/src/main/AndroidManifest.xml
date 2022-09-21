@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Synapse"
         tools:targetApi="31">
         <activity
+            android:name=".screen.senior.modules.view.TicTacToeHome"
+            android:exported="false" />
+        <activity
             android:name=".screen.admin.LoadingScreen"
             android:exported="false" />
         <activity
@@ -27,9 +30,6 @@
             android:exported="false" />
         <activity
             android:name=".screen.senior.test.MCIpromptMessage"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.view.Sample"
             android:exported="false" />
         <activity
             android:name=".screen.senior.games.TriviaQuiz"
@@ -80,12 +80,6 @@
             android:name=".screen.senior.games.MathGame"
             android:exported="false" />
         <activity
-            android:name=".screen.senior.dashboard.GameDashboard"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.SeniorHome"
-            android:exported="false" />
-        <activity
             android:name=".screen.senior.SeniorVerifyEmail"
             android:exported="false" />
         <activity
@@ -132,7 +126,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more.
