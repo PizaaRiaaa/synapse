@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.example.synapse.R;
+import com.example.synapse.screen.admin.LoadingScreen;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.SendRequest;
@@ -157,6 +158,9 @@ public class Login extends AppCompatActivity {
                             }else if(userType.equals("Senior")){
                                 startActivity(new Intent(Login.this, SeniorMainActivity.class));
                                 finish();
+
+                            }else if(userType.equals("Admin")){
+                                startActivity(new Intent(Login.this, LoadingScreen.class));
                             }
                         }
 

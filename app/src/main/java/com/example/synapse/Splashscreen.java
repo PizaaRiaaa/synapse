@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.Onboarding;
+import com.example.synapse.screen.admin.AdminMainActivity;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorMainActivity;
@@ -142,6 +143,9 @@ public class Splashscreen extends AppCompatActivity {
                                 promptMessage.defaultErrorMessage(Splashscreen.this);
                             }
                         });
+                    } else if(userType.equals("Admin")){
+                        startActivity(new Intent(Splashscreen.this, AdminMainActivity.class));
+                        finish();
                     }
                 }
 

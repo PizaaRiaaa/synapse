@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_senior_games"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -25,20 +26,15 @@
         android:contentDescription="@string/back"
         android:src="@drawable/ic_back" />
 
-    <TextView
+    <View
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="15"
-        android:fontFamily="@font/redhat_display_semibold"
-        android:text="Games"
-        android:textColor="@color/grey5"
-        android:textAlignment="center"
-        android:textSize="20sp" />
+        android:layout_height="2dp"
+        android:layout_weight="10"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1.5"
+        android:layout_weight="2.0"
         android:src="@drawable/ic_calendar_games"/>
 
 </LinearLayout>
@@ -48,7 +44,7 @@
     android:layout_height="100dp"
     android:layout_gravity="center"
     android:layout_marginTop="30dp"
-    android:layout_marginBottom="50dp"
+    android:layout_marginBottom="30dp"
     android:background="@drawable/image_elavation"
     android:elevation="5dp"
     android:src="@drawable/ic_brain" />
@@ -63,7 +59,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginBottom="20dp"
         android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:layout_marginBottom="30dp"
+            android:text="Games"
+            android:textColor="@color/grey5"
+            android:layout_gravity="center"
+            android:textSize="25sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,7 +85,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 app:strokeColor="#C5C5C5"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="20dp">
 
@@ -99,7 +106,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 app:strokeColor="#C5C5C5"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="20dp">
 
@@ -128,17 +135,17 @@
                 android:layout_height="160dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                app:strokeColor="#C5C5C5"
-                app:strokeWidth="2dp"
                 android:elevation="10dp"
-                app:cardCornerRadius="20dp">
+                app:cardCornerRadius="20dp"
+                app:strokeColor="#C5C5C5"
+                app:strokeWidth="1dp">
 
                 <ImageView
-                    android:src="@drawable/ic_math_game"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_math_game" />
 
             </com.google.android.material.card.MaterialCardView>
 

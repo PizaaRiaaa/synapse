@@ -1,12 +1,23 @@
 package com.example.synapse.screen.senior.games;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.synapse.R;
+import com.example.synapse.screen.carer.CarerMainActivity;
+import com.example.synapse.screen.senior.SeniorMainActivity;
+import com.example.synapse.screen.senior.modules.fragments.GamesFragment;
+import com.google.android.material.button.MaterialButton;
+
+import android.app.Dialog;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +25,13 @@ import java.util.Arrays;
 
 public class TicTacToe extends AppCompatActivity {
 
+    // Global variables
     int activePlayer = 0; // this integer will serve as a flag (boolean); 0 - Yellow, 1 - Red
+    Dialog dialog;
+    String winner;
+    TextView tvCongrats;
+    ImageView ivPlayer;
+    MediaPlayer bgMusic;
 
     // initially, the state of the game is none. Empty represents by 2, so in our array, let's put nine 2s
     // 0 - Yellow, 1 - Red, 2 - Empty
@@ -32,11 +49,14 @@ public class TicTacToe extends AppCompatActivity {
     boolean gameActive = true;
 
     /* onClick functions for ImageView */
-    public void dropIn(View view){ // need a View parameter which is the ImageView that was tapped on
+   public void dropIn(View view){ // need a View parameter which is the ImageView that was tapped on
 
-        ImageView counter = (ImageView) view; // actual imageview that was tapped on
+       ImageView counter = (ImageView) view; // actual imageview that was tapped on
 
-        // check the tag
+       // play sound effect
+       playSound(R.raw.pop_sound);
+
+       // check the tag
         int tappedCounterTag = Integer.parseInt(counter.getTag().toString());
 
         // check if the gameState element in the array is already occupied by 0 or 1 and if the gameActive is true
@@ -50,13 +70,8 @@ public class TicTacToe extends AppCompatActivity {
                     && gameState[3]!= 2 && gameState[4]!= 2 && gameState[5]!= 2
                     && gameState[6]!= 2 && gameState[7]!= 2 && gameState[8]!= 2){
 
-                // reference for the winner textview and retry button
-                TextView winnerTV = (TextView) findViewById(R.id.winnerTextViewId);
-                Button retryBtn = (Button) findViewById(R.id.retryBtnId );
-
-                winnerTV.setText("No one won :( ");
-                winnerTV.setVisibility(View.VISIBLE);
-                retryBtn.setVisibility(View.VISIBLE);
+                // display no one won
+                displayNoOneWon();
             }
 
             // animate the counter
@@ -71,7 +86,6 @@ public class TicTacToe extends AppCompatActivity {
             }
             counter.animate().translationYBy(1000).rotation(1000).setDuration(1000); // paano bababa
 
-
             /* CHECK AGAINST THE WINNING POSITION */
             for(int[] winningPosition: winningPositions){
                 if((gameState[winningPosition[0]]) == gameState[winningPosition[1]] &&
@@ -82,41 +96,25 @@ public class TicTacToe extends AppCompatActivity {
                     gameActive = false;
 
                     // decide which color has won
-                    String winner;
                     if(activePlayer == 1){
                         winner = "Yellow";
                     } else {
-                        winner = "Red";
+                        winner = "Blue";
                     }
-
                     // if all the above condition is all met, then someone has won
-                    // reference for the winner textview and retry button
-                    TextView winnerTV = (TextView) findViewById(R.id.winnerTextViewId);
-                    Button retryBtn = (Button) findViewById(R.id.retryBtnId );
-
-                    winnerTV.setText("Congratulations! " + winner + " has won!");
-                    winnerTV.setVisibility(View.VISIBLE);
-                    retryBtn.setVisibility(View.VISIBLE);
-
+                    displayGameStatus();
+                    // play sound effect
+                    playSound(R.raw.win_sound);
                 }
             }
-
         }
     }
 
     /* onClick function for Retry Button */
-    public void playAgain(View view){
-
-        // reference to the button and textview
-        TextView winnerTV = (TextView) findViewById(R.id.winnerTextViewId);
-        Button retryBtn = (Button) findViewById(R.id.retryBtnId );
-
-        // make textview and button invisible again
-        winnerTV.setVisibility(View.INVISIBLE);
-        retryBtn.setVisibility(View.INVISIBLE);
+    public void playAgain(){
 
         // remove all the imageview if retry button is clicked
-        GridLayout boardGridLayout = (GridLayout) findViewById(R.id.boardGridLayoutId);
+        androidx.gridlayout.widget.GridLayout boardGridLayout = findViewById(R.id.boardGridLayoutId);
         for(int i = 0; i < boardGridLayout.getChildCount(); i++) {
 
             ImageView counter = (ImageView) boardGridLayout.getChildAt(i); // child
@@ -129,10 +127,68 @@ public class TicTacToe extends AppCompatActivity {
         gameActive = true;
     }
 
+    void displayGameStatus(){
+        dialog.show();
+        ivPlayer = dialog.findViewById(R.id.ivPlayer);
+        if(winner.equals("Blue")){
+           ivPlayer.setBackgroundResource(R.drawable.ic_ex);
+        }else{
+            ivPlayer.setBackgroundResource(R.drawable.ic_zero);
+        }
+        tvCongrats = dialog.findViewById(R.id.tvCongrats);
+        tvCongrats.setText("Congratulations! \n" + winner + " has won!");
+    }
+
+    void displayNoOneWon(){
+        dialog.show();
+        ivPlayer = dialog.findViewById(R.id.ivPlayer);
+        tvCongrats = dialog.findViewById(R.id.tvCongrats);
+        tvCongrats.setText("No one won :(");
+        ivPlayer.setBackgroundResource(R.drawable.ic_no_one_won);
+    }
+
+    void playSound(int sound){
+        MediaPlayer mp = MediaPlayer.create(this, sound);
+        mp.start();
+    }
+
+    // check if back button was pressed
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+
+        bgMusic.stop();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tic_tac_toe);
+
+        dialog = new Dialog(TicTacToe.this);
+        dialog.setContentView(R.layout.custom_dialog_tic_tac_toe);
+        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_background3));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
+
+        bgMusic = MediaPlayer.create(this, R.raw.tic_tac_toe);
+        bgMusic.start();
+        bgMusic.setLooping(true);
+
+        MaterialButton btnRetry = dialog.findViewById(R.id.btnRetry);
+        btnRetry.setOnClickListener(v -> {
+            dialog.dismiss();
+            playAgain();
+        });
+
+        MaterialButton btnQuit = dialog.findViewById(R.id.btnQuit);
+        btnQuit.setOnClickListener(v -> {
+            bgMusic.stop();
+            startActivity(new Intent(this, SeniorMainActivity.class));
+            finish();
+        });
+
     }
 
 }

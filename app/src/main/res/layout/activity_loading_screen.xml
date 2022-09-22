@@ -38,6 +38,7 @@
         android:text="Mandaluyong"/>
 
         <TextView
+            android:id="@+id/tvProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/redhat_display_bold"

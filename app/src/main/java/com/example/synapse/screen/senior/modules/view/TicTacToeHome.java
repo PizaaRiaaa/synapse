@@ -6,6 +6,7 @@ import com.example.synapse.screen.senior.games.TicTacToe;
 import com.google.android.material.button.MaterialButton;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 public class TicTacToeHome extends AppCompatActivity {
 
@@ -16,5 +17,9 @@ public class TicTacToeHome extends AppCompatActivity {
 
         MaterialButton btnStart = findViewById(R.id.btnStart);
         btnStart.setOnClickListener(v -> startActivity(new Intent(this, TicTacToe.class)));
+
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
+
     }
 }

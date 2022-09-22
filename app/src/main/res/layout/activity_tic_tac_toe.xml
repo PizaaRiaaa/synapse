@@ -15,29 +15,6 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/winnerTextViewId"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/retryBtnId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:onClick="playAgain"
-            android:textColor="@color/white"
-            android:text="Retry"
-            android:visibility="invisible" />
-
-
         <androidx.gridlayout.widget.GridLayout
             android:id="@+id/boardGridLayoutId"
             android:layout_width="368dp"
