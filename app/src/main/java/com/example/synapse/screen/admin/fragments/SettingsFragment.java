@@ -1,5 +1,6 @@
 package com.example.synapse.screen.admin.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.Login;
+import com.example.synapse.screen.util.ReplaceFragment;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +22,11 @@ import com.example.synapse.R;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
+
+    // Global variables
+    MaterialCardView btnLogout;
+    ReplaceFragment replaceFragment = new ReplaceFragment();
+    FirebaseAuth user = FirebaseAuth.getInstance();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,6 +59,20 @@ public class SettingsFragment extends Fragment {
         return fragment;
     }
 
+    public void logoutUser(){
+        btnLogout.setOnClickListener(v -> {
+            user.signOut();
+            Intent intent = new Intent(getActivity(), Login.class);
+            intent.putExtra("finish", true);
+            intent.setFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            getActivity().onBackPressed();
+        });
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +87,15 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_settings, container, false);
+
+
+        ImageButton ibBack = view.findViewById(R.id.ibBack);
+        btnLogout = view.findViewById(R.id.btnLogout);
+
+        ibBack.setOnClickListener(v ->
+                replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
+
+        logoutUser();
 
         return view;
     }

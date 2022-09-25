@@ -9,9 +9,19 @@ import android.widget.TextView;
 
 public class LoadingScreen extends AppCompatActivity {
 
+    // Global variables
     ProgressBar progressBar;
     TextView textView;
 
+    void progressBarAnimation(){
+        ProgressBarAnimation animation = new ProgressBarAnimation(this, progressBar, textView, 0f, 100f);
+        animation.setDuration(8000);
+        progressBar.setAnimation(animation);
+    }
+
+    public void finishActivity(){
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +38,5 @@ public class LoadingScreen extends AppCompatActivity {
         progressBar.setScaleY(3f);
 
         progressBarAnimation();
-    }
-
-    void progressBarAnimation(){
-        ProgressBarAnimation animation = new ProgressBarAnimation(this, progressBar, textView, 0f, 100f);
-        animation.setDuration(8000);
-        progressBar.setAnimation(animation);
-
     }
 }

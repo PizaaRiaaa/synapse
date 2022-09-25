@@ -10,6 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageButton
+        android:id="@+id/ibBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_back"
@@ -196,18 +197,25 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/grey2"
+        android:layout_margin="15dp"
+        android:layout_height="2dp"/>
+
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="80dp"
+        android:id="@+id/btnLogout"
+        android:layout_width="90dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         app:cardBackgroundColor="#D15353"
         app:cardCornerRadius="10dp"
-        android:layout_height="50dp">
+        android:layout_height="40dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:text="Logout"/>

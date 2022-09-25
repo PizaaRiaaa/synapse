@@ -84,6 +84,12 @@ public class Login extends AppCompatActivity {
         // authenticate user
         btnLogin.setOnClickListener(v -> authenticateUser());
 
+        boolean finish = getIntent().getBooleanExtra("finish", false);
+        if(finish) {
+            startActivity(new Intent(this, Login.class));
+            this.onBackPressed();
+            finish();
+        }
     }
 
    void authenticateUser(){
@@ -93,10 +99,10 @@ public class Login extends AppCompatActivity {
             promptMessage.displayMessage("Empty field", "Please enter your email", R.color.red1, Login.this);
             etEmail.requestFocus();
         }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
-            promptMessage.displayMessage("Invalid email", "Please enter your email", R.color.dark_green, Login.this);
+            promptMessage.displayMessage("Invalid email", "Please enter your email", R.color.red1, Login.this);
             etPassword.requestFocus();
         }else if(TextUtils.isEmpty(textPassword)){
-            promptMessage.displayMessage("Empty field", "Please enter your password", R.color.dark_green, Login.this);
+            promptMessage.displayMessage("Empty field", "Please enter your password", R.color.red1, Login.this);
             etPassword.requestFocus();
         }else{
             loginUser(textEmail, textPassword);
@@ -161,6 +167,7 @@ public class Login extends AppCompatActivity {
 
                             }else if(userType.equals("Admin")){
                                 startActivity(new Intent(Login.this, LoadingScreen.class));
+                                finish();
                             }
                         }
 

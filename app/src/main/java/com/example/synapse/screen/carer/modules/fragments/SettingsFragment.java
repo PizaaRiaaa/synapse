@@ -92,6 +92,29 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    void displayCarerInfo(){
+        // display carer profile pic
+        referenceUser.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                if(userProfile != null){
+                    tvName.setText(userProfile.getFullName());
+                    tvEmail.setText(userProfile.getEmail());
+                    Uri uri = mUser.getPhotoUrl();
+                    Picasso.get()
+                            .load(uri)
+                            .transform(new CropCircleTransformation())
+                            .into(ivUserPicture);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessage(getActivity());
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,28 +146,5 @@ public class SettingsFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public void displayCarerInfo(){
-        // display carer profile pic
-            referenceUser.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                    if(userProfile != null){
-                        tvName.setText(userProfile.getFullName());
-                        tvEmail.setText(userProfile.getEmail());
-                        Uri uri = mUser.getPhotoUrl();
-                        Picasso.get()
-                                .load(uri)
-                                .transform(new CropCircleTransformation())
-                                .into(ivUserPicture);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
     }
 }

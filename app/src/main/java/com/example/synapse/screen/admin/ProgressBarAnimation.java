@@ -7,6 +7,8 @@ import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.synapse.screen.Login;
+
 public class ProgressBarAnimation extends Animation {
     Context context;
     ProgressBar progressBar;
@@ -30,7 +32,9 @@ public class ProgressBarAnimation extends Animation {
         textView.setText((int) value + " %");
 
         if(value == to){
-            context.startActivity(new Intent(context, AdminMainActivity.class));
+            Intent intent = new Intent(context, AdminMainActivity.class);
+            context.startActivity(intent);
+            ((LoadingScreen)(context)).finish();
         }
     }
 }
