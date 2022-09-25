@@ -22,7 +22,7 @@
         android:contentDescription="@string/back"
         android:src="@drawable/ic_back" />
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3.5"/>
@@ -93,7 +93,7 @@
                 android:fontFamily="@font/redhat_display_semibold"
                 android:textColor="@color/dark_green"/>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
@@ -120,7 +120,7 @@
                 android:fontFamily="@font/redhat_display_semibold"
                 android:textColorHint="@color/dark_green"/>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
@@ -142,7 +142,7 @@
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"/>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
@@ -196,7 +196,7 @@
             android:textColor="@color/grey3"
             android:textSize="16sp" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
 
@@ -242,7 +242,7 @@
             android:textColor="@color/grey3"
             android:textSize="16sp" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
 
@@ -268,7 +268,7 @@
             android:textColor="@color/grey3"
             android:fontFamily="@font/redhat_display_semibold"/>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
 

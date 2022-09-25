@@ -35,7 +35,6 @@
         android:fontFamily="@font/redhat_display_regular"
         android:textSize="18sp"/>
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLoginNow"
             android:layout_width="wrap_content"
@@ -46,6 +45,5 @@
             android:fontFamily="@font/redhat_display_bold"
             android:text="@string/mbLogin"
             android:textSize="15sp"/>
-
 
     </LinearLayout>

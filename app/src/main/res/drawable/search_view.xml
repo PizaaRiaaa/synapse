@@ -4,7 +4,7 @@
 
     <corners android:radius="10dp"/>
     <stroke
-        android:color="@color/search_view_stroke"
+        android:color="@color/grey2"
         android:width="2dp"/>
 
 

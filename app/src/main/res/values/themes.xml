@@ -122,4 +122,9 @@
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:radius">2dp</item>
     </style>
+
+    <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>

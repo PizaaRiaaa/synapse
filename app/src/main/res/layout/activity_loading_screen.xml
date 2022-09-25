@@ -63,8 +63,4 @@
         android:textSize="15sp"
         android:text="Loading resources..."/>
 
-
-
-
-
 </LinearLayout>

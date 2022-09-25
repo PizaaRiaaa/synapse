@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".screen.carer.modules.Medication">
+    tools:context=".screen.carer.modules.view.ViewGame">
 
 
     <com.google.android.material.card.MaterialCardView

@@ -22,7 +22,7 @@
             android:textColor="@color/grey5"
             android:layout_margin="17dp" />
 
-        <Space
+        <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />

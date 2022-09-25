@@ -27,7 +27,6 @@ public class CarerMainActivity extends AppCompatActivity {
 
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.miHome:

@@ -44,7 +44,7 @@
             android:textAlignment="center"
             android:inputType="textVisiblePassword|textNoSuggestions"/>
 
-        <Space
+        <View
             android:layout_width="wrap_content"
             android:layout_height="10dp"/>
 
@@ -109,7 +109,7 @@
 
     </LinearLayout>
 
-    <Space
+    <View
         android:layout_width="wrap_content"
         android:layout_height="10dp"/>
 
@@ -184,7 +184,7 @@
 
    </LinearLayout>
 
-    <Space
+    <View
         android:layout_width="wrap_content"
         android:layout_height="10dp"/>
 

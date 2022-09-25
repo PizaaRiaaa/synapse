@@ -31,7 +31,7 @@
         android:textAlignment="center" />
 
         <!-- recycle view for all senior users -->
-        <SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/search_field_send_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

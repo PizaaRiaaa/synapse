@@ -4,7 +4,7 @@
      xmlns:tools="http://schemas.android.com/tools"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
-     android:id="@+id/fragment_home"
+     android:id="@+id/fragment_carer_home"
      tools:context=".screen.senior.modules.fragments.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
