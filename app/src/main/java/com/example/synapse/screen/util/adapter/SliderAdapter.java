@@ -33,7 +33,7 @@ public class SliderAdapter extends PagerAdapter {
 
     // HEADINGS
     public String[] slide_headings = {
-            "Welcome to Synapse",
+            "Synapse",
             "Do Notify",
             "Get Notifs"
     };

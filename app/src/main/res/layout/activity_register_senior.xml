@@ -90,7 +90,7 @@
 
         <!-- full name -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilFullName"
+            android:id="@+id/tilFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -101,7 +101,7 @@
             app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSeniorFullName"
+                android:id="@+id/etSeniorFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_text_login"
@@ -114,6 +114,74 @@
                 android:textSize="20sp"
                 app:boxStrokeWidthFocused="0dp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <!-- middle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMiddle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:errorEnabled="true"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:endIconMode="clear_text"
+                app:hintEnabled="true"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorMiddle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Middle"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- middle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLastName"
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:endIconMode="clear_text"
+                app:hintEnabled="true"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Last Name"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

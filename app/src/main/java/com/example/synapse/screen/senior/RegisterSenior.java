@@ -78,13 +78,17 @@ public class RegisterSenior extends AppCompatActivity {
     AutoCompleteTextView autocompleteGender;
 
     private TextInputEditText
-            etFullName,
+            etFirstName,
+            etMiddle,
+            etLastName,
             etEmail,
             etPassword,
             etMobileNumber;
 
     private TextInputLayout
-            tilFullName,
+            tilFirstName,
+            tilMiddle,
+            tilLastName,
             tilDOB,
             tilGender,
             tilEmail,
@@ -93,7 +97,9 @@ public class RegisterSenior extends AppCompatActivity {
             tilPassword;
 
     String  token,
-            textFullName,
+            textFirstName,
+            textMiddle,
+            textLastName,
             textEmail,
             textPassword,
             textMobileNumber,
@@ -114,13 +120,17 @@ public class RegisterSenior extends AppCompatActivity {
         autocompleteGender = findViewById(R.id.drop_gender);
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupSenior);
-        etFullName = findViewById(R.id.etSeniorFullName);
+        etFirstName = findViewById(R.id.etSeniorFirstName);
+        etMiddle = findViewById(R.id.etSeniorMiddle);
+        etLastName = findViewById(R.id.etSeniorLastName);
         etEmail = findViewById(R.id.etSeniorEmail);
         etPassword = findViewById(R.id.etRegisterSeniorPassword);
         etMobileNumber = findViewById(R.id.etSeniorMobileNumber);
         ivProfilePic = findViewById(R.id.ibSeniorProfilePic);
         dropdown_dob = findViewById(R.id.dropdown_dob);
-        tilFullName = findViewById(R.id.tilFullName);
+        tilFirstName = findViewById(R.id.tilFirstName);
+        tilMiddle = findViewById(R.id.tilMiddle);
+        tilLastName = findViewById(R.id.tilLastName);
         tilDOB = findViewById(R.id.tilDOB);
         tilGender = findViewById(R.id.tilGender);
         tilEmail = findViewById(R.id.tilEmail);
@@ -183,7 +193,9 @@ public class RegisterSenior extends AppCompatActivity {
            datePickerDialog.show();
         });
 
-        etFullName.addTextChangedListener(textWatcher);
+        etFirstName.addTextChangedListener(textWatcher);
+        etMiddle.addTextChangedListener(textWatcher);
+        etLastName.addTextChangedListener(textWatcher);
         dropdown_dob.addTextChangedListener(textWatcher);
         autocompleteGender.addTextChangedListener(textWatcher);
         autocompleteBarangay.addTextChangedListener(textWatcher);
@@ -200,7 +212,9 @@ public class RegisterSenior extends AppCompatActivity {
             Date timestamp = Calendar.getInstance().getTime();
             textToken = token;
             userType = "Senior";
-            textFullName = etFullName.getText().toString();
+            textFirstName = etFirstName.getText().toString();
+            textMiddle = etMiddle.getText().toString();
+            textLastName = etLastName.getText().toString();
             textEmail = etEmail.getText().toString();
             textPassword = etPassword.getText().toString();
             textMobileNumber = etMobileNumber.getText().toString();
@@ -222,9 +236,15 @@ public class RegisterSenior extends AppCompatActivity {
             Pattern passwordPattern = Pattern.compile(passwordRegex);
             passwordMatcher = passwordPattern.matcher(etPassword.getText());
 
-            if(checkIfEmpty(etFullName)){
-                tilFullName.setError("This field can't be empty");
-                tilFullName.requestFocus();
+            if(checkIfEmpty(etFirstName)){
+                tilFirstName.setError("This field can't be empty");
+                tilFirstName.requestFocus();
+            } else if(checkIfEmpty(etMiddle)){
+                tilMiddle.setError("This field can't be empty");
+                tilMiddle.requestFocus();
+            } else if(checkIfEmpty(etLastName)){
+                tilLastName.setError("This field can't be empty");
+                tilLastName.requestFocus();
             } else if(checkIfEmpty(dropdown_dob)){
                 tilDOB.setError("This field can't be empty");
                 tilDOB.requestFocus();
@@ -258,7 +278,7 @@ public class RegisterSenior extends AppCompatActivity {
             }
 
             else{
-                signupUser(textFullName,textEmail,textMobileNumber,textPassword,textDOB,textAddress, textCity,
+                signupUser(textFirstName,textMiddle, textLastName, textEmail,textMobileNumber,textPassword,textDOB,textAddress, textCity,
                         textGender,userType,imageURL,textToken, textDate);
             }
     }
@@ -275,7 +295,9 @@ public class RegisterSenior extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            tilFullName.setError(null);
+            tilFirstName.setError(null);
+            tilMiddle.setError(null);
+            tilLastName.setError(null);
             tilGender.setError(null);
             tilEmail.setError(null);
             tilAddress.setError(null);
@@ -324,7 +346,7 @@ public class RegisterSenior extends AppCompatActivity {
     }
 
     // register User using the credentials given
-    private void signupUser(String textFullName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress, String textCity,
+    private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress, String textCity,
                             String textGender, String userType, String imageURL, String textToken, String textDateCreated){
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -339,7 +361,7 @@ public class RegisterSenior extends AppCompatActivity {
                             FirebaseUser firebaseUser = auth.getCurrentUser();
 
                             // enter user data into the firebase realtime database
-                            ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail, textMobileNumber, textPassword, textDOB,
+                            ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFirstName, textMiddle, textLastName, textEmail, textMobileNumber, textPassword, textDOB,
                             textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "registered user"

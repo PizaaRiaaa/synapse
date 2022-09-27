@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.example.synapse.screen.Landing;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.Onboarding;
 import com.example.synapse.screen.admin.AdminMainActivity;
@@ -65,7 +67,7 @@ public class Splashscreen extends AppCompatActivity {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("firstRun", true);
                 editor.apply();
-                startActivity(new Intent(Splashscreen.this, Onboarding.class));
+                startActivity(new Intent(Splashscreen.this, Landing.class));
                 finish();
 
             }else if(mAuth.getCurrentUser() == null) {  // prevent display on-boarding screen
@@ -138,7 +140,6 @@ public class Splashscreen extends AppCompatActivity {
                                     finish();
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 promptMessage.defaultErrorMessage(Splashscreen.this);
@@ -149,7 +150,6 @@ public class Splashscreen extends AppCompatActivity {
                         finish();
                     }
                 }
-
                 @Override
                  public void onCancelled(@NonNull DatabaseError error) {
                     promptMessage.defaultErrorMessage(Splashscreen.this);

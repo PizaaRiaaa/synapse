@@ -166,7 +166,7 @@ public class SendRequest extends AppCompatActivity {
                     }
 
                     // display details of every senior users
-                    holder.fullName.setText(model.getFullName());
+                    holder.fullName.setText(model.getFirstName());
                     holder.barangay.setText("Brgy." + model.getAddress() + ",");
                     holder.age.setText(Integer.toString(calculateAge(cal.getTimeInMillis())) + " yrs");
 

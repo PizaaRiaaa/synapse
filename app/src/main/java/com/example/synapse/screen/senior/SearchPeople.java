@@ -135,7 +135,7 @@ public class SearchPeople extends AppCompatActivity {
                             .into(holder.profileImage);
 
                     // display details of user
-                    holder.fullName.setText(model.getFullName());
+                    holder.fullName.setText(model.getFirstName());
                     holder.userType.setText(model.getUserType());
 
                 } else {

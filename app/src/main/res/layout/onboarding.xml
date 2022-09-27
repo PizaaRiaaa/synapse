@@ -9,6 +9,7 @@
     android:background="@color/white"
     tools:context=".screen.Onboarding">
 
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slideViewPager"
         android:layout_width="match_parent"
@@ -17,13 +18,12 @@
 
     </androidx.viewpager.widget.ViewPager>
 
-
     <LinearLayout
         android:id="@+id/dotsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/slideViewPager"
-        android:layout_marginBottom="-30dp"
+        android:layout_marginBottom="30dp"
         android:layout_centerInParent="true"
         android:orientation="horizontal"
         android:padding="20dp" />
@@ -34,7 +34,7 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="90dp"
         android:background="@drawable/rounded_button"
         android:fontFamily="@font/redhat_display_bold"
         android:gravity="center"
@@ -45,6 +45,16 @@
         app:iconGravity="textEnd"
         app:iconPadding="10dp"
         app:iconTint="@color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2022 • OSCA • Mandaluyong City"
+        android:fontFamily="@font/redhat_display_regular"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="?actionBarSize"
+        android:textColor="#0071B0" />
 
 
 </RelativeLayout>

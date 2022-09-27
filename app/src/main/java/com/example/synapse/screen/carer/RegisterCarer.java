@@ -21,9 +21,11 @@ import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.PickRole;
@@ -72,15 +74,20 @@ public class RegisterCarer extends AppCompatActivity {
     private TextInputEditText etAddress;
     private DatePickerDialog datePickerDialog;
     private AutoCompleteTextView autocompleteGender;
+    private CheckBox cbAgree;
 
     private TextInputEditText
-            etFullName,
+            etFirstName,
+            etMiddle,
+            etLastName,
             etEmail,
             etPassword,
             etMobileNumber;
 
     private TextInputLayout
-            tilFullName,
+            tilFirstName,
+            tilMiddle,
+            tilLastName,
             tilDOB,
             tilGender,
             tilEmail,
@@ -91,7 +98,9 @@ public class RegisterCarer extends AppCompatActivity {
     String textPassword,
            textGender,
            textMobileNumber,
-           textFullName,
+           textFirstName,
+           textMiddle,
+           textLastName,
            textEmail,
            textDOB,
            textAddress,
@@ -107,7 +116,10 @@ public class RegisterCarer extends AppCompatActivity {
         ImageButton ibBack = findViewById(R.id.ibRegisterCarerBack);
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_carer_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupCarer);
-        etFullName = findViewById(R.id.etCarerFullName);
+        cbAgree = findViewById(R.id.cbAgree);
+        etFirstName = findViewById(R.id.etCarerFirstName);
+        etMiddle = findViewById(R.id.etCarerMiddle);
+        etLastName = findViewById(R.id.etCarerLastName);
         etEmail = findViewById(R.id.etCarerEmail);
         etPassword = findViewById(R.id.etRegisterCarerPassword);
         etMobileNumber = findViewById(R.id.etCarerMobileNumber);
@@ -115,7 +127,9 @@ public class RegisterCarer extends AppCompatActivity {
         ivProfilePic = findViewById(R.id.ivCarerProfilePic);
         autocompleteGender = findViewById(R.id.drop_gender);
         etAddress = findViewById(R.id.etAddress);
-        tilFullName = findViewById(R.id.tilFullName);
+        tilFirstName = findViewById(R.id.tilFirstName);
+        tilMiddle = findViewById(R.id.tilMiddle);
+        tilLastName = findViewById(R.id.tilLastName);
         tilDOB = findViewById(R.id.tilDOB);
         tilGender = findViewById(R.id.tilGender);
         tilEmail = findViewById(R.id.tilEmail);
@@ -157,7 +171,7 @@ public class RegisterCarer extends AppCompatActivity {
             datePickerDialog.show();
         });
 
-        etFullName.addTextChangedListener(textWatcher);
+        etFirstName.addTextChangedListener(textWatcher);
         dropdown_dob.addTextChangedListener(textWatcher);
         autocompleteGender.addTextChangedListener(textWatcher);
         etEmail.addTextChangedListener(textWatcher);
@@ -207,7 +221,9 @@ public class RegisterCarer extends AppCompatActivity {
         Date timestamp = Calendar.getInstance().getTime();
         user_token = token;
         userType = "Carer";
-        textFullName = etFullName.getText().toString();
+        textFirstName = etFirstName.getText().toString();
+        textMiddle = etMiddle.getText().toString();
+        textLastName = etLastName.getText().toString();
         textEmail = etEmail.getText().toString().trim();
         textGender = autocompleteGender.getText().toString();
         textPassword = etPassword.getText().toString().trim();
@@ -230,45 +246,54 @@ public class RegisterCarer extends AppCompatActivity {
         Pattern passwordPattern = Pattern.compile(passwordRegex);
         passwordMatcher = passwordPattern.matcher(etPassword.getText());
 
-        if (checkIfEmpty(etFullName)) {
-            tilFullName.setError("This field can't be empty");
-            tilFullName.requestFocus();
+        if (checkIfEmpty(etFirstName)) {
+            tilFirstName.setError("This field can't be empty");
+            tilFirstName.requestFocus();
+        }else if(checkIfEmpty(etMiddle)){
+            tilMiddle.setError("This field can't be empty");
+            tilMiddle.requestFocus();
+        }else if(checkIfEmpty(etLastName)){
+            tilLastName.setError("This field can't be empty");
+            tilLastName.requestFocus();
         }else if(checkIfEmpty(dropdown_dob)){
             tilDOB.setError("This field can't be empty");
             tilDOB.requestFocus();
-        } else if(TextUtils.isEmpty(autocompleteGender.getText())){
+        }else if(TextUtils.isEmpty(autocompleteGender.getText())){
             tilGender.setError("This field can't be empty");
             tilGender.requestFocus();
         }else if(checkIfEmpty(etEmail)){
             tilEmail.setError("This field can't be empty");
             tilEmail.requestFocus();
-        } else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
             tilEmail.setError("Invalid email. Please re-enter your email");
             tilEmail.requestFocus();
-        } else if(checkIfEmpty(etAddress)){
+        }else if(checkIfEmpty(etAddress)){
             tilAddress.setError("This field can't be empty");
             tilAddress.requestFocus();
-        } else if(checkIfEmpty(etMobileNumber)){
+        }else if(checkIfEmpty(etMobileNumber)){
             tilMobileNumber.setError("This field can't be empty");
             tilMobileNumber.requestFocus();
-        } else if(etMobileNumber.getText().length() != 11){
+        }else if(etMobileNumber.getText().length() != 11){
             tilMobileNumber.setError("Mobile no. should be 11 digits. e.g. 09166992880");
             tilMobileNumber.requestFocus();
-        } else if(!mobileMatcher.find()){
+        }else if(!mobileMatcher.find()){
             tilMobileNumber.setError("Mobile no. is not valid. e.g. 091669928880");
             tilMobileNumber.requestFocus();
-        } else if(checkIfEmpty(etPassword)){
+        }else if(checkIfEmpty(etPassword)){
             tilPassword.setError("This field can't be empty");
             tilPassword.requestFocus();
-        } else if(!passwordMatcher.find()){
+        }else if(!passwordMatcher.find()){
             tilPassword.setError("Password contain at least 6 characters, 1 digit, and 1 upper case");
             tilPassword.requestFocus();
-        } else if(uriImage == null){
+        }else if(uriImage == null){
             promptMessage.displayMessage("Empty profile picture", "Please select your profile picture", R.color.red_decline_request, this);
+        }else if(!cbAgree.isChecked()){
+            promptMessage.displayMessage("Check box", "Please check the agreement checkbox to proceed further", R.color.red1, this);
+            cbAgree.requestFocus();
+        }
 
-        } else{
-
-            signupUser(textFullName, textEmail, textMobileNumber, textPassword, textDOB, textAddress, textCity,
+        else{
+            signupUser(textFirstName,textMiddle, textLastName, textEmail, textMobileNumber, textPassword, textDOB, textAddress, textCity,
                     textGender, userType, imageURL, user_token, textDateCreated);
         }
 
@@ -286,7 +311,9 @@ public class RegisterCarer extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            tilFullName.setError(null);
+            tilFirstName.setError(null);
+            tilMiddle.setError(null);
+            tilLastName.setError(null);
             tilGender.setError(null);
             tilEmail.setError(null);
             tilAddress.setError(null);
@@ -301,7 +328,7 @@ public class RegisterCarer extends AppCompatActivity {
     };
 
     // register user using the credentials given
-    private void signupUser(String textFullName, String textEmail, String textMobileNumber, String textPassword, String textDOB,
+    private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB,
                             String textAddress, String textCity, String textGender, String userType, String imageURL, String textToken, String textDateCreated){
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -316,7 +343,7 @@ public class RegisterCarer extends AppCompatActivity {
                             FirebaseUser firebaseUser = auth.getCurrentUser();
 
                             // enter user data into the firebase realtime database
-                            ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFullName, textEmail, textMobileNumber, textPassword, textDOB,
+                            ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFirstName,textMiddle, textLastName, textEmail, textMobileNumber, textPassword, textDOB,
                             textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "Registered Users"

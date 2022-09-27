@@ -10,30 +10,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/horizontal_bg_1"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/ibRegisterCarerBack"
             android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_margin="15dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_back_white" />
+            android:src="@drawable/ic_back" />
 
-        <TextView
+        <!--<TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Carer"
-            android:fontFamily="@font/redhat_display_semibold"
-            android:textColor="@color/white"
-            android:textAlignment="center"
             android:layout_marginTop="15dp"
-            android:textSize="20sp"
-            android:layout_weight="5.5"/>
+            android:layout_weight="5.5"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="Carer"
+            android:textAlignment="center"
+            android:textColor="@color/grey7"
+            android:textSize="22sp" />-->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="9"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/osca_banner"/>
 
         <View
             android:layout_width="0dp"
@@ -46,6 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/grey3"/>
+
+
 
     <FrameLayout
         android:layout_width="120dp"
@@ -72,11 +80,24 @@
 
     </FrameLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:textSize="20sp"
+        android:textColor="@color/grey7"
+        android:fontFamily="@font/redhat_display_semibold"
+        android:text="Carer Registration"/>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:fillViewport="true"
+        android:fadeScrollbars="false"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarThumbVertical="@color/dark_green"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="match_parent">
 
     <LinearLayout
@@ -90,7 +111,7 @@
 
         <!-- full name -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilFullName"
+            android:id="@+id/tilFirstName"
             android:layout_width="match_parent"
             android:layout_marginTop="15dp"
             android:layout_height="wrap_content"
@@ -103,12 +124,12 @@
             app:boxStrokeWidthFocused="0dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCarerFullName"
+                android:id="@+id/etCarerFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="@string/full_name"
+                android:hint="First Name"
                 android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
@@ -116,6 +137,74 @@
                 app:boxStrokeWidthFocused="0dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <!-- middle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMiddle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:errorEnabled="true"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:endIconMode="clear_text"
+                app:hintEnabled="true"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCarerMiddle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Middle"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- middle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLastName"
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:endIconMode="clear_text"
+                app:hintEnabled="true"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCarerLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Last Name"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -263,7 +352,7 @@
                 android:fontFamily="@font/redhat_display_regular"
                 android:drawableStart="@drawable/ic_ph_flag"
                 android:drawablePadding="10dp"
-                android:hint="Mobile Number"
+                android:hint="+63   Mobile Number"
                 app:boxStrokeWidthFocused="0dp"
                 android:padding="20dp"
                 android:textColorHint="@color/grey4"
@@ -298,6 +387,27 @@
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cbAgree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            android:text="By signing up, you agrees to our Terms \n and Data Policy"/>
+
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignupCarer"
             android:layout_width="match_parent"
@@ -309,17 +419,6 @@
             android:enabled="true"
             android:text="@string/signup"
             android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvCarerHaveAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="?actionBarSize"
-            android:fontFamily="@font/redhat_display_regular"
-            android:text="@string/already_have_account"
-            android:textAlignment="center"
-            android:textColor="@color/grey1"
-            android:textSize="18sp" />
 
     </LinearLayout>
 

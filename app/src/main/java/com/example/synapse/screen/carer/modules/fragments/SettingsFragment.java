@@ -99,7 +99,7 @@ public class SettingsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
                 if(userProfile != null){
-                    tvName.setText(userProfile.getFullName());
+                    tvName.setText(userProfile.getFirstName());
                     tvEmail.setText(userProfile.getEmail());
                     Uri uri = mUser.getPhotoUrl();
                     Picasso.get()

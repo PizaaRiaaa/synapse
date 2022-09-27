@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment {
                                 if(snapshot.exists()){
                                     ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
                                     String user_dob = seniorProfile.getDOB();
-                                   String fullName = seniorProfile.fullName;
+                                   String fullName = seniorProfile.firstName;
                                     String barangay = seniorProfile.address;
 
                                     Calendar cal = Calendar.getInstance();
@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment {
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if(snapshot.exists()){
                                                 ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                                String fullName = seniorProfile.fullName;
+                                                String fullName = seniorProfile.firstName;
                                                 String barangay = seniorProfile.address;
                                                 assert seniorProfile != null;
 

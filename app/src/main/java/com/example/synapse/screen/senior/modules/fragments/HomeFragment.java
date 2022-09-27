@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment {
                 if(snapshot.exists()){
                     ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
                     if(userProfile != null){
-                        String name = userProfile.fullName;
+                        String name = userProfile.firstName;
                         int firstName = name.indexOf(" ");
                         tvSeniorName.setText("Hello,\n" + name.substring(0, firstName ).toString());
 

@@ -1,7 +1,9 @@
 package com.example.synapse.screen.util.readwrite;
 
 public class ReadWriteUserDetails {
-    public String fullName;
+    public String firstName;
+    public String middle;
+    public String lastName;
     public String email;
     public String mobileNumber;
     public String password;
@@ -16,11 +18,13 @@ public class ReadWriteUserDetails {
 
     public ReadWriteUserDetails() { }
 
-    public ReadWriteUserDetails(String textFullName, String textEmail, String textMobileNumber, String textPassword,
+    public ReadWriteUserDetails(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword,
                                 String textDOB, String textAddress, String textCity, String textGender,
                                 String userType, String imageURL, String token, String date_created){
 
-        this.fullName = textFullName;
+        this.firstName = textFirstName;
+        this.middle = textMiddle;
+        this.lastName = textLastName;
         this.email = textEmail;
         this.mobileNumber = textMobileNumber;
         this.password = textPassword;
@@ -34,8 +38,14 @@ public class ReadWriteUserDetails {
         this.date_created = date_created;
     }
 
-    public String getFullName(){ return fullName; }
-    public void setFullName(String fullName){ this.fullName = fullName; }
+    public String getFirstName(){ return firstName; }
+    public void setFirstName(String firstName){ this.firstName = firstName; }
+
+    public String getMiddle(){ return middle; }
+    public void setMiddle(String middle){ this.middle = middle; }
+
+    public String getLastName(){ return lastName; }
+    public void setLastName(String lastName){ this.lastName = lastName; }
 
     public String getEmail(){ return email; }
     public void setEmail(String email){ this.email = email; }
