@@ -2,6 +2,7 @@ package com.example.synapse.screen.carer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.SearchView;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import com.squareup.picasso.Picasso;
-
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SendRequest extends AppCompatActivity {
@@ -129,7 +128,7 @@ public class SendRequest extends AppCompatActivity {
     // display all senior users in recycle view
     private void LoadUsers(String s){
         // search users by fullName
-        Query query = mUserRef.orderByChild("fullName").startAt(s).endAt(s+"\uf8ff");
+        Query query = mUserRef.orderByChild("firstName").startAt(s).endAt(s+"\uf8ff");
 
         FirebaseRecyclerOptions<ReadWriteUserDetails> options = new FirebaseRecyclerOptions.Builder<ReadWriteUserDetails>().setQuery(query, ReadWriteUserDetails.class).build();
 

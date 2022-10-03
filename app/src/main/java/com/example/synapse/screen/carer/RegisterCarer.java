@@ -25,11 +25,14 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.PickRole;
+import com.example.synapse.screen.carer.verification.OTP;
 import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +64,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class RegisterCarer extends AppCompatActivity {
 
+    // Global variables
     PromptMessage promptMessage = new PromptMessage();
     String userType, token;
     private StorageReference storageReference;
@@ -75,7 +79,7 @@ public class RegisterCarer extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private AutoCompleteTextView autocompleteGender;
     private CheckBox cbAgree;
-
+    ProgressBar progressBar;
     private TextInputEditText
             etFirstName,
             etMiddle,
@@ -108,6 +112,8 @@ public class RegisterCarer extends AppCompatActivity {
            textDateCreated,
            user_token;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +122,7 @@ public class RegisterCarer extends AppCompatActivity {
         ImageButton ibBack = findViewById(R.id.ibRegisterCarerBack);
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_carer_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupCarer);
+        progressBar = findViewById(R.id.progressBarRegister);
         cbAgree = findViewById(R.id.cbAgree);
         etFirstName = findViewById(R.id.etCarerFirstName);
         etMiddle = findViewById(R.id.etCarerMiddle);
@@ -179,11 +186,9 @@ public class RegisterCarer extends AppCompatActivity {
         etMobileNumber.addTextChangedListener(textWatcher);
         etPassword.addTextChangedListener(textWatcher);
 
-
-         btnSignup.setOnClickListener(v -> checkValidation());
+        btnSignup.setOnClickListener(v -> checkValidation());
     }
-
-    private String getTodaysDate(){
+    String getTodaysDate(){
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
@@ -192,7 +197,7 @@ public class RegisterCarer extends AppCompatActivity {
         return makeDateString(day, month, year);
     }
 
-    private void initDatePicker(){
+    void initDatePicker(){
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -216,7 +221,7 @@ public class RegisterCarer extends AppCompatActivity {
         return month + " " + day + " " + year;
     }
 
-    public void checkValidation() {
+    void checkValidation() {
         // obtain the entered data
         Date timestamp = Calendar.getInstance().getTime();
         user_token = token;
@@ -235,7 +240,7 @@ public class RegisterCarer extends AppCompatActivity {
         textDateCreated = timestamp.toString();
 
         // validate mobile number using matcher and regex
-        String mobileRegex = "^(09|\\+639)\\d{9}$"; // first no. can be {09 or +639} and rest 9 no. can be any no.
+        String mobileRegex = "^(9|\\+639)\\d{9}$"; // first no. can be {09 or +639} and rest 9 no. can be any no.
         Matcher mobileMatcher;
         Pattern mobilePattern = Pattern.compile(mobileRegex);
         mobileMatcher = mobilePattern.matcher(etMobileNumber.getText());
@@ -273,7 +278,7 @@ public class RegisterCarer extends AppCompatActivity {
         }else if(checkIfEmpty(etMobileNumber)){
             tilMobileNumber.setError("This field can't be empty");
             tilMobileNumber.requestFocus();
-        }else if(etMobileNumber.getText().length() != 11){
+        }else if(etMobileNumber.getText().length() < 10){
             tilMobileNumber.setError("Mobile no. should be 11 digits. e.g. 09166992880");
             tilMobileNumber.requestFocus();
         }else if(!mobileMatcher.find()){
@@ -299,11 +304,11 @@ public class RegisterCarer extends AppCompatActivity {
 
     }
 
-    public boolean checkIfEmpty(TextInputEditText tit){
+    boolean checkIfEmpty(TextInputEditText tit){
         return TextUtils.isEmpty(tit.getText());
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -340,11 +345,13 @@ public class RegisterCarer extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
+                            progressBar.setVisibility(View.VISIBLE);
+
                             FirebaseUser firebaseUser = auth.getCurrentUser();
 
                             // enter user data into the firebase realtime database
                             ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(textFirstName,textMiddle, textLastName, textEmail, textMobileNumber, textPassword, textDOB,
-                            textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
+                                    textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "Registered Users"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
@@ -381,7 +388,6 @@ public class RegisterCarer extends AppCompatActivity {
                                                         firebaseUser.updateProfile(profileUpdates);
                                                     }
                                                 });
-
                                             }
                                         });
                                     }
@@ -392,10 +398,16 @@ public class RegisterCarer extends AppCompatActivity {
                                         firebaseUser.sendEmailVerification();
 
                                         // sign out the user to prevent automatic sign in, right after successful register
-                                        auth.signOut();
 
-                                        Toast.makeText(RegisterCarer.this, "Registered successfully. Please verify your email.", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(RegisterCarer.this, CarerVerifyEmail.class));
+
+                                        // send mobile and email intent
+                                        Intent intent = new Intent(RegisterCarer.this, OTP.class);
+                                        Bundle data = new Bundle();
+                                        data.putString("Mobile", textMobileNumber);
+                                        intent.putExtras(data);
+                                        startActivity(intent);
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        //auth.signOut();
                                     }else{
                                         Toast.makeText(RegisterCarer.this, "User registered failed. Please try again",
                                                 Toast.LENGTH_LONG).show();
@@ -424,8 +436,7 @@ public class RegisterCarer extends AppCompatActivity {
                 });
     }
 
-
-    private void openFileChooser(){
+    void openFileChooser(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -447,7 +458,7 @@ public class RegisterCarer extends AppCompatActivity {
     }
 
     // obtain file extension of the image
-    private String getFileExtension(Uri uri){
+    String getFileExtension(Uri uri){
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));

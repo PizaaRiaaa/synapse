@@ -64,7 +64,7 @@
                     android:inputType="textVisiblePassword"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="@string/login_email"
+                    android:hint="Email address"
                     android:drawableStart="@drawable/ic_profile"
                     android:drawablePadding="15dp"
                     app:boxStrokeWidthFocused="0dp"

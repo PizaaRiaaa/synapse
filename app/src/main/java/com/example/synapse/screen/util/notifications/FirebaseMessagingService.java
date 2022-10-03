@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
@@ -23,7 +24,11 @@ import androidx.core.app.NotificationCompat;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Objects;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
@@ -31,22 +36,26 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        //
-        String title = remoteMessage.getNotification().getTitle();
-        if(title.equals("Medicine Reminder")){
-            playVoiceReminder(R.raw.medicine_reminder);
-        }else if(title.equals("Physical Activity Reminder")){
-           playVoiceReminder(R.raw.physical_activity_reminder);
-        }else if(title.equals("Game Reminder")){
-            playVoiceReminder(R.raw.game_reminder);
-        }else{
-            playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
+        switch (Objects.requireNonNull(title)) {
+            case "Medicine Reminder":
+                playVoiceReminder(R.raw.medicine_reminder);
+                break;
+            case "Physical Activity Reminder":
+                playVoiceReminder(R.raw.physical_activity_reminder);
+                break;
+            case "Game Reminder":
+                playVoiceReminder(R.raw.game_reminder);
+                break;
+            default:
+                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+                break;
         }
 
-        // playing audio and vibration when user set reques
+        // playing audio and vibration
          Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
          Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
          r.play();
@@ -60,7 +69,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         long[] pattern = {100, 300, 300, 300};
         v.vibrate(pattern, -1);
 
-        int resourceImage = getResources().getIdentifier(remoteMessage.getNotification().getIcon(), "drawable", getPackageName());
+        int resourceImage =
+                getResources()
+                .getIdentifier(remoteMessage
+                        .getNotification()
+                        .getIcon(),
+                        "drawable",
+                        getPackageName());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "hello");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

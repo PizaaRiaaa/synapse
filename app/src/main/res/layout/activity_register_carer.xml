@@ -54,7 +54,6 @@
         android:background="@color/grey3"/>
 
 
-
     <FrameLayout
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -100,7 +99,7 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="20dp"
@@ -139,10 +138,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
+            android:id="@+id/tilMiddleAndLast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
+            android:layout_below="@+id/tilFirstName"
             android:baselineAligned="false">
 
             <!-- middle -->
@@ -175,7 +176,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- middle -->
+            <!-- lastname -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilLastName"
                 android:layout_width="0dp"
@@ -207,10 +208,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/tilDOBAndGender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
+            android:layout_below="@id/tilMiddleAndLast"
             android:baselineAligned="false">
 
             <!-- DOB dropdown -->
@@ -281,6 +284,7 @@
             android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tilDOBAndGender"
             app:errorEnabled="true"
             app:endIconMode="clear_text"
             app:boxStrokeWidth="0dp"
@@ -306,6 +310,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
+            android:layout_below="@+id/tilEmail"
             app:errorEnabled="true"
             app:endIconMode="clear_text"
             app:counterMaxLength="30"
@@ -335,6 +340,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
+            android:layout_below="@+id/tilAddress"
             app:counterEnabled="true"
             app:counterMaxLength="11"
             app:errorEnabled="true"
@@ -364,33 +370,36 @@
             android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
-            app:endIconMode="password_toggle"
-            app:endIconDrawable="@drawable/custom_eye"
-            app:endIconTint="@color/grey4"
-            app:hintEnabled="true"
+            android:layout_below="@+id/tilMobileNumber"
             app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconDrawable="@drawable/custom_eye"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/grey4"
+            app:errorEnabled="true"
+            app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etRegisterCarerPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
                 android:hint="@string/login_password"
+                android:inputType="textPassword"
                 android:maxLength="20"
-                app:boxStrokeWidthFocused="0dp"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:boxStrokeWidthFocused="0dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
+            android:id="@+id/tilCheckBox"
+            android:layout_below="@+id/tilPassword"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal">
 
         <CheckBox
@@ -401,7 +410,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
             android:textAlignment="center"
             android:textSize="13sp"
             android:text="By signing up, you agrees to our Terms \n and Data Policy"/>
@@ -414,13 +422,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="?actionBarSize"
+            android:layout_below="@+id/tilCheckBox"
             android:background="@drawable/rounded_button_login"
             android:fontFamily="@font/redhat_display_bold"
             android:enabled="true"
             android:text="@string/signup"
             android:textSize="14sp" />
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="20dp">
+
+            <ProgressBar
+                android:id="@+id/progressBarRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_gravity="center" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 
     </ScrollView>
 

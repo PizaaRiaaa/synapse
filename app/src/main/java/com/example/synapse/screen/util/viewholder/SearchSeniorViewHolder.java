@@ -11,7 +11,7 @@ import com.example.synapse.R;
 
 public class SearchSeniorViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView fullName;
+    public TextView firstName;
     public TextView userType;
     public ImageView profileImage;
 
@@ -19,7 +19,7 @@ public class SearchSeniorViewHolder extends RecyclerView.ViewHolder {
     public SearchSeniorViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        fullName = itemView.findViewById(R.id.tvSearch_FullName);
+        firstName = itemView.findViewById(R.id.tvSearch_FullName);
         profileImage = itemView.findViewById(R.id.ivSearchProfileImage);
         userType = itemView.findViewById(R.id.tvSearchUserType);
     }

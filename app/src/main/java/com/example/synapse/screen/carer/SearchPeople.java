@@ -132,7 +132,7 @@ public class SearchPeople extends AppCompatActivity {
                             .into(holder.profileImage);
 
                      // display every details of senior users
-                    holder.fullName.setText(model.getFirstName());
+                    holder.firstName.setText(model.getFirstName());
                     holder.userType.setText(model.getUserType());
 
                 } else {

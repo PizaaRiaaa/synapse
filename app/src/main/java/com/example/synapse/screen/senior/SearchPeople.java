@@ -2,6 +2,7 @@ package com.example.synapse.screen.senior;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,9 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
-
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SearchPeople extends AppCompatActivity {
@@ -109,7 +108,7 @@ public class SearchPeople extends AppCompatActivity {
     private void LoadUsers(String s){
 
         // search users by fullName
-        Query query = mUserRef.orderByChild("fullName").startAt(s).endAt(s+"\uf8ff");
+        Query query = mUserRef.orderByChild("firstName").startAt(s).endAt(s+"\uf8ff");
 
         FirebaseRecyclerOptions<ReadWriteUserDetails> options = new FirebaseRecyclerOptions.Builder<ReadWriteUserDetails>().setQuery(query, ReadWriteUserDetails.class).build();
 
@@ -135,7 +134,7 @@ public class SearchPeople extends AppCompatActivity {
                             .into(holder.profileImage);
 
                     // display details of user
-                    holder.fullName.setText(model.getFirstName());
+                    holder.firstName.setText(model.getFirstName());
                     holder.userType.setText(model.getUserType());
 
                 } else {

@@ -13,6 +13,8 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -515,7 +517,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                            for(DataSnapshot ds1: snapshot.getChildren()){
                                String key = ds1.getKey();
 
-                               // userID > serniorID > medicineID (retrieve)
+                               // userID > seniorID > medicineID (retrieve)
                                referenceReminders.child(mUser.getUid()).child(key).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                    @Override
                                    public void onDataChange(@NonNull DataSnapshot snapshot) {

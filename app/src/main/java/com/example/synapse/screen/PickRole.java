@@ -43,10 +43,6 @@ public class PickRole extends AppCompatActivity {
         tvBack = findViewById(R.id.tvAlreadyHaveAnAccount);
         tvBack.setOnClickListener(view -> startActivity(new Intent(PickRole.this, Login.class)));
 
-       /*  if ibCarer was pressed, then bring
-           user to carer registration screen
-           ibSenior was pressed, then bring
-           user to senior registration screen*/
         btnContinue = findViewById(R.id.btnContinue);
         ibCarer = findViewById(R.id.ibPickCarer);
         ibSenior = findViewById(R.id.ibPickSenior);
@@ -57,6 +53,7 @@ public class PickRole extends AppCompatActivity {
             ibCarer.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.rounded_button_pick_role));
             ibSenior.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.custom_button_selector));
             btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, RegisterCarer.class)));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
         // check if senior ImageButton was pressed

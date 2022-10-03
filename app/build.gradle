@@ -90,6 +90,10 @@ dependencies {
     // gif extension support
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
 
+    // prerequisite for OTP
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+
     implementation 'com.karumi:dexter:6.2.3'
 
 }

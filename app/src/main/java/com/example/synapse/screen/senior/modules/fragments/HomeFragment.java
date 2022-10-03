@@ -142,7 +142,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // retrieve and update token
+    // retrieve  and generate token everytime user access the app
     @Override
     public void onStart() {
         super.onStart();
@@ -155,8 +155,6 @@ public class HomeFragment extends Fragment {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-                        // generate token everytime user access the app
-                        // Get new FCM registration token
                         token = task.getResult();
                         hashMap.put("token", token);
                         referenceProfile.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
@@ -164,7 +162,6 @@ public class HomeFragment extends Fragment {
                             public void onComplete(@NonNull Task task) {
                             }
                         });
-                        // Log and toast
                         String msg = token;
                         Log.d("Token:", msg);
                     }
@@ -180,8 +177,7 @@ public class HomeFragment extends Fragment {
                     ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
                     if(userProfile != null){
                         String name = userProfile.firstName;
-                        int firstName = name.indexOf(" ");
-                        tvSeniorName.setText("Hello,\n" + name.substring(0, firstName ).toString());
+                        tvSeniorName.setText("Hello,\n" + name);
 
                         // display carer profile pic
                         Uri uri = mUser.getPhotoUrl();

@@ -208,7 +208,7 @@ public class ViewPeople extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     imageURL = snapshot.child("imageURL").getValue().toString();
-                    fullName = snapshot.child("fullName").getValue().toString();
+                    fullName = snapshot.child("firstName").getValue().toString();
 
                     Picasso.get()
                             .load(imageURL)

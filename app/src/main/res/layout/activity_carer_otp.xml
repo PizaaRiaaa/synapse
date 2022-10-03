@@ -1,9 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".screen.carer.verification.OTP">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="Thank you for \n signing up!"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/grey7"
+            android:textSize="23sp" />
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:text="We're glad you're here!\nBefore you start exploring, we\njust sent you OTP and email \n verification"
+            android:textAlignment="center"
+            android:textColor="#7E7E7E"
+            android:textSize="17sp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/ic_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvHeader"
+        app:strokeWidth="2dp"
+        app:cardCornerRadius="30dp"
+        app:strokeColor="@color/light_green">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/ic_otp_verify" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:padding="20dp">
+
+            <ProgressBar
+                android:id="@+id/progressBarOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OTP Verification"
+        android:fontFamily="@font/redhat_display_bold"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/input1"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+        <EditText
+            android:id="@+id/input2"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+        <EditText
+            android:id="@+id/input3"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+        <EditText
+            android:id="@+id/input4"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+        <EditText
+            android:id="@+id/input5"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+        <EditText
+            android:id="@+id/input6"
+            android:backgroundTint="@color/dark_green"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/tvResendOTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/red_decline_request"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:text="RESEND OTP"/>
+
+        <TextView
+            android:id="@+id/tvCountDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey4"
+            android:layout_marginStart="10sp"
+            android:textSize="14sp"
+            android:text="60s"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?actionBarSize"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerifyOTP"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:background="@drawable/rounded_button_login"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="VERIFY"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center|bottom"
+            android:textColor="#0071B0"
+            android:text="© 2022 • OSCA • Mandaluyong City"/>
+
+    </LinearLayout>
+
+</LinearLayout>

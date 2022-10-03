@@ -7,24 +7,23 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
-
 import com.example.synapse.R;
-
 import androidx.core.app.NotificationCompat;
 
 public class MedicineNotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
-
     private NotificationManager mManager;
+    Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
     public MedicineNotificationHelper(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
         }
-       // notificationIntent.putExtra("MedicationID",alertReceiver.retrieveRequestCode());
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -32,8 +31,7 @@ public class MedicineNotificationHelper extends ContextWrapper {
         NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
         channel.enableLights(true);
         channel.enableVibration(true);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
     }
 
@@ -41,20 +39,17 @@ public class MedicineNotificationHelper extends ContextWrapper {
         if (mManager == null) {
             mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
-
         return mManager;
     }
 
     public NotificationCompat.Builder getChannelNotification() {
-
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Medicine Reminder")
-                .setContentText("It's time for your senior to take a medicine")
-                .setAutoCancel(true)
                 .setColorized(true)
+                .setVibrate(new long[]{0, 1000, 500, 3000})
                 .setLights(Color.RED, 3000, 3000)
-                .setSmallIcon(R.drawable.ic_splash_logo);
-
-
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSmallIcon(R.drawable.ic_splash_logo)
+                .setSound(defaultSoundUri)
+                .setAutoCancel(true);
     }
 }
