@@ -31,6 +31,7 @@ public class MedicineNotificationHelper extends ContextWrapper {
         NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
         channel.enableLights(true);
         channel.enableVibration(true);
+        channel.setDescription("Hello world");
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
     }
@@ -48,7 +49,6 @@ public class MedicineNotificationHelper extends ContextWrapper {
                 .setVibrate(new long[]{0, 1000, 500, 3000})
                 .setLights(Color.RED, 3000, 3000)
                 .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.drawable.ic_splash_logo)
                 .setSound(defaultSoundUri)
                 .setAutoCancel(true);
     }

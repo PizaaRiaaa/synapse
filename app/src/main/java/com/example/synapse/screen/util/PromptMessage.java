@@ -1,6 +1,9 @@
 package com.example.synapse.screen.util;
 
 import android.app.Activity;
+import android.content.Context;
+import android.widget.Toast;
+
 import com.example.synapse.R;
 import org.aviran.cookiebar2.CookieBar;
 
@@ -28,4 +31,8 @@ public class PromptMessage {
                 .show();
     }
 
+    // display default error message for non activity class
+    public void defaultErrorMessageContext(Context context) {
+        Toast.makeText(context, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+    }
 }
