@@ -22,9 +22,11 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,33 +92,32 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    private final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
+    DatabaseReference referenceCompanion, referenceReminders, referenceRequest, referenceProfile;
+
+    final String[] APPOINTMENT_SPECIALIST =
+            {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
             "Ophthalmologist","Dentist","Psychologist","Audiologist"};
-    private final int [] APPOINTMENT_SPECIALIST_ICS = {R.drawable.ic_geriatrician, R.drawable.ic_doctor, R.drawable.ic_cardiologist,
+
+    final int [] APPOINTMENT_SPECIALIST_ICS =
+            {R.drawable.ic_geriatrician, R.drawable.ic_doctor, R.drawable.ic_cardiologist,
             R.drawable.ic_rheumatologist,R.drawable.ic_urologist, R.drawable.ic_ophthalmologist,
             R.drawable.ic_dentist,R.drawable.ic_psychologist,R.drawable.ic_audiologist};
-    private final String[]  APPOINTMENT_TYPE = {"In Person","Online"};
-    private final int [] APPOINTMENT_TYPE_ICS = {R.drawable.ic_in_person, R.drawable.ic_online};
-    AppCompatButton btnMon, btnTue, btnWed,
-            btnThu, btnFri, btnSat, btnSun;
-    private final Calendar calendar = Calendar.getInstance();
-    private DatabaseReference
-            referenceCompanion,
-            referenceReminders,
-            referenceRequest,
-            referenceProfile;
 
-    private FirebaseUser mUser;
+    final String[]  APPOINTMENT_TYPE = {"In Person","Online"};
+    final int [] APPOINTMENT_TYPE_ICS = {R.drawable.ic_in_person, R.drawable.ic_online};
+    final Calendar calendar = Calendar.getInstance();
+
+    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
+    String time, selected_specialist, token, selected_appointment_type, seniorID, date;
+    FirebaseUser mUser;
     RequestQueue requestQueue;
-    private int requestCode;
+    int requestCode;
 
-    private RecyclerView recyclerView;
-    private Dialog dialog;
-    private TextView tvTime;
-    private TextInputEditText etDrName, etConcern;
-    private String time, selected_specialist, token,
-            selected_appointment_type, seniorID, date;
-    private ImageView profilePic;
+    RecyclerView recyclerView;
+    Dialog dialog;
+    TextView tvTime;
+    TextInputEditText etDrName, etConcern;
+    ImageView profilePic;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -192,9 +193,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         // get current user
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // generate unique alarm id
-        requestCode = (int)calendar.getTimeInMillis()/1000;
-
         // generate volley for sending notification to senior
         requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -205,7 +203,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         ImageButton ibBack = view.findViewById(R.id.ibBack);
         ImageButton ibClose = dialog.findViewById(R.id.ibClose);
         AppCompatImageButton ibTimePicker = dialog.findViewById(R.id.ibTimePicker);
-        AppCompatButton btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
+        btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         FloatingActionButton btnAddAppointment = view.findViewById(R.id.btnAddAppointment);
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         Spinner spinner_appointment_specialist, spinner_appointment_type;
@@ -217,24 +215,15 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         // show status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // display carer's profile pic
         showUserProfile();
-
-        // load appointment schedules
         loadScheduleForAppointments();
-
         displayCurrentDay();
+        addButton();
 
-        // redirect user to CarerHome screen
         ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), CarerMainActivity.class)));
-
-        // display dialog
         btnAddAppointment.setOnClickListener(v -> dialog.show());
-
-        // close dialog
         ibClose.setOnClickListener(v -> dialog.dismiss());
 
-        // spinner for specialist
         spinner_appointment_specialist = dialog.findViewById(R.id.spinner_appointment_specialist);
         ItemAppointmentSpecialist adapter1 = new ItemAppointmentSpecialist(getActivity(),
                 APPOINTMENT_SPECIALIST, APPOINTMENT_SPECIALIST_ICS);
@@ -242,7 +231,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         spinner_appointment_specialist.setAdapter(adapter1);
         spinner_appointment_specialist.setOnItemSelectedListener(this);
 
-        // spinner for appointment type
         spinner_appointment_type = dialog.findViewById(R.id.spinner_appointment_type);
         ItemAppointmentType adapter2 = new ItemAppointmentType(getActivity(),
                 APPOINTMENT_TYPE, APPOINTMENT_TYPE_ICS);
@@ -250,43 +238,15 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         spinner_appointment_type.setAdapter(adapter2);
         spinner_appointment_type.setOnItemSelectedListener(this);
 
-        // display time picker
         ibTimePicker.setOnClickListener(v -> {
             DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
+                DialogFragment timePicker = new TimePickerFragment(this);
                 timePicker.show(getChildFragmentManager(), "time picker");
             };
             new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-
-        // perform add schedule
-        btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        if(tvTime.getText().equals("Add New Appointment")){
-                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
-                        } else {
-                            addSchedule();
-                        }
-                    } else {
-                        dialog.dismiss();
-                        promptMessage.displayMessage("Failed to set an appointment", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request,getActivity());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
         });
 
         return view;
@@ -315,7 +275,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
             selected_appointment_type = APPOINTMENT_TYPE[position];
         }
     }
-
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
@@ -331,8 +290,14 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     private void updateTimeText(Calendar calendar) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat =
                 new SimpleDateFormat("MMMM dd yyyy hh:mm a", Locale.ENGLISH);
-        tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
+        tvTime.setText(simpleDateFormat.format(calendar.getTime()));
+        tvTime.setTextColor(getResources().getColor(R.color.black));
         time = simpleDateFormat.format(calendar.getTime());
+    }
+
+    // get the selected time
+    Calendar getCalendar(){
+        return calendar;
     }
 
     // listen if alarm is currently running so we can send notification to senior
@@ -379,8 +344,40 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         getActivity().unregisterReceiver(broadcastReceiver);
     }
 
+    // set the alarm manager and listen for broadcast
+    private void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("Appointment", 3);
+        intent.putExtra("appointment_id", key);
+        intent.putExtra("request_code", requestCode);
+
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent =
+                    PendingIntent.getBroadcast(getActivity(),
+                            requestCode,
+                            intent,
+                            PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent =
+                    PendingIntent.getBroadcast(getActivity(),
+                            requestCode,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        // notify a day before the appointment
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - (86400000) , pendingIntent);
+    }
+
     // store schedule for appointment
     private void addSchedule() {
+        requestCode = (int) getCalendar().getTimeInMillis()/1000;
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Specialist", selected_specialist);
         hashMap.put("AppointmentType", selected_appointment_type);
@@ -405,26 +402,19 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                                     referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             dialog.dismiss();
+                                            clearDialogText();
+                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                                            // start alarm and retrieve the unique id of newly created medicine
+                                            // so we can send it to alert receiver.
+                                            startAlarm(getCalendar(), key);
                                         }
                                     });
                                 }
-
-                                CookieBar.build(getActivity())
-                                        .setTitle("Set Appointment")
-                                        .setMessage("Alarm has been set")
-                                        .setIcon(R.drawable.ic_cookie_check)
-                                        .setBackgroundColor(R.color.dark_green)
-                                        .setCookiePosition(CookieBar.TOP)
-                                        .setDuration(5000)
-                                        .show();
-
-                                startAlarm(calendar, key);
                             }
                         });
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 promptMessage.defaultErrorMessage(getActivity());
@@ -432,35 +422,39 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         });
     }
 
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c, String key) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("Appointment", 3);
-        intent.putExtra("appointment_id", key);
+    // store schedule when add button was clicked
+    void addButton(){
+        // perform add schedule
+        btnAddSchedule.setOnClickListener(v -> {
+            // check if carer has already assigned senior in companion node
+            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.S)
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        if(tvTime.getText().equals("Add New Appointment")){
+                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
+                        } else {
+                            addSchedule();
+                        }
+                    } else {
+                        addSchedule();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
+                        ft.detach(AppointmentFragment.this).attach(AppointmentFragment.this).commit();
+                    }
+                }
 
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent =
-                    PendingIntent.getBroadcast(getActivity(),
-                    requestCode,
-                    intent,
-                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
-        } else {
-            pendingIntent =
-                    PendingIntent.getBroadcast(getActivity(),
-                    requestCode,
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
-        }
-
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
-
-        // notify a day before the appointment
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - (86400000) , pendingIntent);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    promptMessage.defaultErrorMessage(getActivity());
+                }
+            });
+        });
     }
+
+
+
 
     // change the background the current day to white
     public void displayCurrentDay(){
@@ -598,6 +592,14 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                 promptMessage.defaultErrorMessage(getActivity());
             }
         });
+    }
+
+    // clear text in dialog box
+    void clearDialogText(){
+        etDrName.setText("");
+        etConcern.setText("");
+        tvTime.setText("Add New Appointment");
+        tvTime.setTextColor(getResources().getColor(R.color.grey5));
     }
 
 }

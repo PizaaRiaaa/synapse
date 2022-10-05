@@ -1,22 +1,43 @@
 package com.example.synapse.screen.util.notifications;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.StrictMode;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.view.ViewAppointment;
 import com.example.synapse.screen.carer.modules.view.ViewGame;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;
 import com.example.synapse.screen.carer.modules.view.ViewPhysicalActivity;
 import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
+import com.example.synapse.screen.util.readwrite.ReadWriteGames;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
+import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,21 +46,42 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class AlertReceiver extends BroadcastReceiver {
 
-    DatabaseReference referenceReminders = FirebaseDatabase.getInstance().getReference().child("Medication Reminders");
-    DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
-    String med_id, physical_id, appointment_id, game_id, seniorID;
     FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-    MedicineNotificationHelper medicineNotificationHelper;
+    DatabaseReference referenceProfile,medicationReminder,
+            physicalActivityReminder, appointmentReminder, gameReminder;
+    String med_id, physical_id, appointment_id, game_id, seniorID;
     PromptMessage promptMessage = new PromptMessage();
     NotificationCompat.Builder nb;
+    MedicineNotificationHelper medicineNotificationHelper;
+    PhysicalActivityNotificationHelper physicalActivityNotificationHelper;
+    AppointmentNotificationHelper appointmentNotificationHelper;
+    GamesNotificationHelper gamesNotificationHelper;
+
+    Bitmap bmp = null;
+    int pill_shape_color = 0;
     int requestCode1;
     int requestCode2;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+        medicationReminder = FirebaseDatabase.getInstance().getReference().child("Medication Reminders");
+        physicalActivityReminder = FirebaseDatabase.getInstance().getReference().child("Physical Activity Reminders");
+        appointmentReminder = FirebaseDatabase.getInstance().getReference().child("Appointment Reminders");
+        gameReminder = FirebaseDatabase.getInstance().getReference().child("Games Reminders");
+        referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
 
         int medication = intent.getExtras().getInt("Medication");
         int physical = intent.getExtras().getInt("PhysicalActivity");
@@ -57,41 +99,24 @@ public class AlertReceiver extends BroadcastReceiver {
         if(medication == 1){
             displayMedicineNotification(requestCode2, context);
         }else if(physical == 2){
-            PhysicalActivityNotificationHelper physicalActivityNotificationHelper = new PhysicalActivityNotificationHelper(context);
-            nb = physicalActivityNotificationHelper.getChannelNotification();
-            setContentIntent(context, ViewPhysicalActivity.class, "key", physical_id);
-            physicalActivityNotificationHelper.getManager().notify(requestCode1, nb.build());
-            context.sendBroadcast(new Intent("NOTIFY_PHYSICAL_ACTIVITY"));
-            notificationRingtone(context);
-
+            displayPhysicalActivityNotification(requestCode2, context);
         }else if(appointment == 3){
-            AppointmentNotificationHelper appointmentNotificationHelper = new AppointmentNotificationHelper(context);
-            nb = appointmentNotificationHelper.getChannelNotification();
-            setContentIntent(context, ViewAppointment.class, "key", appointment_id);
-            appointmentNotificationHelper.getManager().notify(requestCode1, nb.build());
-            context.sendBroadcast(new Intent("NOTIFY_APPOINTMENT"));
-            notificationRingtone(context);
-
+            displayAppointmentNotification(requestCode2, context);
         }else if(games == 4){
-            GamesNotificationHelper gamesNotificationHelper = new GamesNotificationHelper(context);
-            nb = gamesNotificationHelper.getChannelNotification();
-            setContentIntent(context, ViewGame.class, "key", game_id);
-            gamesNotificationHelper.getManager().notify(requestCode1, nb.build());
-            context.sendBroadcast(new Intent("NOTIFY_GAMES"));
-            notificationRingtone(context);
+            displayGameNotification(requestCode2, context);
         }
 
      }
 
-     // play custom alarm sound
-     void notificationRingtone(Context context){
+    // play custom alarm sound
+    void notificationRingtone(Context context){
           MediaPlayer mp = MediaPlayer.create(context, R.raw.alarm);
           mp.setLooping(false);
           mp.start();
     }
 
     // redirect carer user to their respective screen when notification is click
-        void setContentIntent(Context context, Class className, String putExtraKey, String module_id){
+    void setContentIntent(Context context, Class className, String putExtraKey, String module_id){
         Intent appActivityIntent = new Intent(context,className);
         appActivityIntent.putExtra(putExtraKey,module_id);
         PendingIntent contentAppActivityIntent =
@@ -103,28 +128,89 @@ public class AlertReceiver extends BroadcastReceiver {
         nb.setContentIntent(contentAppActivityIntent);
     }
 
+    void displayMedicine(String color, String shape){
 
-    public void displayMedicineNotification(int requestCode, Context context){
-        referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        if(color.equals("White") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_white_horizontal;
+        }else if(color.equals("Blue") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_blue_horizontal;
+        }else if(color.equals("Brown") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_brown_horizontal;
+        }else if(color.equals("Green") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_green_horizontal;
+        }else if(color.equals("Pink") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_pink_horizontal;
+        }else if(color.equals("Red") && shape.equals("Pill1")){
+            pill_shape_color = R.drawable.pill1_red_horizontal;
+        }
+
+        if(color.equals("White") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_white;
+        }else if(color.equals("Blue") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_blue;
+        }else if(color.equals("Brown") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_brown;
+        }else if(color.equals("Green") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_green;
+        }else if(color.equals("Pink") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_pink;
+        }else if(color.equals("Red") && shape.equals("Pill2")){
+            pill_shape_color = R.drawable.pill2_red;
+        }
+
+        if(color.equals("White") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_white_horizontal;
+        }else if(color.equals("Blue") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_blue_horizontal;
+        }else if(color.equals("Brown") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_brown_horizontal;
+        }else if(color.equals("Green") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_green_horizontal;
+        }else if(color.equals("Pink") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_pink_horizontal;
+        }else if(color.equals("Red") && shape.equals("Pill3")){
+            pill_shape_color = R.drawable.pill3_red_horizontal;
+        }
+
+        if(color.equals("White") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_white_horizontal;
+        }else if(color.equals("Blue") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_blue_horizontal;
+        }else if(color.equals("Brown") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_brown_horizontal;
+        }else if(color.equals("Green") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_green_horizontal;
+        }else if(color.equals("Pink") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_pink_horizontal;
+        }else if(color.equals("Red") && shape.equals("Pill4")){
+            pill_shape_color = R.drawable.pill4_red_horizontal;
+        }
+
+    }
+
+    void displayMedicineNotification(int requestCode, Context context){
+        medicationReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds1:snapshot.getChildren()){
-                    String seniorID = ds1.getKey();
-                    referenceReminders.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    seniorID = ds1.getKey();
+                    medicationReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored:snapshot.getChildren()){
-                                referenceReminders.child(mUser.getUid()).child(seniorID).child(med_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                medicationReminder.child(mUser.getUid()).child(seniorID).child(med_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         ReadWriteMedication rm = snapshot.getValue(ReadWriteMedication.class);
                                         Long code = rm.getRequestCode();
                                         if(code == requestCode){
                                            String medicine_name = rm.getName();
-                                           String pill_shape = rm.getShape();
                                            String dose = rm.getDose();
+                                           String pill_shape = rm.getShape();
+                                           String pill_color = rm.getColor();
 
                                             referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @RequiresApi(api = Build.VERSION_CODES.S)
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -132,31 +218,110 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
                                                         String senior_name = user.getFirstName() + " " + user.getLastName();
 
-                                                        int pill_icon = 0;
-                                                        switch (pill_shape) {
-                                                            case "Pill1":
-                                                                pill_icon = R.drawable.ic_pill1;
-                                                                break;
-                                                            case "Pill2":
-                                                                pill_icon = R.drawable.ic_pill2;
-                                                                break;
-                                                            case "Pill3":
-                                                                pill_icon = R.drawable.ic_pill3;
-                                                                break;
-                                                            case "Pill4":
-                                                                pill_icon = R.drawable.ic_pill4;
-                                                                break;
-                                                        }
+                                                        displayMedicine(pill_color, pill_shape);
 
                                                         medicineNotificationHelper = new MedicineNotificationHelper(context);
                                                         nb = medicineNotificationHelper.getChannelNotification();
                                                         setContentIntent(context, ViewMedicine.class, "key", med_id);
-                                                        nb.setSmallIcon(pill_icon);
+                                                        nb.setSmallIcon(R.drawable.ic_splash_logo);
+                                                        nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
                                                         nb.setContentTitle("Medicine Reminder");
                                                         nb.setContentText("It's time for your senior " + senior_name +
-                                                                " to take the medicine. " + "(Medicine: medicine_name " + ", Dose: " + dose + " )");
+                                                                " to take the medicine. " + "( Medicine: " + medicine_name +
+                                                                ", Dose: " + dose + " )");
+
+                                                        // retrieve senior's profile picture
+                                                        try {
+                                                            InputStream in = new URL(user.getImageURL()).openStream();
+                                                            bmp = BitmapFactory.decodeStream(in);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();}
+                                                        nb.setLargeIcon(GetBitmapClippedCircle(bmp));
+
+                                                        nb.setStyle(new NotificationCompat.BigPictureStyle()
+                                                                .setBigContentTitle("Medicine Reminder")
+                                                                .setSummaryText("It's time for your senior " + senior_name +
+                                                                        " to take the medicine. " + "( Medicine: " + medicine_name +
+                                                                        ", Dose: " + dose + " )")
+                                                                .bigPicture(BitmapFactory.decodeResource(context.getResources(), pill_shape_color)));
                                                         medicineNotificationHelper.getManager().notify(requestCode1, nb.build());
                                                         context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
+                                                        notificationRingtone(context);
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    promptMessage.defaultErrorMessageContext(context);
+                                                }
+                                            });
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        promptMessage.defaultErrorMessageContext(context);
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(context);
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(context);
+            }
+        });
+    }
+
+    void displayPhysicalActivityNotification(int requestCode, Context context){
+        physicalActivityReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds1:snapshot.getChildren()){
+                    seniorID = ds1.getKey();
+                    physicalActivityReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ignored:snapshot.getChildren()){
+                                physicalActivityReminder.child(mUser.getUid()).child(seniorID).child(physical_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        ReadWritePhysicalActivity rm = snapshot.getValue(ReadWritePhysicalActivity.class);
+                                        Long code = rm.getRequestCode();
+                                        if(code == requestCode){
+                                            String activity_name = rm.getActivity();
+                                            String duration = rm.getDuration();
+
+                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
+                                                        String senior_name = user.getFirstName() + " " + user.getLastName();
+                                                        physicalActivityNotificationHelper = new PhysicalActivityNotificationHelper(context);
+                                                        nb = physicalActivityNotificationHelper.getChannelNotification();
+
+                                                        setContentIntent(context, ViewPhysicalActivity.class, "key", physical_id);
+                                                        nb.setSmallIcon(R.drawable.ic_splash_logo);
+                                                        nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
+                                                        nb.setContentTitle("Physical Activity Reminder");
+                                                        nb.setContentText("It's time for your senior " + senior_name +  " to do physical activity. " +
+                                                               "( " + duration + " " + activity_name + " )");
+
+                                                        // retrieve senior's profile picture
+                                                        try {
+                                                            InputStream in = new URL(user.getImageURL()).openStream();
+                                                            bmp = BitmapFactory.decodeStream(in);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();}
+                                                        nb.setLargeIcon(GetBitmapClippedCircle(bmp));
+
+                                                        physicalActivityNotificationHelper.getManager().notify(requestCode1, nb.build());
+                                                        context.sendBroadcast(new Intent("NOTIFY_PHYSICAL_ACTIVITY"));
                                                         notificationRingtone(context);
 
                                                     }
@@ -187,5 +352,178 @@ public class AlertReceiver extends BroadcastReceiver {
                 promptMessage.defaultErrorMessageContext(context);
             }
         });
+    }
+
+    void displayAppointmentNotification(int requestCode, Context context){
+        appointmentReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds1:snapshot.getChildren()){
+                    seniorID = ds1.getKey();
+                    appointmentReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ignored:snapshot.getChildren()){
+                                appointmentReminder.child(mUser.getUid()).child(seniorID).child(appointment_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        ReadWriteAppointment rm = snapshot.getValue(ReadWriteAppointment.class);
+                                        Long code = rm.getRequestCode();
+                                        if(code == requestCode){
+                                            String time = rm.getTime();
+
+                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
+                                                        String senior_name = user.getFirstName() + " " + user.getLastName();
+                                                        appointmentNotificationHelper = new AppointmentNotificationHelper(context);
+                                                        nb = appointmentNotificationHelper.getChannelNotification();
+
+                                                        setContentIntent(context, ViewAppointment.class, "key", appointment_id);
+                                                        nb.setSmallIcon(R.drawable.ic_splash_logo);
+                                                        nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
+                                                        nb.setContentTitle("Appointment Reminder");
+                                                        nb.setContentText("This is a reminder that your senior " +
+                                                                senior_name + "have an appointment scheduled for tomorrow.");
+                                                        nb.setStyle(new NotificationCompat.BigTextStyle()
+                                                                .bigText("This is a reminder that your senior " +
+                                                                        senior_name +
+                                                                        " have an appointment scheduled for tomorrow at " + time));
+
+                                                        // retrieve senior's profile picture
+                                                        try {
+                                                            InputStream in = new URL(user.getImageURL()).openStream();
+                                                            bmp = BitmapFactory.decodeStream(in);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();}
+                                                        nb.setLargeIcon(GetBitmapClippedCircle(bmp));
+
+                                                        appointmentNotificationHelper.getManager().notify(requestCode1, nb.build());
+                                                        context.sendBroadcast(new Intent("NOTIFY_APPOINTMENT"));
+                                                        notificationRingtone(context);
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    promptMessage.defaultErrorMessageContext(context);
+                                                }
+                                            });
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        promptMessage.defaultErrorMessageContext(context);
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(context);
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(context);
+            }
+        });
+    }
+
+    void displayGameNotification(int requestCode, Context context){
+        gameReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds1:snapshot.getChildren()){
+                    seniorID = ds1.getKey();
+                    gameReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot ignored:snapshot.getChildren()){
+                               gameReminder.child(mUser.getUid()).child(seniorID).child(game_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        ReadWriteGames rm = snapshot.getValue(ReadWriteGames.class);
+                                        Long code = rm.getRequestCode();
+                                        if(code == requestCode){
+                                            String game = rm.getGame();
+
+                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+
+                                                        ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
+                                                        String senior_name = user.getFirstName() + " " + user.getLastName();
+
+                                                        gamesNotificationHelper = new GamesNotificationHelper(context);
+                                                        nb = gamesNotificationHelper.getChannelNotification();
+                                                        setContentIntent(context, ViewGame.class, "key", game_id);
+                                                        nb.setSmallIcon(R.drawable.ic_splash_logo);
+                                                        nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
+                                                        nb.setContentTitle("Game Reminder");
+                                                        nb.setContentText("It's time for your senior " +
+                                                                senior_name + " to Play " + game);
+
+                                                        // retrieve senior's profile picture
+                                                        try {
+                                                            InputStream in = new URL(user.getImageURL()).openStream();
+                                                            bmp = BitmapFactory.decodeStream(in);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();}
+                                                        nb.setLargeIcon(GetBitmapClippedCircle(bmp));
+
+                                                        gamesNotificationHelper.getManager().notify(requestCode1, nb.build());
+                                                        context.sendBroadcast(new Intent("NOTIFY_GAMES"));
+                                                        notificationRingtone(context);
+
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    promptMessage.defaultErrorMessageContext(context);
+                                                }
+                                            });
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        promptMessage.defaultErrorMessageContext(context);
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(context);
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(context);
+            }
+        });
+    }
+
+    static Bitmap GetBitmapClippedCircle(Bitmap bitmap) {
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final Bitmap outputBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        final Path path = new Path();
+        path.addCircle(
+                (float)(width / 2)
+                , (float)(height / 2)
+                , (float) Math.min(width, (height / 2))
+                , Path.Direction.CCW);
+
+        final Canvas canvas = new Canvas(outputBitmap);
+        canvas.clipPath(path);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        return outputBitmap;
     }
 }

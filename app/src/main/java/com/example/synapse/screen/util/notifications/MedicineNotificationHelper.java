@@ -17,6 +17,7 @@ public class MedicineNotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
     private NotificationManager mManager;
+
     Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
     public MedicineNotificationHelper(Context base) {

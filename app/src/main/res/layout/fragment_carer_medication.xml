@@ -26,9 +26,9 @@
 
         <ImageButton
             android:id="@+id/ibBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="18dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_back" />

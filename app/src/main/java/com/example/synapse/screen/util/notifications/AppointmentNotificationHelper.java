@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -18,6 +20,8 @@ public class AppointmentNotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
     private NotificationManager mManager;
+
+    Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
     public AppointmentNotificationHelper(Context base) {
         super(base);
@@ -31,8 +35,8 @@ public class AppointmentNotificationHelper extends ContextWrapper {
         NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
         channel.enableLights(true);
         channel.enableVibration(true);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        channel.setDescription("Hello world");
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
     }
 
@@ -45,12 +49,11 @@ public class AppointmentNotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification() {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Appointment Reminder")
-                .setContentText("This is a reminder that your senior have an appointment scheduled for tomorrow at ")
-                .setAutoCancel(true)
                 .setColorized(true)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setVibrate(new long[]{0, 1000, 500, 3000})
                 .setLights(Color.RED, 3000, 3000)
-                .setSmallIcon(R.drawable.ic_splash_logo);
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSound(defaultSoundUri)
+                .setAutoCancel(true);
     }
 }

@@ -44,7 +44,6 @@ import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
 import com.example.synapse.screen.util.notifications.FirebaseMessagingService;
-import com.example.synapse.screen.util.notifications.MedicineNotificationHelper;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
@@ -96,7 +95,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     AppCompatButton btnAddSchedule;
     RecyclerView recyclerView;
     ImageView pill1, pill2, pill3, pill4;
-    public String pillShape = "", color = "", time = "", key, medicine_name;
+    String pillShape = "", color = "", time = "", key;
     Dialog dialog;
     ImageView profilePic;
     FloatingActionButton fabAddMedicine;
@@ -147,8 +146,12 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carer_medication, container, false);
+
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
@@ -160,7 +163,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         ImageButton ibBack, btnClose;
         MaterialButton ibMinus, ibAdd;
         AppCompatImageButton buttonTimePicker;
-
 
         // initialized dialog
         dialog = new Dialog(getActivity());
@@ -208,18 +210,15 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         showUserProfile();
+        displayCurrentDay();
         LoadScheduleForMedication();
         clickedColorAndShape();
-        displayCurrentDay();
         addButton();
 
+        ibBack.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
         btnClose.setOnClickListener(v -> dialog.dismiss());
         etDose.setShowSoftInputOnFocus(false);
-        ibBack.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
         ibMinus.setOnClickListener(this::decrement);
         ibAdd.setOnClickListener(this::increment);
 
@@ -255,6 +254,53 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    // listen if alarm is currently running so we can send notification to senior
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                //TODO: sent intent to FirebaseMessagingService so we can change speech text based on the notif type
+                Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
+                fcm_intent.putExtra("Medication",1);
+
+                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            seniorID = ds.getKey();
+                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                                    token = seniorProfile.getToken();
+                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+                                            "Medicine Reminder",
+                                            "It's time to take your medicine",
+                                            getActivity());
+                                    notificationsSender.SendNotifications();
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    promptMessage.defaultErrorMessage(getActivity());
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        promptMessage.defaultErrorMessage(getActivity());
+                    }
+                });
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     // increment for dose input
@@ -293,54 +339,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     // get the selected time
    Calendar getCalendar(){
         return calendar;
-    }
-
-    // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                //TODO: sent intent to FirebaseMessagingService so we can change speech text based on the notif type
-                Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
-                fcm_intent.putExtra("Medication",1);
-
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Medicine Reminder",
-                                            "It's time to take your medicine",
-                                            getActivity());
-
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
-                    }
-                });
-            }
-        }
-    };
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     // display all schedules for medication
@@ -416,7 +414,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         });
     }
 
-
     // set the alarm manager
     void startAlarm(Calendar c, String key) {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -455,7 +452,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     // store schedule for medicine
     void addSchedule() {
         requestCode = (int) getCalendar().getTimeInMillis()/1000;
-
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Name", etName.getText().toString());
         hashMap.put("Dose", etDose.getText().toString());
@@ -485,7 +481,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                             Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
                                             // start alarm and retrieve the unique id of newly created medicine
                                             // so we can send it to alert receiver.
-                                            startAlarm(calendar, key);
+                                            startAlarm(getCalendar(), key);
                                         }
                                     });
                                 }
@@ -671,6 +667,5 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         etDose.setText("");
         etName.setText("");
     }
-
 
 }

@@ -22,8 +22,11 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +73,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -83,26 +87,20 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    private DatabaseReference
-            referenceCompanion,
-            referenceReminders,
-            referenceRequest,
-            referenceProfile;
-    AppCompatButton btnMon, btnTue, btnWed,
-            btnThu, btnFri, btnSat, btnSun;
-    private AppCompatEditText etDuration;
+    DatabaseReference referenceCompanion, referenceReminders, referenceRequest, referenceProfile;
+    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
+    AppCompatEditText etDuration;
 
-    private FirebaseUser mUser;
+    FirebaseUser mUser;
     RequestQueue requestQueue;
-    private int requestCode;
+    int requestCode;
     FloatingActionButton fabAddGame;
-    private Dialog dialog;
-    private final Calendar calendar = Calendar.getInstance();
-    private RecyclerView recyclerView;
+    Dialog dialog;
+    final Calendar calendar = Calendar.getInstance();
+    RecyclerView recyclerView;
 
-    private final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
-    private final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe,
-            R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
+    final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
+    final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe, R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
 
     private TextView tvTime;
     private String selected_game, time, imageURL, token, seniorID;
@@ -176,81 +174,37 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
 
-        // listen for broadcast
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
-
-        // get current user
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        // generate unique alarm id
-        requestCode = (int)calendar.getTimeInMillis()/1000;
-
-        // generate volley for sending notification to senior
         requestQueue = Volley.newRequestQueue(getActivity());
+
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
 
         Spinner spinner_games;
         tvTime = dialog.findViewById(R.id.tvTime);
         ImageButton ibClose = dialog.findViewById(R.id.ibClose);
         ImageButton ibBack = view.findViewById(R.id.ibBack);
-        AppCompatButton btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
+        btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         AppCompatImageButton ibTimePicker = dialog.findViewById(R.id.ibTimePicker);
-        BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         profilePic = view.findViewById(R.id.ivCarerProfilePic);
 
-        // set bottomNavigationView to transparent & show status bar
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // show carer profile pic
         showUserProfile();
-
         displayCurrentDay();
-
-        // load games schedule
         loadScheduleForGames();
+        addButton();
 
-        // close dialog
         ibClose.setOnClickListener(v -> dialog.dismiss());
-
-        // redirect user to games screen
         ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), CarerMainActivity.class)));
 
-        // spinner for games
         spinner_games = dialog.findViewById(R.id.spinner_games);
         ItemGames adapter = new ItemGames(getActivity(), GAMES, GAMES_ICS);
         adapter.notifyDataSetChanged();
         spinner_games.setAdapter(adapter);
         spinner_games.setOnItemSelectedListener(this);
 
-        // display time picker
         ibTimePicker.setOnClickListener(v -> {
              DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
              timePicker.show(getChildFragmentManager(), "time picker");
-        });
-
-        // perform add schedule
-        btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        if(tvTime.getText().equals("Add New Game")){
-                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
-                        } else {
-                            addSchedule();
-                        }
-                    } else {
-                        dialog.dismiss();
-                        promptMessage.displayMessage("Failed to set an appointment", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request, getActivity());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
         });
 
         return view;
@@ -412,8 +366,40 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         });
     }
 
+    // set the alarm manager and listen for broadcast
+    void startAlarm(Calendar c, String key) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        intent.putExtra("Games", 4);
+        intent.putExtra("game_id", key);
+        intent.putExtra("request_code", requestCode);
+
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent
+                    .getBroadcast(getActivity(),
+                            requestCode,
+                            intent,
+                            PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            pendingIntent = PendingIntent
+                    .getBroadcast(getActivity(),
+                            requestCode,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        // set alarm for everyday
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        //        calendar.getTimeInMillis(),
+        //        AlarmManager.INTERVAL_DAY,
+        //        pendingIntent);
+    }
+
     // store schedule for games
-    private void addSchedule() {
+    void addSchedule() {
+        requestCode = (int)calendar.getTimeInMillis()/1000;
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Game", selected_game);
         hashMap.put("Time", time);
@@ -434,20 +420,15 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                                     referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             dialog.dismiss();
+                                            tvTime.setVisibility(View.INVISIBLE);
+                                            clearDialogText();
+                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                                            // start alarm and retrieve the unique id of newly created medicine
+                                            // so we can send it to alert receiver.
+                                            startAlarm(calendar, key);
                                         }
                                     });
                                 }
-
-                                CookieBar.build(getActivity())
-                                        .setTitle("Set Game")
-                                        .setMessage("Alarm has been set")
-                                        .setIcon(R.drawable.ic_cookie_check)
-                                        .setBackgroundColor(R.color.dark_green)
-                                        .setCookiePosition(CookieBar.TOP)
-                                        .setDuration(5000)
-                                        .show();
-
-                                startAlarm(calendar, key);
                             }
                         });
                     }
@@ -461,32 +442,37 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         });
     }
 
-    // set the alarm manager and listen for broadcast
-    private void startAlarm(Calendar c, String key) {
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
-        intent.putExtra("Games", 4);
-        intent.putExtra("game_id", key);
-        PendingIntent pendingIntent;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode, intent, 0);
-        }
-        if (c.before(Calendar.getInstance())) {
-            c.add(Calendar.DATE, 1);
-        }
+    void addButton(){
+        // perform add schedule
+        btnAddSchedule.setOnClickListener(v -> {
+            // check if carer has already assigned senior in companion node
+            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.S)
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        if(tvTime.getText().equals("Add New Game")){
+                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
+                        } else {
+                            addSchedule();
+                        }
+                    } else {
+                        dialog.dismiss();
+                        promptMessage.displayMessage("Failed to set an appointment", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request, getActivity());
+                    }
+                }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        // set alarm for everyday
-        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-        //        calendar.getTimeInMillis(),
-        //        AlarmManager.INTERVAL_DAY,
-        //        pendingIntent);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    promptMessage.defaultErrorMessage(getActivity());
+                }
+            });
+        });
+
     }
 
     // change the background the current day to white
-    public void displayCurrentDay(){
+    void displayCurrentDay(){
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
         Calendar calendar = Calendar.getInstance();
         String day = dayFormat.format(calendar.getTime());
@@ -516,7 +502,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     }
 
     // display carer's profile pic
-    private void showUserProfile(){
+    void showUserProfile(){
         referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -534,6 +520,12 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                 promptMessage.defaultErrorMessage(getActivity());
             }
         });
+    }
+
+    // clear text in dialog box
+    void clearDialogText(){
+        tvTime.setText("Add New Game");
+        tvTime.setTextColor(getResources().getColor(R.color.black));
     }
 
 }
