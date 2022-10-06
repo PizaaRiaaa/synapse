@@ -102,6 +102,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_senior_home, container, false);
 
+        FirebaseMessaging.getInstance().subscribeToTopic("hello");
+
         TextClock currentTime = view.findViewById(R.id.tcTime);
         MaterialCardView btnMedication = view.findViewById(R.id.btnMedication);
         MaterialCardView btnGames = view.findViewById(R.id.btnGames);

@@ -188,7 +188,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
 
         // listen for broadcast
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
+       // getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
 
         // get current user
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -205,7 +205,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         AppCompatImageButton ibTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         FloatingActionButton btnAddAppointment = view.findViewById(R.id.btnAddAppointment);
-        BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
+        //BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
         Spinner spinner_appointment_specialist, spinner_appointment_type;
         etDrName = dialog.findViewById(R.id.etDrName);
         etConcern = dialog.findViewById(R.id.etConcern);
@@ -301,48 +301,48 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     }
 
     // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
+  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+  //      @Override
+  //      public void onReceive(Context context, Intent intent) {
+  //          if (intent != null) {
+  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+  //                  @Override
+  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                      for (DataSnapshot ds : snapshot.getChildren()) {
+  //                          seniorID = ds.getKey();
 
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Appointment Reminder",
-                                            "This is a reminder that you have an appointment scheduled for tomorrow ",
-                                            getActivity());
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
-                    }
-                });
-            }
-        }
-    };
+  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+  //                              @Override
+  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+  //                                  token = seniorProfile.getToken();
+  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+  //                                          "Appointment Reminder",
+  //                                          "This is a reminder that you have an appointment scheduled for tomorrow ",
+  //                                          getActivity());
+  //                                  notificationsSender.SendNotifications();
+  //                              }
+  //                              @Override
+  //                              public void onCancelled(@NonNull DatabaseError error) {
+  //                                  promptMessage.defaultErrorMessage(getActivity());
+  //                              }
+  //                          });
+  //                      }
+  //                  }
+  //                  @Override
+  //                  public void onCancelled(@NonNull DatabaseError error) {
+  //                      promptMessage.defaultErrorMessage(getActivity());
+  //                  }
+  //              });
+  //          }
+  //      }
+  //  };
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
-    }
+  //  @Override
+  //  public void onDestroy() {
+  //      super.onDestroy();
+  //      getActivity().unregisterReceiver(broadcastReceiver);
+  //  }
 
     // set the alarm manager and listen for broadcast
     private void startAlarm(Calendar c, String key) {

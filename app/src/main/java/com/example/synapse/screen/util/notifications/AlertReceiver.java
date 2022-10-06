@@ -8,26 +8,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.StrictMode;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.ListPreloader;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.view.ViewAppointment;
 import com.example.synapse.screen.carer.modules.view.ViewGame;
@@ -46,27 +36,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AlertReceiver extends BroadcastReceiver {
 
     FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference referenceProfile,medicationReminder,
+    DatabaseReference referenceProfile,medicationReminder, referenceCompanion,
             physicalActivityReminder, appointmentReminder, gameReminder;
-    String med_id, physical_id, appointment_id, game_id, seniorID;
+    String med_id, physical_id, appointment_id, game_id, seniorID, token, pill_color, pill_name;
     PromptMessage promptMessage = new PromptMessage();
     NotificationCompat.Builder nb;
     MedicineNotificationHelper medicineNotificationHelper;
     PhysicalActivityNotificationHelper physicalActivityNotificationHelper;
     AppointmentNotificationHelper appointmentNotificationHelper;
     GamesNotificationHelper gamesNotificationHelper;
-
+    RequestQueue requestQueue;
     Bitmap bmp = null;
     int pill_shape_color = 0;
     int requestCode1;
@@ -74,13 +60,15 @@ public class AlertReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        requestQueue = Volley.newRequestQueue(context);
         medicationReminder = FirebaseDatabase.getInstance().getReference().child("Medication Reminders");
         physicalActivityReminder = FirebaseDatabase.getInstance().getReference().child("Physical Activity Reminders");
         appointmentReminder = FirebaseDatabase.getInstance().getReference().child("Appointment Reminders");
         gameReminder = FirebaseDatabase.getInstance().getReference().child("Games Reminders");
+        referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
         referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
 
         int medication = intent.getExtras().getInt("Medication");
@@ -209,26 +197,27 @@ public class AlertReceiver extends BroadcastReceiver {
                                            String pill_shape = rm.getShape();
                                            String pill_color = rm.getColor();
 
+                                           Intent intent = new Intent(context, FirebaseMessagingService.class);
+                                           intent.putExtra("pill_shape", pill_shape);
+                                           intent.putExtra("pill_color", pill_color);
+
                                             referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @RequiresApi(api = Build.VERSION_CODES.S)
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
-
                                                         ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
                                                         String senior_name = user.getFirstName() + " " + user.getLastName();
-
                                                         displayMedicine(pill_color, pill_shape);
 
                                                         medicineNotificationHelper = new MedicineNotificationHelper(context);
                                                         nb = medicineNotificationHelper.getChannelNotification();
                                                         setContentIntent(context, ViewMedicine.class, "key", med_id);
-                                                        nb.setSmallIcon(R.drawable.ic_splash_logo);
+                                                        nb.setSmallIcon(R.drawable.ic_pill2);
                                                         nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
                                                         nb.setContentTitle("Medicine Reminder");
-                                                        nb.setContentText("It's time for your senior " + senior_name +
-                                                                " to take the medicine. " + "( Medicine: " + medicine_name +
-                                                                ", Dose: " + dose + " )");
+                                                        nb.setContentText("It's time for your senior " + senior_name + " to take a medicine. " +
+                                                                "( Medicine - " + medicine_name + ", Dose " + dose + " )" );
 
                                                         // retrieve senior's profile picture
                                                         try {
@@ -240,13 +229,17 @@ public class AlertReceiver extends BroadcastReceiver {
 
                                                         nb.setStyle(new NotificationCompat.BigPictureStyle()
                                                                 .setBigContentTitle("Medicine Reminder")
-                                                                .setSummaryText("It's time for your senior " + senior_name +
-                                                                        " to take the medicine. " + "( Medicine: " + medicine_name +
-                                                                        ", Dose: " + dose + " )")
                                                                 .bigPicture(BitmapFactory.decodeResource(context.getResources(), pill_shape_color)));
+
+
                                                         medicineNotificationHelper.getManager().notify(requestCode1, nb.build());
                                                         context.sendBroadcast(new Intent("NOTIFY_MEDICINE"));
                                                         notificationRingtone(context);
+
+                                                        sendFCMtoSeniorNotification(context, "Medicine Reminder",
+                                                                "Time to take your medicine " +
+                                                                        medicine_name + ", take " + dose, pill_shape + pill_color );
+
                                                     }
                                                 }
                                                 @Override
@@ -276,6 +269,7 @@ public class AlertReceiver extends BroadcastReceiver {
             }
         });
     }
+
 
     void displayPhysicalActivityNotification(int requestCode, Context context){
         physicalActivityReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -467,6 +461,9 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         nb.setContentTitle("Game Reminder");
                                                         nb.setContentText("It's time for your senior " +
                                                                 senior_name + " to Play " + game);
+                                                        nb.setStyle(new NotificationCompat.BigTextStyle()
+                                                                        .setBigContentTitle("Game Reminder")
+                                                                .bigText("\nIt's time for your senior" + senior_name + " to play " + game));
 
                                                         // retrieve senior's profile picture
                                                         try {
@@ -526,4 +523,38 @@ public class AlertReceiver extends BroadcastReceiver {
         canvas.drawBitmap(bitmap, 0, 0, null);
         return outputBitmap;
     }
+
+    void sendFCMtoSeniorNotification(Context context, String title, String body, String tag){
+        Intent fcm_intent = new Intent(context, FirebaseMessagingService.class);
+        fcm_intent.putExtra("Medication",1);
+        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    seniorID = ds.getKey();
+                    referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                            token = seniorProfile.getToken();
+
+                            FcmNotificationsSender notificationsSender =
+                                    new FcmNotificationsSender(token, title, body, tag, context);
+                           FirebaseMessagingService fs = new FirebaseMessagingService();
+                            notificationsSender.SendNotifications();
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(context);
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(context);
+            }
+        });
+    }
 }
+

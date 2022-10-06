@@ -1,6 +1,8 @@
 package com.example.synapse.screen.util.notifications;
 
 import android.app.Activity;
+import android.content.Context;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,29 +21,32 @@ public class FcmNotificationsSender  {
     String userFcmToken;
     String title;
     String body;
-    Activity mActivity;
-
+    //Activity activity;
+    String tag;
+    Context context;
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
     private final String fcmServerKey ="AAAAJkoER6Y:APA91bFpC1ZKGAuVwUfHZx6YPVpGxsq1IRxymDWbM3ZtaY4_wJAvORhcoO9uadjlOWtNBk0tapXPFljd_60wkq1pmtFfFFpJI-OJeBfXjl557zYXBAk1zuD1BgoBMVo-lqpBgVZYYUJF";
 
-    public FcmNotificationsSender(String userFcmToken,String title, String body, Activity mActivity) {
+    public FcmNotificationsSender(String userFcmToken,String title, String body, String tag, Context context) {
         this.userFcmToken = userFcmToken;
         this.title = title;
         this.body = body;
-        this.mActivity = mActivity;
+        this.tag = tag;
+        this.context = context;
     }
 
     public void SendNotifications() {
 
-        requestQueue = Volley.newRequestQueue(mActivity);
+        requestQueue = Volley.newRequestQueue(context);
         JSONObject mainObj = new JSONObject();
         try {
             mainObj.put("to", userFcmToken);
             JSONObject notiObject = new JSONObject();
             notiObject.put("title", title);
             notiObject.put("body", body);
+            notiObject.put("tag", tag);
             notiObject.put("icon", R.drawable.ic_splash_logo); // enter icon that exists in drawable only
 
             mainObj.put("notification", notiObject);

@@ -262,48 +262,48 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     }
 
     // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
+  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+  //      @Override
+  //      public void onReceive(Context context, Intent intent) {
+  //          if (intent != null) {
+  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+  //                  @Override
+  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                      for (DataSnapshot ds : snapshot.getChildren()) {
+  //                          seniorID = ds.getKey();
 
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Game Reminder",
-                                            "Hello! It's time for you to play a game",
-                                            getActivity());
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
-                    }
-                });
-            }
-        }
-    };
+  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+  //                              @Override
+  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+  //                                  token = seniorProfile.getToken();
+  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+  //                                          "Game Reminder",
+  //                                          "Hello! It's time for you to play a game",
+  //                                          getActivity());
+  //                                  notificationsSender.SendNotifications();
+  //                              }
+  //                              @Override
+  //                              public void onCancelled(@NonNull DatabaseError error) {
+  //                                  promptMessage.defaultErrorMessage(getActivity());
+  //                              }
+  //                          });
+  //                      }
+  //                  }
+  //                  @Override
+  //                  public void onCancelled(@NonNull DatabaseError error) {
+  //                      promptMessage.defaultErrorMessage(getActivity());
+  //                  }
+  //              });
+  //          }
+  //      }
+  //  };
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
-    }
+  //  @Override
+  //  public void onDestroy() {
+  //      super.onDestroy();
+  //      getActivity().unregisterReceiver(broadcastReceiver);
+  //  }
 
     // display all schedules for games
     private void loadScheduleForGames() {

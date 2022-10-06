@@ -150,7 +150,9 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carer_medication, container, false);
 
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
+        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
+        //requestQueue = Volley.newRequestQueue(getActivity());
+
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
@@ -257,51 +259,50 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     }
 
     // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                //TODO: sent intent to FirebaseMessagingService so we can change speech text based on the notif type
-                Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
-                fcm_intent.putExtra("Medication",1);
+  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+  //      @Override
+  //      public void onReceive(Context context, Intent intent) {
+  //          if (intent != null) {
+  //              Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
+  //              fcm_intent.putExtra("Medication",1);
+  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+  //                  @Override
+  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                      for (DataSnapshot ds : snapshot.getChildren()) {
+  //                          seniorID = ds.getKey();
+  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+  //                              @Override
+  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
+  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+  //                                  token = seniorProfile.getToken();
 
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Medicine Reminder",
-                                            "It's time to take your medicine",
-                                            getActivity());
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
-                    }
-                });
-            }
-        }
-    };
+  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+  //                                          "Medicine Reminder",
+  //                                          "It's time to take your medicine",
+  //                                          getActivity());
+  //                                  notificationsSender.SendNotifications();
+  //                              }
+  //                              @Override
+  //                              public void onCancelled(@NonNull DatabaseError error) {
+  //                                  promptMessage.defaultErrorMessage(getActivity());
+  //                              }
+  //                          });
+  //                      }
+  //                  }
+  //                  @Override
+  //                  public void onCancelled(@NonNull DatabaseError error) {
+  //                      promptMessage.defaultErrorMessage(getActivity());
+  //                  }
+  //              });
+  //          }
+  //      }
+  //  };
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
-    }
+//   @Override
+//   public void onDestroy() {
+//       super.onDestroy();
+//       getActivity().unregisterReceiver(broadcastReceiver);
+//   }
 
     // increment for dose input
     void increment(View v) {
@@ -478,7 +479,10 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                             dialog.dismiss();
                                             tvTime.setVisibility(View.INVISIBLE);
                                             clearDialogText();
-                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                                            promptMessage.displayMessage(
+                                                    "Success",
+                                                    "Alarm has been set successfully",
+                                                    R.color.dark_green, getActivity());
                                             // start alarm and retrieve the unique id of newly created medicine
                                             // so we can send it to alert receiver.
                                             startAlarm(getCalendar(), key);
