@@ -252,45 +252,45 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     }
 
     //  listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Medicine Reminder",
-                                            "It's time to take your medicine",
-                                            ViewMedicine.this);
-                                    notificationsSender.SendNotifications();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
-                    }
-                });
-            }
-        }
-    };
-
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent != null) {
+//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                        for (DataSnapshot ds : snapshot.getChildren()) {
+//                            seniorID = ds.getKey();
+//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+//                                    token = seniorProfile.getToken();
+//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+//                                            "Medicine Reminder",
+//                                            "It's time to take your medicine",
+//                                            ViewMedicine.this);
+//                                    notificationsSender.SendNotifications();
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+//                                }
+//                            });
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+//                    }
+//                });
+//            }
+//        }
+//    };
+//
     public void showMedicineInfo(String medicineID){
         // userID >
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {

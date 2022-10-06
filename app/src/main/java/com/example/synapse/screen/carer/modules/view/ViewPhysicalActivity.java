@@ -199,44 +199,44 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
     }
 
     //  broadcast to listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Physical Activity Reminder",
-                                            "It's time to do your physical activity",
-                                            ViewPhysicalActivity.this);
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
-                    }
-                });
-            }
-        }
-    };
-
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent != null) {
+//
+//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot ds : snapshot.getChildren()) {
+//                            seniorID = ds.getKey();
+//
+//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+//                                    token = seniorProfile.getToken();
+//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+//                                            "Physical Activity Reminder",
+//                                            "It's time to do your physical activity",
+//                                            ViewPhysicalActivity.this);
+//                                    notificationsSender.SendNotifications();
+//                                }
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
+//                                }
+//                            });
+//                        }
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
+//                    }
+//                });
+//            }
+//        }
+//    };
+//
     // decrement and increment for dose input
     public void increment(View v) {
         count++;

@@ -214,6 +214,8 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         nb = medicineNotificationHelper.getChannelNotification();
                                                         setContentIntent(context, ViewMedicine.class, "key", med_id);
                                                         nb.setSmallIcon(R.drawable.ic_pill2);
+                                                        nb.setColor(R.color.white);
+                                                        nb.setColorized(true);
                                                         nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
                                                         nb.setContentTitle("Medicine Reminder");
                                                         nb.setContentText("It's time for your senior " + senior_name + " to take a medicine. " +

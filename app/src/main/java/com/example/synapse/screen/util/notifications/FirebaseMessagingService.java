@@ -91,6 +91,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         builder.setContentText(remoteMessage.getNotification().getBody());
         builder.setContentIntent(pendingIntent);
         builder.setColorized(true);
+        builder.setColor(getResources().getColor(R.color.white));
         builder.setVibrate(new long[]{0, 1000, 500, 3000});
         builder.setLights(Color.RED, 3000, 3000);
         builder.setPriority(Notification.PRIORITY_MAX);

@@ -178,7 +178,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         requestQueue = Volley.newRequestQueue(getActivity());
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
+        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
 
         Spinner spinner_games;
         tvTime = dialog.findViewById(R.id.tvTime);

@@ -128,7 +128,7 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         spinner_appointment_type.setOnItemSelectedListener(ViewAppointment.this);
 
         // listen for broadcast
-        registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
+        //registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
 
         ibBack.setOnClickListener(v -> finish());
 
@@ -178,43 +178,43 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     //  broadcast to listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
+ //   BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+ //       @Override
+ //       public void onReceive(Context context, Intent intent) {
+ //           if (intent != null) {
 
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
+ //               referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+ //                   @Override
+ //                   public void onDataChange(@NonNull DataSnapshot snapshot) {
+ //                       for (DataSnapshot ds : snapshot.getChildren()) {
+ //                           seniorID = ds.getKey();
 
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Appointment Reminder",
-                                            "This is a reminder that you have an appointment scheduled for tomorrow. ",
-                                            ViewAppointment.this);
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(ViewAppointment.this);
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(ViewAppointment.this);
-                    }
-                });
-            }
-        }
-    };
+ //                           referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+ //                               @Override
+ //                               public void onDataChange(@NonNull DataSnapshot snapshot) {
+ //                                   ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+ //                                   token = seniorProfile.getToken();
+ //                                   FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+ //                                           "Appointment Reminder",
+ //                                           "This is a reminder that you have an appointment scheduled for tomorrow. ",
+ //                                           ViewAppointment.this);
+ //                                   notificationsSender.SendNotifications();
+ //                               }
+ //                               @Override
+ //                               public void onCancelled(@NonNull DatabaseError error) {
+ //                                   promptMessage.defaultErrorMessage(ViewAppointment.this);
+ //                               }
+ //                           });
+ //                       }
+ //                   }
+ //                   @Override
+ //                   public void onCancelled(@NonNull DatabaseError error) {
+ //                       promptMessage.defaultErrorMessage(ViewAppointment.this);
+ //                   }
+ //               });
+ //           }
+ //       }
+ //   };
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

@@ -175,7 +175,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         requestQueue = Volley.newRequestQueue(getActivity());
 
         // listen for broadcast
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_PHYSICAL_ACTIVITY"));
+        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_PHYSICAL_ACTIVITY"));
 
         // variables for dialog
         MaterialButton btnAdd = dialog.findViewById(R.id.ibAdd);
@@ -343,11 +343,11 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     }
 
     // we need to destroy the broadcast if we register one
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(broadcastReceiver);
-    }
+   // @Override
+   // public void onDestroy() {
+   //     super.onDestroy();
+   //     getActivity().unregisterReceiver(broadcastReceiver);
+   // }
 
     // display all schedules for medication
     private void loadScheduleForPhysicalActivity() {
@@ -621,51 +621,51 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     }
 
     // listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                // if(clickedRepeatBtn.equals("OnceADay")){
+   // BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+   //     @Override
+   //     public void onReceive(Context context, Intent intent) {
+   //         if (intent != null) {
+   //             // if(clickedRepeatBtn.equals("OnceADay")){
 
-                //     startAlarm(calendar, key);
-                //     Intent intent_request_code = new Intent(getActivity(), ViewPhysicalActivity.class);
-                //     intent_request_code.putExtra("new_request_code",requestCode);
-                //     promptMessage.displayMessage("requestcode", "" + requestCode,  R.color.dark_green, getActivity());
-                //     Toast.makeText(getActivity(), " " + requestCode, Toast.LENGTH_SHORT).show();
-                // }
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
+   //             //     startAlarm(calendar, key);
+   //             //     Intent intent_request_code = new Intent(getActivity(), ViewPhysicalActivity.class);
+   //             //     intent_request_code.putExtra("new_request_code",requestCode);
+   //             //     promptMessage.displayMessage("requestcode", "" + requestCode,  R.color.dark_green, getActivity());
+   //             //     Toast.makeText(getActivity(), " " + requestCode, Toast.LENGTH_SHORT).show();
+   //             // }
+   //             referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+   //                 @Override
+   //                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+   //                     for (DataSnapshot ds : snapshot.getChildren()) {
+   //                         seniorID = ds.getKey();
 
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Physical Activity Reminder",
-                                            "It's time to do your physical activity",
-                                            getActivity());
-                                    notificationsSender.SendNotifications();
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(getActivity());
-                                }
-                            });
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(getActivity());
+   //                         referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+   //                             @Override
+   //                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+   //                                 ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+   //                                 token = seniorProfile.getToken();
+   //                                 FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+   //                                         "Physical Activity Reminder",
+   //                                         "It's time to do your physical activity",
+   //                                         getActivity());
+   //                                 notificationsSender.SendNotifications();
+   //                             }
+   //                             @Override
+   //                             public void onCancelled(@NonNull DatabaseError error) {
+   //                                 promptMessage.defaultErrorMessage(getActivity());
+   //                             }
+   //                         });
+   //                     }
+   //                 }
+   //                 @Override
+   //                 public void onCancelled(@NonNull DatabaseError error) {
+   //                     promptMessage.defaultErrorMessage(getActivity());
 
-                    }
-                });
-            }
-        }
-    };
+   //                 }
+   //             });
+   //         }
+   //     }
+   // };
 
 
 }

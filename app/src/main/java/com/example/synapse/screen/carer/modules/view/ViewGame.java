@@ -201,45 +201,45 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     //  listen if alarm is currently running so we can send notification to senior
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            seniorID = ds.getKey();
-                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    token = seniorProfile.getToken();
-                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-                                            "Game Reminder",
-                                            "Hello! It's time for you to play a game",
-                                            ViewGame.this);
-                                    notificationsSender.SendNotifications();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    promptMessage.defaultErrorMessage(ViewGame.this);
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        promptMessage.defaultErrorMessage(ViewGame.this);
-                    }
-                });
-            }
-        }
-    };
-
+//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent != null) {
+//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                        for (DataSnapshot ds : snapshot.getChildren()) {
+//                            seniorID = ds.getKey();
+//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+//                                    token = seniorProfile.getToken();
+//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
+//                                            "Game Reminder",
+//                                            "Hello! It's time for you to play a game",
+//                                            ViewGame.this);
+//                                    notificationsSender.SendNotifications();
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//                                    promptMessage.defaultErrorMessage(ViewGame.this);
+//                                }
+//                            });
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        promptMessage.defaultErrorMessage(ViewGame.this);
+//                    }
+//                });
+//            }
+//        }
+//    };
+//
 
     public void showGameInfo(String gameID){
         // userID >
