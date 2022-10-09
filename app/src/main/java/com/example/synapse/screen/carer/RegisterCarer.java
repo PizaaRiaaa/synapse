@@ -332,6 +332,10 @@ public class RegisterCarer extends AppCompatActivity {
         }
     };
 
+    static String encodeUserEmail(String userEmail) {
+        return userEmail.replace(".", ",");
+    }
+
     // register user using the credentials given
     private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB,
                             String textAddress, String textCity, String textGender, String userType, String imageURL, String textToken, String textDateCreated){
@@ -354,7 +358,7 @@ public class RegisterCarer extends AppCompatActivity {
                                     textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "Registered Users"
-                            DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+                            DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
                             // store profile picture of carer
                             storageReference = FirebaseStorage.getInstance().getReference("ProfilePics");
@@ -362,6 +366,15 @@ public class RegisterCarer extends AppCompatActivity {
                             referenceProfile.child(firebaseUser.getUid()).setValue(writeUserDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+
+                                    // add carer's email in Emails node
+                                    DatabaseReference referenceEmail = FirebaseDatabase.getInstance().getReference("Emails").child(encodeUserEmail(firebaseUser.getEmail()));
+                                    referenceEmail.setValue(encodeUserEmail(firebaseUser.getEmail())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                        }
+                                    });
 
                                     // user upload profile pic
                                     if(uriImage != null){

@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
@@ -62,6 +63,8 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,6 +83,7 @@ public class RegisterSenior extends AppCompatActivity {
     private final String imageURL = "";
     private Uri uriImage;
     private StorageReference storageReference;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     ProgressBar progressBar;
     AutoCompleteTextView autocompleteBarangay;
@@ -214,6 +218,30 @@ public class RegisterSenior extends AppCompatActivity {
 
         btnSignup.setOnClickListener(v -> checkValidation());
 
+        isAppRunning();
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        auth.signOut();
+    }
+
+    private boolean isAppRunning() {
+        ActivityManager m = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
+        Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+        int n=0;
+        while(itr.hasNext()){
+            n++;
+            itr.next();
+        }
+        if(n==1){ // App is killed
+            auth.signOut();
+            return false;
+        }
+
+        return true; // App is in background or foreground
     }
 
     public void checkValidation(){
@@ -362,7 +390,6 @@ public class RegisterSenior extends AppCompatActivity {
     private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress, String textCity,
                             String textGender, String userType, String imageURL, String textToken, String textDateCreated){
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         // Create UserProfile
         auth.createUserWithEmailAndPassword(textEmail, textPassword).addOnCompleteListener(RegisterSenior.this,
@@ -380,7 +407,7 @@ public class RegisterSenior extends AppCompatActivity {
                             textAddress, textCity, textGender, userType, imageURL, textToken, textDateCreated);
 
                             // extracting user reference from database for "registered user"
-                            DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+                            DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
 
                             // store senior in carer's module
                             DatabaseReference referenceCarerModule = FirebaseDatabase.getInstance().getReference("Emails");
@@ -388,13 +415,11 @@ public class RegisterSenior extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(snapshot.hasChild(encodeUserEmail(textCarerEmail))){
-                                        HashMap hashMap = new HashMap();
-                                        hashMap.put("senior_email", firebaseUser.getEmail());
                                         referenceCarerModule
                                                 .child(encodeUserEmail(textCarerEmail))
                                                 .child("AssignedSeniors")
                                                 .child(firebaseUser.getUid())
-                                                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                .setValue(firebaseUser.getEmail()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                             }
