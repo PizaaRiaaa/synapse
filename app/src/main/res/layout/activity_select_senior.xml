@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.SelectSenior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#565555"
+        android:padding="5dp"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#565555"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_menu" />
+
+        <TextView
+            android:id="@+id/tvSample"
+            android:layout_width="0dp"
+            android:layout_margin="18dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="Set Medicine"
+            android:textColor="@color/grey5"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/ivProfilePic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/carer_profile_pic"
+            android:contentDescription="Carer profile pic"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="300dp">
+
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/osca_background"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhat_display_bold"
+                android:layout_marginBottom="60dp"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="MANDALUYONG CITY"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select your senior"
+        android:layout_margin="20dp"
+        android:textSize="20sp"/>
+
+    <!-- recycle view for current carer assigned seniors -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_seniors"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"/>
+
+</LinearLayout>

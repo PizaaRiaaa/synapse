@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
     // Global variables
     PromptMessage promptMessage = new PromptMessage();
     static final String TAG = "loginActivity";
-    DatabaseReference referenceUser, referenceRequest, referenceCompanion;
+    DatabaseReference referenceCarer, referenceSenior, referenceAssignedSeniors;
     EditText etEmail, etPassword;
     FirebaseAuth mAuth;
     String userType;
@@ -64,7 +64,7 @@ public class Login extends AppCompatActivity {
         }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
             promptMessage.displayMessage(
                     "Invalid email",
-                    "Please enter your email", R.color.red1,
+                    "Please enter your email again", R.color.red1,
                     Login.this);
             etPassword.requestFocus();
         }else if(TextUtils.isEmpty(textPassword)){
@@ -78,6 +78,10 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    static String encodeUserEmail(String userEmail) {
+        return userEmail.replace(".", ",");
+    }
+
     void loginUser(String email, String password){
         // check user credentials
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -88,63 +92,34 @@ public class Login extends AppCompatActivity {
                     assert firebaseUser != null;
 
                     if(firebaseUser.isEmailVerified()){ // check if user's email is verified
-                        String userID = firebaseUser.getUid();
-                        referenceUser.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        // check if carer have assigned senior
+                        referenceCarer.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                referenceAssignedSeniors.child(encodeUserEmail(firebaseUser.getEmail())).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                       if(snapshot.exists()){
+                                           Toast.makeText(Login.this, " You have assigned senior ", Toast.LENGTH_SHORT).show();
+                                       }else{
+                                           Toast.makeText(Login.this, " You currently don't have senior assign to your account", Toast.LENGTH_SHORT).show();
+                                       }
+                                    }
 
-                                userType = snapshot.child("userType").getValue().toString(); // check if current user is senior, carer or admin
-                                if(userType.equals("Carer")){
-                                    referenceRequest.child(userID).addListenerForSingleValueEvent(new ValueEventListener() { // check if carer is already send request to senior
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                            if(snapshot.exists()){
-                                                startActivity(new Intent(Login.this, CarerMainActivity.class));
-                                                finish();
-                                            }else{
-                                                startActivity(new Intent(Login.this, SendRequest.class));
-                                                finish();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            promptMessage.defaultErrorMessage(Login.this);
-                                        }
-                                    });
-
-                                    // else check if carer and senior are already companion
-                                    referenceCompanion.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                startActivity(new Intent(Login.this, CarerMainActivity.class));
-                                                finish();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            promptMessage.defaultErrorMessage(Login.this);
-                                        }
-                                    });
-
-                                }else if(userType.equals("Senior")){
-                                    startActivity(new Intent(Login.this, SeniorMainActivity.class));
-                                    finish();
-
-                                }else if(userType.equals("Admin")){
-                                    startActivity(new Intent(Login.this, LoadingScreen.class));
-                                    finish();
-                                }
+                                    }
+                                });
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                promptMessage.defaultErrorMessage(Login.this);
+
                             }
                         });
+
 
                     }else{
                         firebaseUser.sendEmailVerification();
@@ -226,9 +201,9 @@ public class Login extends AppCompatActivity {
         etPassword = findViewById(R.id.etLoginPassword);
         mAuth = FirebaseAuth.getInstance();
 
-        referenceUser = FirebaseDatabase.getInstance().getReference("Users");
-        referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Request").child("Seniors");
+        referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("Emails");
 
         // show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

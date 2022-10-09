@@ -23,9 +23,10 @@
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/redhat_display_semibold"
-        android:text="@string/join_carer_senior"
+        android:text="Register your carer account or your senior account"
         android:textAlignment="center"
         android:textColor="@color/grey5"
+        android:layout_margin="30dp"
         android:textSize="25sp" />
 
     <LinearLayout

@@ -108,24 +108,24 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
         if(score > totalQuestion * 0.60){
             new AlertDialog.Builder(this)
                     .setTitle("Congratulations!")
-                    .setMessage("You have passed the assessment. You can now register to our application.\"")
-                    .setPositiveButton("Register",(dialogInterface, i) -> register())
+                    .setMessage("You have passed the assessment. Senior can now register your account.\"")
+                    .setPositiveButton("PROCEED",(dialogInterface, i) -> checkCarerEmail())
                     .setCancelable(false)
                     .show();
         }else{
             new AlertDialog.Builder(this)
                     .setTitle("Sorry...")
-                    .setMessage("You are not allowed to register. For more information, click this.")
+                    .setMessage("Carer are not allowed to register your account.")
                     .setPositiveButton("I understand", (dialogInterface, i) -> exit())
                     .setCancelable(true)
                     .show();
         }
     }
 
-    void register(){
+    void checkCarerEmail(){
         // go to registration page
         progressBar.setProgress(0);
-        startActivity(new Intent(this, RegisterSenior.class));
+        startActivity(new Intent(this, CheckCarerEmail.class));
         finish();
     }
 

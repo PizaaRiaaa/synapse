@@ -19,7 +19,6 @@
     <string name="tvSub_header">Notify your senior loved ones</string>
 
     <!-- pick role screen -->
-    <string name="join_carer_senior">Join as carer or \n senior citizen</string>
     <string name="carer">Carer</string>
     <string name="senior_citizen">Senior</string>
     <string name="pick_carer">Carer</string>

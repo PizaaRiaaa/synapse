@@ -43,8 +43,7 @@
             android:textColor="@color/white"
             android:layout_marginBottom="30dp"
             android:textSize="20sp"
-            android:text="Hello there! \n you need to answer and passed \n
-            the MCI test before you can \n register to this app"/>
+            android:text="Hello there! \n Senior need to answer and pass \n the MCI test before you can \n register your senior\'s account"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnProceed"

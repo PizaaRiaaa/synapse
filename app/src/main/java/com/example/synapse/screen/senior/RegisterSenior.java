@@ -8,6 +8,8 @@ import com.example.synapse.R;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.PickRole;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
+import com.example.synapse.screen.carer.RegisterCarer;
+import com.example.synapse.screen.carer.verification.OTP;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,8 +24,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -50,11 +55,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +81,7 @@ public class RegisterSenior extends AppCompatActivity {
     private Uri uriImage;
     private StorageReference storageReference;
 
+    ProgressBar progressBar;
     AutoCompleteTextView autocompleteBarangay;
     AutoCompleteTextView autocompleteGender;
 
@@ -109,17 +117,22 @@ public class RegisterSenior extends AppCompatActivity {
             textGender,
             textToken,
             userType,
-            textDate;
+            textDate,
+            textCarerEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_senior);
 
-        autocompleteBarangay = findViewById(R.id.drop_barangay);
-        autocompleteGender = findViewById(R.id.drop_gender);
+        Bundle extras = getIntent().getExtras();
+        textCarerEmail  = extras.getString("carerEmail");
+
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupSenior);
+        progressBar = findViewById(R.id.progressBarRegister);
+        autocompleteBarangay = findViewById(R.id.drop_barangay);
+        autocompleteGender = findViewById(R.id.drop_gender);
         etFirstName = findViewById(R.id.etSeniorFirstName);
         etMiddle = findViewById(R.id.etSeniorMiddle);
         etLastName = findViewById(R.id.etSeniorLastName);
@@ -173,10 +186,6 @@ public class RegisterSenior extends AppCompatActivity {
         // bring user back to PickRole screen
         ImageButton ibBack = findViewById(R.id.ibRegisterSeniorBack);
         ibBack.setOnClickListener(view -> startActivity(new Intent(RegisterSenior.this, PickRole.class)));
-
-        // bring user back to Login screen
-        TextView tvAlreadyHaveAccount = findViewById(R.id.tvSeniorHaveAccount);
-        tvAlreadyHaveAccount.setOnClickListener(view -> startActivity(new Intent(RegisterSenior.this, Login.class)));
 
         // open file dialog for profile pic
         chooseProfilePic.setOnClickListener(new View.OnClickListener() {
@@ -345,6 +354,10 @@ public class RegisterSenior extends AppCompatActivity {
         return month + " " + day + " " + year;
     }
 
+    static String encodeUserEmail(String userEmail) {
+        return userEmail.replace(".", ",");
+    }
+
     // register User using the credentials given
     private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress, String textCity,
                             String textGender, String userType, String imageURL, String textToken, String textDateCreated){
@@ -358,6 +371,8 @@ public class RegisterSenior extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
+                            progressBar.setVisibility(View.VISIBLE);
+
                             FirebaseUser firebaseUser = auth.getCurrentUser();
 
                             // enter user data into the firebase realtime database
@@ -366,6 +381,32 @@ public class RegisterSenior extends AppCompatActivity {
 
                             // extracting user reference from database for "registered user"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+
+                            // store senior in carer's module
+                            DatabaseReference referenceCarerModule = FirebaseDatabase.getInstance().getReference("Emails");
+                            referenceCarerModule.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.hasChild(encodeUserEmail(textCarerEmail))){
+                                        HashMap hashMap = new HashMap();
+                                        hashMap.put("senior_email", firebaseUser.getEmail());
+                                        referenceCarerModule
+                                                .child(encodeUserEmail(textCarerEmail))
+                                                .child("AssignedSeniors")
+                                                .child(firebaseUser.getUid())
+                                                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                             // store profile picture of carer
                             storageReference = FirebaseStorage.getInstance().getReference("ProfilePics");
@@ -409,11 +450,14 @@ public class RegisterSenior extends AppCompatActivity {
                                         // send verification email
                                         firebaseUser.sendEmailVerification();
 
-                                        // sign out the user to prevent automatic sign in, right after successful register
-                                        auth.signOut();
-
-                                        Toast.makeText(RegisterSenior.this, "Registered successfully. Please verify your email.", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(RegisterSenior.this, CarerVerifyEmail.class));
+                                        // send mobile intent
+                                        Intent intent = new Intent(RegisterSenior.this, OTP.class);
+                                        Bundle data = new Bundle();
+                                        data.putString("Mobile", textMobileNumber);
+                                        intent.putExtras(data);
+                                        startActivity(intent);
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        //auth.signOut();
                                     }else{
                                         Toast.makeText(RegisterSenior.this, "User registered failed. Please try again",
                                                 Toast.LENGTH_LONG).show();

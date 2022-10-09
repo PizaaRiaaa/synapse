@@ -63,6 +63,8 @@ public class Email extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carer_email_verify);
 
+        auth.signOut();
+
         // show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
