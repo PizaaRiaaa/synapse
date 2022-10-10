@@ -108,7 +108,7 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
         if(score > totalQuestion * 0.60){
             new AlertDialog.Builder(this)
                     .setTitle("Congratulations!")
-                    .setMessage("You have passed the assessment. Senior can now register your account.\"")
+                    .setMessage("You have passed the assessment. Carer can now register your account.\"")
                     .setPositiveButton("PROCEED",(dialogInterface, i) -> checkCarerEmail())
                     .setCancelable(false)
                     .show();

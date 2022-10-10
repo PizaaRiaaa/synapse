@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment {
                                 if(snapshot.exists()){
                                     ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
                                     String user_dob = seniorProfile.getDOB();
-                                   String fullName = seniorProfile.firstName;
+                                    String fullName = seniorProfile.firstName + " " + seniorProfile.lastName;
                                     String barangay = seniorProfile.address;
 
                                     Calendar cal = Calendar.getInstance();

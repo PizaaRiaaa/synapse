@@ -122,7 +122,7 @@ public class RegisterSenior extends AppCompatActivity {
             textToken,
             userType,
             textDate,
-            textCarerEmail;
+            textCarerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +130,7 @@ public class RegisterSenior extends AppCompatActivity {
         setContentView(R.layout.activity_register_senior);
 
         Bundle extras = getIntent().getExtras();
-        textCarerEmail  = extras.getString("carerEmail");
+        textCarerID  = extras.getString("carerID");
 
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupSenior);
@@ -409,30 +409,6 @@ public class RegisterSenior extends AppCompatActivity {
                             // extracting user reference from database for "registered user"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
 
-                            // store senior in carer's module
-                            DatabaseReference referenceCarerModule = FirebaseDatabase.getInstance().getReference("Emails");
-                            referenceCarerModule.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(snapshot.hasChild(encodeUserEmail(textCarerEmail))){
-                                        referenceCarerModule
-                                                .child(encodeUserEmail(textCarerEmail))
-                                                .child("AssignedSeniors")
-                                                .child(firebaseUser.getUid())
-                                                .setValue(firebaseUser.getEmail()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
                             // store profile picture of carer
                             storageReference = FirebaseStorage.getInstance().getReference("ProfilePics");
 
@@ -462,6 +438,31 @@ public class RegisterSenior extends AppCompatActivity {
                                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                                 .setPhotoUri(uri).build();
                                                         firebaseUser.updateProfile(profileUpdates);
+
+                                                        // store senior in carer's module
+                                                        DatabaseReference referenceCarerModule = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
+                                                        HashMap<Object,String> hashMap = new HashMap<>();
+                                                        hashMap.put("seniorID", firebaseUser.getUid());
+                                                        hashMap.put("firstName", textFirstName);
+                                                        hashMap.put("middle", textMiddle);
+                                                        hashMap.put("lastName", textLastName);
+                                                        hashMap.put("barangay", textAddress);
+                                                        hashMap.put("dob", textDOB);
+                                                        hashMap.put("city", textCity);
+                                                        hashMap.put("image", uri.toString());
+
+                                                        referenceCarerModule
+                                                                .child(textCarerID)
+                                                                .child(firebaseUser.getUid())
+                                                                .push()
+                                                                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if(task.isSuccessful()){
+                                                                            Log.w("Assigned", "Assigned Successfully", task.getException());
+                                                                        }
+                                                                    }
+                                                                });
 
                                                     }
                                                 });
@@ -494,13 +495,13 @@ public class RegisterSenior extends AppCompatActivity {
                             try{
                                 throw task.getException();
                             }catch(FirebaseAuthWeakPasswordException e){
-                                etPassword.setError("Your password is to weak. Please use a-z alphabets and numbers");
+                                promptMessage.displayMessage("Password is too weak","Password must contain at least 6 characters, 1 digit, and 1 upper case", R.color.red1, RegisterSenior.this);
                                 etPassword.requestFocus();
                             }catch(FirebaseAuthInvalidCredentialsException e){
-                                etPassword.setError("Your email is invalid or already in use. Kindly re-enter.");
+                                promptMessage.displayMessage("Invalid Email","Your email is invalid or already in use. Kindly re-enter", R.color.red1, RegisterSenior.this);
                                 etPassword.requestFocus();
                             }catch(FirebaseAuthUserCollisionException e){
-                                etPassword.setError("Email is already registered. User another email.");
+                                promptMessage.displayMessage("Email already taken","Please use another email", R.color.red1, RegisterSenior.this);
                                 etPassword.requestFocus();
                             }catch(Exception e){
                                 Log.e(TAG_1, e.getMessage());

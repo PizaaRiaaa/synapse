@@ -25,6 +25,7 @@ import com.example.synapse.R;
 import com.example.synapse.screen.admin.LoadingScreen;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.CarerMainActivity;
+import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
@@ -97,14 +98,17 @@ public class Login extends AppCompatActivity {
                         referenceCarer.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                referenceAssignedSeniors.child(encodeUserEmail(firebaseUser.getEmail())).addListenerForSingleValueEvent(new ValueEventListener() {
+                                referenceAssignedSeniors.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                       if(snapshot.exists()){
-                                           Toast.makeText(Login.this, " You have assigned senior ", Toast.LENGTH_SHORT).show();
-                                       }else{
-                                           Toast.makeText(Login.this, " You currently don't have senior assign to your account", Toast.LENGTH_SHORT).show();
-                                       }
+                                        if(snapshot.exists()){
+                                            Toast.makeText(Login.this, " You have assigned senior ", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(Login.this, SelectSenior.class));
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                            finish();
+                                        }else{
+                                            Toast.makeText(Login.this, " You currently don't have senior assign to your account", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
 
                                     @Override
@@ -203,7 +207,7 @@ public class Login extends AppCompatActivity {
 
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Request").child("Seniors");
-        referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("Emails");
+        referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
 
         // show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -12,8 +12,10 @@ import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.senior.RegisterSenior;
 import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,30 +56,34 @@ public class CheckCarerEmail extends AppCompatActivity {
     }
 
     void checkCarerEmail(String email){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Emails");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild(encodeUserEmail(email))){
-                    Toast.makeText(CheckCarerEmail.this, "You can now register your senior's account", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CheckCarerEmail.this, RegisterSenior.class);
-                    Bundle data = new Bundle();
-                    data.putString("carerEmail", email);
-                    intent.putExtras(data);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
-                }else{
-                    promptMessage.displayMessage(
-                            "Oops!",
-                            "Your email does not exist. Please try again.", R.color.red1,
-                            CheckCarerEmail.this);
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    ReadWriteUserDetails rw = snapshot1.getValue(ReadWriteUserDetails.class);
+                    if(encodeUserEmail(rw.getEmail()).equals(encodeUserEmail(email))){
+                        String carerID = snapshot1.getKey();
+                        Toast.makeText(CheckCarerEmail.this, "You can now register your senior's account", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CheckCarerEmail.this, RegisterSenior.class);
+                        Bundle data = new Bundle();
+                        data.putString("carerID", carerID);
+                        intent.putExtras(data);
+                        startActivity(intent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        finish();
+                    }else {
+                        promptMessage.displayMessage(
+                                "Oops!",
+                                "Your email does not exist. Please try again.", R.color.red1,
+                                CheckCarerEmail.this);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(CheckCarerEmail.this);
+
             }
         });
 

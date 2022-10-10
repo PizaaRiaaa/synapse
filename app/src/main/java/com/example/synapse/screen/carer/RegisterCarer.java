@@ -10,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -46,8 +47,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -57,7 +62,9 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -367,14 +374,7 @@ public class RegisterCarer extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
-                                    // add carer's email in Emails node
-                                    DatabaseReference referenceEmail = FirebaseDatabase.getInstance().getReference("Emails").child(encodeUserEmail(firebaseUser.getEmail()));
-                                    referenceEmail.setValue(encodeUserEmail(firebaseUser.getEmail())).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                        }
-                                    });
 
                                     // user upload profile pic
                                     if(uriImage != null){
@@ -405,6 +405,7 @@ public class RegisterCarer extends AppCompatActivity {
                                         });
                                     }
 
+
                                     // if all inputs are valid
                                     if(task.isSuccessful()){
                                         // send verification email
@@ -412,15 +413,15 @@ public class RegisterCarer extends AppCompatActivity {
 
                                         // sign out the user to prevent automatic sign in, right after successful register
 
+                                                            // send mobile and email intent
+                                                            Intent intent = new Intent(RegisterCarer.this, OTP.class);
+                                                            Bundle data = new Bundle();
+                                                            data.putString("Mobile", textMobileNumber);
+                                                            intent.putExtras(data);
+                                                            startActivity(intent);
+                                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                            //auth.signOut();
 
-                                        // send mobile and email intent
-                                        Intent intent = new Intent(RegisterCarer.this, OTP.class);
-                                        Bundle data = new Bundle();
-                                        data.putString("Mobile", textMobileNumber);
-                                        intent.putExtras(data);
-                                        startActivity(intent);
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                        //auth.signOut();
                                     }else{
                                         Toast.makeText(RegisterCarer.this, "User registered failed. Please try again",
                                                 Toast.LENGTH_LONG).show();
