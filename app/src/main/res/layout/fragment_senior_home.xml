@@ -9,18 +9,31 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginBottom="?actionBarSize"
         tools:context=".screen.carer.CarerMainActivity">
+
+        <TextClock
+            android:id="@+id/tcTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/redhat_display_regular"
+            android:format12Hour="hh:mm a"
+            android:text="12:00 PM"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -57,20 +70,16 @@
                 android:textSize="15dp"
                 android:text="Brgy. Additioh Hills"/>
 
+            <TextView
+                android:id="@+id/tvCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/grey5"
+                android:textSize="15dp"
+                android:text="Mandaluyong City"/>
+
         </LinearLayout>
-
-        <TextClock
-            android:id="@+id/tcTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="textEnd"
-            android:fontFamily="@font/redhat_display_regular"
-            android:format12Hour="hh:mm a"
-            android:text="12:00 PM"
-            android:textColor="@color/black"
-            android:textSize="25sp" />
-
 
     </LinearLayout>
 
@@ -79,6 +88,7 @@
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_scroll_right"
         android:drawablePadding="20dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="end"
         android:textSize="15sp"
         android:fontFamily="@font/redhat_display_bold"

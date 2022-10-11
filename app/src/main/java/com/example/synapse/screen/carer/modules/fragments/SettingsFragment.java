@@ -141,6 +141,9 @@ public class SettingsFragment extends Fragment {
         tvLogout.setOnClickListener(v -> {
            user.signOut();
             Intent intent = new Intent(getActivity(), Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             getActivity().onBackPressed();
         });

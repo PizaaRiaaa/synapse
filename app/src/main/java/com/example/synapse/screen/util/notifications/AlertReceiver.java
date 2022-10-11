@@ -46,7 +46,7 @@ import java.net.URL;
 public class AlertReceiver extends BroadcastReceiver {
 
     FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference referenceSenior,medicationReminder, referenceCompanion,
+    DatabaseReference referenceSenior,medicationReminder,
             physicalActivityReminder, appointmentReminder, gameReminder;
     String med_id, physical_id, appointment_id, game_id, seniorID, token;
     PromptMessage promptMessage = new PromptMessage();
@@ -71,7 +71,6 @@ public class AlertReceiver extends BroadcastReceiver {
         physicalActivityReminder = FirebaseDatabase.getInstance().getReference().child("Physical Activity Reminders");
         appointmentReminder = FirebaseDatabase.getInstance().getReference().child("Appointment Reminders");
         gameReminder = FirebaseDatabase.getInstance().getReference().child("Games Reminders");
-        referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
         referenceSenior = FirebaseDatabase.getInstance().getReference().child("Users").child("Seniors");
 
         int medication = intent.getExtras().getInt("Medication");
@@ -274,7 +273,6 @@ public class AlertReceiver extends BroadcastReceiver {
         });
     }
 
-
     void displayPhysicalActivityNotification(int requestCode, Context context){
         physicalActivityReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -322,6 +320,9 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         context.sendBroadcast(new Intent("NOTIFY_PHYSICAL_ACTIVITY"));
                                                         notificationRingtone(context);
 
+                                                        sendFCMtoSeniorNotification(context, "Physical Activity Reminder",
+                                                                "It's time for you to do your "  +
+                                                                        activity_name + " for " + duration, activity_name);
                                                     }
                                                 }
                                                 @Override
@@ -401,6 +402,11 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         appointmentNotificationHelper.getManager().notify(requestCode1, nb.build());
                                                         context.sendBroadcast(new Intent("NOTIFY_APPOINTMENT"));
                                                         notificationRingtone(context);
+
+                                                        sendFCMtoSeniorNotification(context, "Appointment Reminder",
+                                                                "Hello " + senior_name +
+                                                                        "! You have an appointment scheduled for tomorrow at "
+                                                                        + time , "appointment");
                                                     }
                                                 }
                                                 @Override
@@ -463,8 +469,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         nb.setSmallIcon(R.drawable.ic_splash_logo);
                                                         nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
                                                         nb.setContentTitle("Game Reminder");
-                                                        nb.setContentText("It's time for your senior " +
-                                                                senior_name + " to Play " + game);
+                                                        nb.setContentText("It's time for your senior  " + senior_name + " to Play " + game);
                                                         nb.setStyle(new NotificationCompat.BigTextStyle()
                                                                         .setBigContentTitle("Game Reminder")
                                                                 .bigText("\nIt's time for your senior" + senior_name + " to play " + game));
@@ -480,6 +485,10 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         gamesNotificationHelper.getManager().notify(requestCode1, nb.build());
                                                         context.sendBroadcast(new Intent("NOTIFY_GAMES"));
                                                         notificationRingtone(context);
+
+                                                        sendFCMtoSeniorNotification(context, "Game Reminder",
+                                                                "Hello " + senior_name + "! " + "it's time to play " + game,
+                                                                game);
 
                                                     }
                                                 }

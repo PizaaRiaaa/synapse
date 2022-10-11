@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -87,7 +89,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    DatabaseReference referenceCompanion, referenceReminders, referenceRequest, referenceProfile;
+    DatabaseReference referenceReminders, referenceCarer;
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
     AppCompatEditText etDuration;
 
@@ -103,7 +105,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe, R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
 
     private TextView tvTime;
-    private String selected_game, time, imageURL, token, seniorID;
+    private String selected_game, time, seniorID;
     private ImageView profilePic;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -169,13 +171,11 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         btnSun = view.findViewById(R.id.btnSUN);
 
         // references for firebase
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Games Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-        referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        requestQueue = Volley.newRequestQueue(getActivity());
+        //requestQueue = Volley.newRequestQueue(getActivity());
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
@@ -397,6 +397,11 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         //        pendingIntent);
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     // store schedule for games
     void addSchedule() {
         requestCode = (int)calendar.getTimeInMillis()/1000;
@@ -405,69 +410,47 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         hashMap.put("Time", time);
         hashMap.put("RequestCode", requestCode);
 
-        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        seniorID = ds.getKey();
-                        assert seniorID != null;
-                        String key = referenceReminders.push().getKey();
-                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            dialog.dismiss();
-                                            tvTime.setVisibility(View.INVISIBLE);
-                                            clearDialogText();
-                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
-                                            // start alarm and retrieve the unique id of newly created medicine
-                                            // so we can send it to alert receiver.
-                                            startAlarm(calendar, key);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-            }
+        String key = referenceReminders.push().getKey();
+        referenceReminders
+                .child(getDefaults("seniorKey",getActivity()))
+                .child(mUser.getUid())
+                .child(key)
+                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(getActivity());
-            }
-        });
+             @Override
+             public void onComplete(@NonNull Task task) {
+                 if (task.isSuccessful()) {
+                     referenceReminders
+                             .child(mUser.getUid())
+                             .child(getDefaults("seniorKey",getActivity()))
+                             .child(key).setValue(hashMap).addOnCompleteListener(task0 -> {
+
+                         if (task0.isSuccessful()) {
+                             dialog.dismiss();
+                             tvTime.setVisibility(View.INVISIBLE);
+                             clearDialogText();
+                             Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                             // start alarm and retrieve the unique id of newly created medicine
+                             // so we can send it to alert receiver.
+                             startAlarm(calendar, key);
+
+                         }
+                     });
+                 }
+             }
+         });
     }
+
 
     void addButton(){
         // perform add schedule
         btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        if(tvTime.getText().equals("Add New Game")){
-                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
-                        } else {
-                            addSchedule();
-                        }
-                    } else {
-                        dialog.dismiss();
-                        promptMessage.displayMessage("Failed to set an appointment", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request, getActivity());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
-        });
+         if(tvTime.getText().equals("Add New Game")){
+             Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
+         } else {
+             addSchedule();
+         }
+      });
 
     }
 
@@ -503,7 +486,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
 
     // display carer's profile pic
     void showUserProfile(){
-        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCarer.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);

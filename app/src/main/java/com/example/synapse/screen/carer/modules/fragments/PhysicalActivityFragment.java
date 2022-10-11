@@ -98,7 +98,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     FloatingActionButton fabAddPhysicalActivity;
     AppCompatEditText etDuration;
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
-    DatabaseReference referenceCompanion, referenceReminders, referenceCarer;
+    DatabaseReference referenceReminders, referenceCarer;
     FirebaseUser mUser;
 
     RequestQueue requestQueue;
@@ -486,10 +486,16 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                 .child(mUser.getUid())
                 .child(key)
                 .setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
+
              @Override
              public void onComplete(@NonNull Task task) {
                  if (task.isSuccessful()) {
-                     referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
+                     referenceReminders
+                             .child(mUser.getUid())
+                             .child(getDefaults("seniorKey",getActivity()))
+                             .child(key)
+                             .setValue(hashMap).addOnCompleteListener(task1 -> {
+
                          if (task1.isSuccessful()) {
                              dialog.dismiss();
                              tvTime.setText("Add New Physical Activity");
@@ -509,45 +515,25 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     // store schedule when add button was clicked
     void addButton(){
         btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String duration = etDuration.getText().toString();
-                        if (TextUtils.isEmpty(duration)) {
-                            //promptMessage.displayMessage("Empty field", "Please enter the duration of the physical activity",R.color.red_decline_request, getActivity());
-                            Toast.makeText(getActivity(), "Please enter the duration of the physical activity", Toast.LENGTH_SHORT).show();
-                        }else if(!isClicked){
-                            //promptMessage.displayMessage("Empty field", "Please pick a schedule for the physical activity",R.color.red_decline_request, getActivity());
-                            Toast.makeText(getActivity(), "Please pick a schedule for the physical activity", Toast.LENGTH_SHORT).show();
-                        }else if(clickedRepeatBtn == null){
-                            //promptMessage.displayMessage("Choose repetition", "Please pick a repetition for the physical activity", R.color.dark_green, getActivity());
-                            Toast.makeText(getActivity(), "Please pick a repetition for the physical activity", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            addSchedule();
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
-                            ft.detach(PhysicalActivityFragment.this).attach(PhysicalActivityFragment.this).commit();
-                        }
-                    } else {
-                        dialog.dismiss();
-                        promptMessage.displayMessage(
-                                "Failed to set a physical activity",
-                                "Wait for our senior to accept your request before sending notifications",
-                                R.color.red_decline_request,
-                                getActivity());
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
-        });
-    }
+         String duration = etDuration.getText().toString();
+         if (TextUtils.isEmpty(duration)) {
+             //promptMessage.displayMessage("Empty field", "Please enter the duration of the physical activity",R.color.red_decline_request, getActivity());
+             Toast.makeText(getActivity(), "Please enter the duration of the physical activity", Toast.LENGTH_SHORT).show();
+         }else if(!isClicked){
+             //promptMessage.displayMessage("Empty field", "Please pick a schedule for the physical activity",R.color.red_decline_request, getActivity());
+             Toast.makeText(getActivity(), "Please pick a schedule for the physical activity", Toast.LENGTH_SHORT).show();
+         }else if(clickedRepeatBtn == null){
+             //promptMessage.displayMessage("Choose repetition", "Please pick a repetition for the physical activity", R.color.dark_green, getActivity());
+             Toast.makeText(getActivity(), "Please pick a repetition for the physical activity", Toast.LENGTH_SHORT).show();
+         }
+         else {
+             addSchedule();
+             FragmentTransaction ft = getFragmentManager().beginTransaction();
+             if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
+             ft.detach(PhysicalActivityFragment.this).attach(PhysicalActivityFragment.this).commit();
+         }
+     });
+   }
 
     // change the background the current day to white
     public void displayCurrentDay(){

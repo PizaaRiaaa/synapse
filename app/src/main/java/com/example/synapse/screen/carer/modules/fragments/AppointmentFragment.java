@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -92,7 +94,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    DatabaseReference referenceCompanion, referenceReminders, referenceRequest, referenceProfile;
+    DatabaseReference referenceReminders, referenceCarer;
 
     final String[] APPOINTMENT_SPECIALIST =
             {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
@@ -103,14 +105,11 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
             R.drawable.ic_rheumatologist,R.drawable.ic_urologist, R.drawable.ic_ophthalmologist,
             R.drawable.ic_dentist,R.drawable.ic_psychologist,R.drawable.ic_audiologist};
 
-    final String[]  APPOINTMENT_TYPE = {"In Person","Online"};
-    final int [] APPOINTMENT_TYPE_ICS = {R.drawable.ic_in_person, R.drawable.ic_online};
     final Calendar calendar = Calendar.getInstance();
 
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
-    String time, selected_specialist, token, selected_appointment_type, seniorID, date;
+    String time, selected_specialist,selected_appointment_type;
     FirebaseUser mUser;
-    RequestQueue requestQueue;
     int requestCode;
 
     RecyclerView recyclerView;
@@ -182,10 +181,8 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         btnSun = view.findViewById(R.id.btnSUN);
 
         // references for firebase
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Appointment Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-        referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         // listen for broadcast
        // getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
@@ -194,7 +191,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // generate volley for sending notification to senior
-        requestQueue = Volley.newRequestQueue(getActivity());
+        //requestQueue = Volley.newRequestQueue(getActivity());
 
         // set recyclerview
         recyclerView = view.findViewById(R.id.recyclerview_appointment);
@@ -231,13 +228,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         spinner_appointment_specialist.setAdapter(adapter1);
         spinner_appointment_specialist.setOnItemSelectedListener(this);
 
-        spinner_appointment_type = dialog.findViewById(R.id.spinner_appointment_type);
-        ItemAppointmentType adapter2 = new ItemAppointmentType(getActivity(),
-                APPOINTMENT_TYPE, APPOINTMENT_TYPE_ICS);
-        adapter2.notifyDataSetChanged();
-        spinner_appointment_type.setAdapter(adapter2);
-        spinner_appointment_type.setOnItemSelectedListener(this);
-
         ibTimePicker.setOnClickListener(v -> {
             DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> {
                 calendar.set(Calendar.YEAR, year);
@@ -269,11 +259,9 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     // get the current selected item in spinners
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getId() == R.id.spinner_appointment_specialist){
+        if(parent.getId() == R.id.spinner_appointment_specialist)
             selected_specialist = APPOINTMENT_SPECIALIST[position];
-        }else if(parent.getId() == R.id.spinner_appointment_type){
-            selected_appointment_type = APPOINTMENT_TYPE[position];
-        }
+
     }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -375,86 +363,67 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() - (86400000) , pendingIntent);
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     // store schedule for appointment
     private void addSchedule() {
         requestCode = (int) getCalendar().getTimeInMillis()/1000;
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Specialist", selected_specialist);
-        hashMap.put("AppointmentType", selected_appointment_type);
         hashMap.put("Time", time);
         hashMap.put("DrName", Objects.requireNonNull(etDrName.getText()).toString());
         hashMap.put("Concern", Objects.requireNonNull(etConcern.getText()).toString());
         hashMap.put("RequestCode", requestCode);
 
-        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        // create unique key
+        String key = referenceReminders.push().getKey();
+        referenceReminders
+                .child(getDefaults("seniorKey",getActivity()))
+                .child(mUser.getUid())
+                .child(key)
+                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        seniorID = ds.getKey();
-                        assert seniorID != null;
-                        // create unique key
-                        String key = referenceReminders.push().getKey();
-                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            dialog.dismiss();
-                                            clearDialogText();
-                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
-                                            // start alarm and retrieve the unique id of newly created medicine
-                                            // so we can send it to alert receiver.
-                                            startAlarm(getCalendar(), key);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    referenceReminders
+                            .child(mUser.getUid())
+                            .child(getDefaults("seniorKey",getActivity()))
+                            .child(key)
+                            .setValue(hashMap).addOnCompleteListener(task1 -> {
+
+                        if (task1.isSuccessful()) {
+                            dialog.dismiss();
+                            clearDialogText();
+                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                            // start alarm and retrieve the unique id of newly created medicine
+                            // so we can send it to alert receiver.
+                            startAlarm(getCalendar(), key);
+                        }
+                    });
                 }
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(getActivity());
-            }
         });
+
     }
 
     // store schedule when add button was clicked
     void addButton(){
         // perform add schedule
         btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        if(tvTime.getText().equals("Add New Appointment")){
-                            Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
-                        } else {
-                            addSchedule();
-                        }
-                    } else {
-                        addSchedule();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
-                        ft.detach(AppointmentFragment.this).attach(AppointmentFragment.this).commit();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
+            if(tvTime.getText().equals("Add New Appointment")){
+                Toast.makeText(getActivity(), "Please pick a schedule for the appointment", Toast.LENGTH_SHORT).show();
+            } else {
+                addSchedule();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
+                ft.detach(AppointmentFragment.this).attach(AppointmentFragment.this).commit();
+            }
         });
     }
-
-
-
 
     // change the background the current day to white
     public void displayCurrentDay(){
@@ -575,7 +544,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     // display carer's profile pic
     private void showUserProfile(){
         // display carer profile pic
-        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCarer.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);

@@ -129,8 +129,13 @@ public class HomeFragment extends Fragment {
         btnLogout.setOnClickListener(v -> {
             FirebaseAuth user = FirebaseAuth.getInstance();
             user.signOut();
-            startActivity(new Intent(getActivity(), Login.class));
-            getActivity().getFragmentManager().popBackStack();
+            Intent intent = new Intent(getActivity(), Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            getActivity().onBackPressed();
+            //getActivity().getFragmentManager().popBackStack();
         });
 
         return view;
@@ -161,8 +166,6 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
-
-
 
     // retrieve senior's profile picture
     public void showUserProfile(String firebaseUser){

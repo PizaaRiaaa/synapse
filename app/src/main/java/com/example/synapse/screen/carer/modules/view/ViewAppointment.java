@@ -57,25 +57,17 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
     private FirebaseUser mUser;
     private DatabaseReference
-            referenceReminders,
-            referenceProfile,
-            referenceCompanion;
+            referenceReminders, referenceProfile;
 
     PromptMessage promptMessage = new PromptMessage();
 
     private final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
             "Ophthalmologist","Dentist","Psychologist","Audiologist"};
-    private final String[]  APPOINTMENT_TYPE = {"In Person","Online"};
-    private final int [] APPOINTMENT_TYPE_ICS = {R.drawable.ic_in_person, R.drawable.ic_online};
-    Spinner spinner_appointment_specialist, spinner_appointment_type;
-    RequestQueue requestQueue;
+    Spinner spinner_appointment_specialist;
 
     private String time;
     private String selected_specialist;
     private String selected_appointment_type;
-    private String token;
-    private String seniorID;
-    private String appointmentType;
     private String concern;
     private String drName;
     private String specialist;
@@ -97,7 +89,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_view_appointment);
 
         spinner_appointment_specialist = findViewById(R.id.spinner_specialist);
-        spinner_appointment_type = findViewById(R.id.spinner_appointment_type);
         ImageButton ibBack = findViewById(R.id.ibBack);
         MaterialButton btnChangeSchedule = findViewById(R.id.btnChangeSchedule);
         AppCompatButton btnUpdate = findViewById(R.id.btnUpdate);
@@ -107,11 +98,9 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         tvDateAndTime = findViewById(R.id.tvDateAndTime);
         tvDelete = findViewById(R.id.tvDelete);
 
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Appointment Reminders");
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        requestQueue = Volley.newRequestQueue(ViewAppointment.this);
 
         // spinner for specialist
         adapter1 = new ItemViewAppointmentSpecialist(ViewAppointment.this,
@@ -119,13 +108,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         adapter1.notifyDataSetChanged();
         spinner_appointment_specialist.setAdapter(adapter1);
         spinner_appointment_specialist.setOnItemSelectedListener(ViewAppointment.this);
-
-        // spinner for appointment type
-        adapter2 = new ItemAppointmentType(ViewAppointment.this,
-                APPOINTMENT_TYPE, APPOINTMENT_TYPE_ICS);
-        adapter2.notifyDataSetChanged();
-        spinner_appointment_type.setAdapter(adapter2);
-        spinner_appointment_type.setOnItemSelectedListener(ViewAppointment.this);
 
         // listen for broadcast
         //registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
@@ -167,8 +149,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getId() == R.id.spinner_specialist){
             selected_specialist = APPOINTMENT_SPECIALIST[position];
-        }else if(parent.getId() == R.id.spinner_appointment_type){
-            selected_appointment_type = APPOINTMENT_TYPE[position];
         }
     }
 
@@ -286,22 +266,16 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                         if(snapshot.exists()){
                                             ReadWriteAppointment readWriteAppointment = snapshot.getValue(ReadWriteAppointment.class);
                                             adapter1.notifyDataSetChanged();
-                                            adapter2.notifyDataSetChanged();
 
                                             time = readWriteAppointment.getTime();
                                             concern = readWriteAppointment.getConcern();
                                             drName = readWriteAppointment.getDrName();
                                             specialist = readWriteAppointment.getSpecialist();
-                                            appointmentType = readWriteAppointment.getAppointmentType();
 
                                             tvDateAndTime.setText(time);
                                             if(concern != null) etConcern.setText(concern);
                                             if(drName != null) etDrName.setText(drName);
 
-                                            if(appointmentType.equals("In Person"))
-                                                spinner_appointment_type.setSelection(0);
-                                            else
-                                                spinner_appointment_type.setSelection(1);
 
                                             switch(specialist){
                                                 case "Geriatrician":
@@ -493,7 +467,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                                         referenceReminders.child(mUser.getUid()).child(seniorID).child(appointmentID).updateChildren(hashMap).addOnCompleteListener(task ->
                                                                 referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).updateChildren(hashMap).addOnCompleteListener(task1 -> {
                                                                     adapter1.notifyDataSetChanged();
-                                                                    adapter2.notifyDataSetChanged();
                                                                 }));
                                                     }
                                                 }
