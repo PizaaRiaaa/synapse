@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +13,8 @@ import android.graphics.Path;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -43,9 +46,9 @@ import java.net.URL;
 public class AlertReceiver extends BroadcastReceiver {
 
     FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference referenceProfile,medicationReminder, referenceCompanion,
+    DatabaseReference referenceSenior,medicationReminder, referenceCompanion,
             physicalActivityReminder, appointmentReminder, gameReminder;
-    String med_id, physical_id, appointment_id, game_id, seniorID, token, pill_color, pill_name;
+    String med_id, physical_id, appointment_id, game_id, seniorID, token;
     PromptMessage promptMessage = new PromptMessage();
     NotificationCompat.Builder nb;
     MedicineNotificationHelper medicineNotificationHelper;
@@ -69,7 +72,7 @@ public class AlertReceiver extends BroadcastReceiver {
         appointmentReminder = FirebaseDatabase.getInstance().getReference().child("Appointment Reminders");
         gameReminder = FirebaseDatabase.getInstance().getReference().child("Games Reminders");
         referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
-        referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
+        referenceSenior = FirebaseDatabase.getInstance().getReference().child("Users").child("Seniors");
 
         int medication = intent.getExtras().getInt("Medication");
         int physical = intent.getExtras().getInt("PhysicalActivity");
@@ -201,7 +204,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                            intent.putExtra("pill_shape", pill_shape);
                                            intent.putExtra("pill_color", pill_color);
 
-                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @RequiresApi(api = Build.VERSION_CODES.S)
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -214,7 +217,6 @@ public class AlertReceiver extends BroadcastReceiver {
                                                         nb = medicineNotificationHelper.getChannelNotification();
                                                         setContentIntent(context, ViewMedicine.class, "key", med_id);
                                                         nb.setSmallIcon(R.drawable.ic_pill2);
-                                                        nb.setColor(R.color.white);
                                                         nb.setColorized(true);
                                                         nb.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
                                                         nb.setContentTitle("Medicine Reminder");
@@ -292,7 +294,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                             String activity_name = rm.getActivity();
                                             String duration = rm.getDuration();
 
-                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -368,7 +370,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                         if(code == requestCode){
                                             String time = rm.getTime();
 
-                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -447,7 +449,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                         if(code == requestCode){
                                             String game = rm.getGame();
 
-                                            referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -526,15 +528,15 @@ public class AlertReceiver extends BroadcastReceiver {
         return outputBitmap;
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     void sendFCMtoSeniorNotification(Context context, String title, String body, String tag){
         Intent fcm_intent = new Intent(context, FirebaseMessagingService.class);
         fcm_intent.putExtra("Medication",1);
-        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    seniorID = ds.getKey();
-                    referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
+                    referenceSenior.child(getDefaults("seniorKey",context)).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
@@ -551,12 +553,5 @@ public class AlertReceiver extends BroadcastReceiver {
                         }
                     });
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessageContext(context);
-            }
-        });
-    }
 }
 

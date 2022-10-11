@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
 
     // Global variables
      static final String TAG = "";
-     DatabaseReference referenceProfile;
+     DatabaseReference referenceSenior;
      FirebaseUser mUser;
      String token;
      TextView tvSeniorName;
@@ -110,27 +110,19 @@ public class HomeFragment extends Fragment {
         MaterialCardView btnSearchPeople = view.findViewById(R.id.btnSearchPeople);
         MaterialCardView btnLogout = view.findViewById(R.id.btnLogout);
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
-        tvSeniorName = view.findViewById(R.id.tvSeniorName);
+        tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
 
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         String userID = mUser.getUid();
 
-        // Show status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
-
-        // direct user to games dashboard
         btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(),getActivity()));
-
-        // direct user to search people
         btnSearchPeople.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchPeople.class)));
-
-        // display current time
         currentTime.setFormat12Hour("hh:mm a");
 
-        // display senior profile picture
         showUserProfile(userID);
 
         // logout user
@@ -159,7 +151,7 @@ public class HomeFragment extends Fragment {
                         }
                         token = task.getResult();
                         hashMap.put("token", token);
-                        referenceProfile.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                        referenceSenior.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
                             }
@@ -170,16 +162,18 @@ public class HomeFragment extends Fragment {
                 });
     }
 
+
+
     // retrieve senior's profile picture
     public void showUserProfile(String firebaseUser){
-        referenceProfile.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceSenior.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
                     if(userProfile != null){
-                        String name = userProfile.firstName;
-                        tvSeniorName.setText("Hello,\n" + name);
+                        String fullname = userProfile.firstName + " " + userProfile.lastName;
+                        tvSeniorName.setText(fullname);
 
                         // display carer profile pic
                         Uri uri = mUser.getPhotoUrl();

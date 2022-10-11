@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    tools:context=".screen.carer.PromptToRegisterSenior">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogout"
+        android:fontFamily="@font/redhat_display_bold"
+        android:layout_margin="10dp"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="#FF8989"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:text="Logout"/>
+
+    <ImageView
+        android:layout_width="290dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@drawable/banner_send_request"
+        android:layout_margin="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Hi there! Currently you don't \n have senior assigned to your \n account"
+        android:textAlignment="center"
+        android:fontFamily="@font/redhat_display_regular"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textColor="#2E2640"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="45dp"
+        android:background="@drawable/rounded_button_login"
+        android:fontFamily="@font/redhat_display_bold"
+        android:text="START"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click start to register your \n senior's account"
+        android:textAlignment="center"
+        android:fontFamily="@font/redhat_display_regular"
+        android:layout_gravity="center"
+        android:textSize="15sp"
+        android:textColor="@color/grey1"/>
+
+
+
+</LinearLayout>

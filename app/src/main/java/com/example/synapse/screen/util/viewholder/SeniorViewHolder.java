@@ -22,6 +22,6 @@ public class SeniorViewHolder extends RecyclerView.ViewHolder {
         barangay = itemView.findViewById(R.id.tvSeniorBarangay);
         city = itemView.findViewById(R.id.tvSeniorCity);
         dob = itemView.findViewById(R.id.tvSeniorAge);
-        image = itemView.findViewById(R.id.ivSearchProfileImage);
+        image = itemView.findViewById(R.id.ivSeniorProfilePic);
     }
 }

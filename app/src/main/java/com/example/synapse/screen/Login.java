@@ -2,6 +2,9 @@ package com.example.synapse.screen;
 
 import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -25,6 +28,7 @@ import com.example.synapse.R;
 import com.example.synapse.screen.admin.LoadingScreen;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.CarerMainActivity;
+import com.example.synapse.screen.carer.PromptToRegisterSenior;
 import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorMainActivity;
@@ -51,7 +55,6 @@ public class Login extends AppCompatActivity {
     DatabaseReference referenceCarer, referenceSenior, referenceAssignedSeniors;
     EditText etEmail, etPassword;
     FirebaseAuth mAuth;
-    String userType;
 
     void authenticateUser(){
         String textEmail = etEmail.getText().toString();
@@ -79,12 +82,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
-
     void loginUser(String email, String password){
-        // check user credentials
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -92,30 +90,48 @@ public class Login extends AppCompatActivity {
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     assert firebaseUser != null;
 
-                    if(firebaseUser.isEmailVerified()){ // check if user's email is verified
+                    if(firebaseUser.isEmailVerified()){
 
-                        // check if carer have assigned senior
+                        // carer
                         referenceCarer.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                referenceAssignedSeniors.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            Toast.makeText(Login.this, " You have assigned senior ", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(Login.this, SelectSenior.class));
-                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                            finish();
-                                        }else{
-                                            Toast.makeText(Login.this, " You currently don't have senior assign to your account", Toast.LENGTH_SHORT).show();
+                                if(snapshot.exists()){
+                                    referenceAssignedSeniors.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.exists()){
+                                                startActivity(new Intent(Login.this, SelectSenior.class));
+                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                finish();
+                                            }else{
+                                                startActivity(new Intent(Login.this, PromptToRegisterSenior.class));
+                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                finish();
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        // senior
+                        referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                startActivity(new Intent(Login.this, SeniorMainActivity.class));
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                finish();
                             }
 
                             @Override
@@ -148,7 +164,6 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
 
     // display dialog if user's email is not verified
     void showAlertDialog(){

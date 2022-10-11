@@ -67,9 +67,9 @@ public class Splashscreen extends AppCompatActivity {
                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                    if(snapshot.exists()){
-                      // startActivity(new Intent(Splashscreen.this, SelectSenior.class));
-                      // overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                      // finish();
+                       startActivity(new Intent(Splashscreen.this, SeniorMainActivity.class));
+                       overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                       finish();
                    }
                }
 

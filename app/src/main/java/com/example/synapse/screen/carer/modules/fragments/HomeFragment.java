@@ -1,17 +1,23 @@
 package com.example.synapse.screen.carer.modules.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.synapse.R;
+import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
@@ -41,12 +47,13 @@ public class HomeFragment extends Fragment {
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    private DatabaseReference referenceProfile, referenceRequest, referenceCompanion;
+    private DatabaseReference referenceSenior, referenceCarer;
     private ImageView ivProfilePic, ivSeniorProfilePic;
     private TextView tvSeniorFullName;
     private TextView tvBarangay;
     private TextView tvSeniorAge;
-    private String seniorID, imageURL;
+    private TextView tvSeniorCity;
+    private String imageURL;
     private FirebaseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -100,6 +107,7 @@ public class HomeFragment extends Fragment {
         ivProfilePic = view.findViewById(R.id.ivCarerProfilePic);
         ivSeniorProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorFullName = view.findViewById(R.id.tvSeniorFullName);
+        tvSeniorCity = view.findViewById(R.id.tvSeniorCity);
         tvBarangay = view.findViewById(R.id.tvSeniorBarangay);
         tvSeniorAge = view.findViewById(R.id.tvSeniorAge);
         btnMedication = view.findViewById(R.id.btnMedication);
@@ -108,39 +116,30 @@ public class HomeFragment extends Fragment {
         btnGames = view.findViewById(R.id.btnGames);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
-        referenceRequest = FirebaseDatabase.getInstance().getReference("Request");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         String userID = user.getUid();
 
-
-        // show top status bar
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // display carer's profile picture
         showUserProfile(userID);
+        showSeniorProfile(getDefaults("seniorKey",getActivity()));
 
-        // display assigned senior's information
-        showSeniorProfile(userID);
-
-        // redirect user to medication screen
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
-
-        // redirect user to physical activity screen
         btnPhysicalActivity.setOnClickListener(v -> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
-
-        // redirect user to appointment screen
         btnAppointment.setOnClickListener(v -> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));
-
-        // redirect user to games screen
         btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(), getActivity()));
 
         return view;
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     // display carer profile pic
     private void showUserProfile(String firebaseUser){
-        referenceProfile.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCarer.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
@@ -172,113 +171,43 @@ public class HomeFragment extends Fragment {
     }
 
     // display assigned senior info
-    void showSeniorProfile(String firebaseUser){
-        // check if carer already send request
-        referenceRequest.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot ds : snapshot.getChildren()){
-                        seniorID = ds.getKey();
-                        assert seniorID != null;
+    void showSeniorProfile(String seniorKey){
+            referenceSenior.child(seniorKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        ReadWriteUserDetails senior = snapshot.getValue(ReadWriteUserDetails.class);
+                        String user_dob = senior.dob;
+                        String fullName = senior.firstName + " " + senior.lastName;
+                        String barangay = senior.address;
+                        String city = senior.city;
 
-                        referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                    String user_dob = seniorProfile.getDOB();
-                                    String fullName = seniorProfile.firstName + " " + seniorProfile.lastName;
-                                    String barangay = seniorProfile.address;
+                        Calendar cal = Calendar.getInstance();
+                        SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
 
-                                    Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
+                        try {
+                            cal.setTime(Objects.requireNonNull(format.parse(user_dob)));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
-                                    try {
-                                        cal.setTime(Objects.requireNonNull(format.parse(user_dob)));
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                        tvSeniorFullName.setText(fullName);
+                        tvBarangay.setText("Brgy." + barangay + ",");
+                        tvSeniorCity.setText(city);
+                        tvSeniorAge.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
 
-                                    tvSeniorFullName.setText(fullName);
-                                    tvBarangay.setText("Brgy." + barangay + ",");
-                                    tvSeniorAge.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
-
-                                    imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
-                                    Picasso.get()
-                                            .load(imageURL)
-                                            .fit()
-                                            .transform(new CropCircleTransformation())
-                                            .into(ivSeniorProfilePic);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                promptMessage.defaultErrorMessage(getActivity());
-                            }
-                        });
+                        imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
+                        Picasso.get()
+                               .load(imageURL)
+                               .fit()
+                               .transform(new CropCircleTransformation())
+                               .into(ivSeniorProfilePic);
                     }
-                }else{
-                    // check if senior accepted the carer request
-                    referenceCompanion.child(firebaseUser).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                            if(snapshot.exists()){
-                                for(DataSnapshot ds : snapshot.getChildren()){
-                                    seniorID = ds.getKey();
-                                    assert seniorID != null;
-                                    referenceProfile.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                                                String fullName = seniorProfile.firstName;
-                                                String barangay = seniorProfile.address;
-                                                assert seniorProfile != null;
-
-                                                // get user's age from date of birth
-                                                String user_dob = seniorProfile.getDOB();
-                                                Calendar cal = Calendar.getInstance();
-                                                SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
-                                                try {
-                                                    cal.setTime(Objects.requireNonNull(format.parse(user_dob)));
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                tvSeniorFullName.setText(fullName);
-                                                tvBarangay.setText("Brgy." + barangay + ",");
-                                                tvSeniorAge.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
-
-                                                imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
-                                                Picasso.get()
-                                                        .load(imageURL)
-                                                        .fit()
-                                                        .transform(new CropCircleTransformation())
-                                                        .into(ivSeniorProfilePic);
-                                            }
-                                        }
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            promptMessage.defaultErrorMessage(getActivity());
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage.defaultErrorMessage(getActivity());
-                        }
-                    });
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(getActivity());
-            }
-        });
-    }
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    promptMessage.defaultErrorMessage(getActivity());
+                }
+            });
+       }
 }

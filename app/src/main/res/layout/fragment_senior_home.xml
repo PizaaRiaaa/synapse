@@ -25,24 +25,39 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivSeniorProfilePic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:background="@drawable/carer_profile_pic"
             android:backgroundTint="@color/carer_profile_pic"
-            android:contentDescription="@string/pick_carer"
             android:scaleType="fitCenter" />
 
-        <TextView
-            android:id="@+id/tvSeniorName"
-            android:layout_width="0dp"
+        <LinearLayout
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:textSize="20sp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSeniorFullName"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="15sp"
             android:textColor="@color/black"
             android:drawablePadding="10dp"
-            android:fontFamily="@font/redhat_display_regular"
-            android:drawableStart="@drawable/ic_greet" />
+            android:text="Jane Doe"
+            android:fontFamily="@font/redhat_display_semibold"/>
+
+            <TextView
+                android:id="@+id/tvBarangay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textSize="15dp"
+                android:text="Brgy. Additioh Hills"/>
+
+        </LinearLayout>
 
         <TextClock
             android:id="@+id/tcTime"
@@ -334,7 +349,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnMedication"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
             app:strokeColor="@color/white"
@@ -375,7 +390,7 @@
         <!-- physical activity module -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
             app:strokeColor="@color/white"
@@ -388,7 +403,7 @@
                 android:layout_height="70dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/ic_aerobics"
+                android:background="@drawable/ic_stretching"
                 android:contentDescription="@string/pick_carer"
                 android:scaleType="fitCenter"/>
 
@@ -425,7 +440,7 @@
         <com.google.android.material.card.MaterialCardView
             app:cardBackgroundColor="@color/appointment_bg"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:layout_weight="1"
             android:layout_margin="12dp"
             app:strokeColor="@color/white"
@@ -467,7 +482,7 @@
             android:id="@+id/btnGames"
             app:cardBackgroundColor="@color/games_bg"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:layout_weight="1"
             android:layout_margin="10dp"
             app:strokeColor="@color/white"

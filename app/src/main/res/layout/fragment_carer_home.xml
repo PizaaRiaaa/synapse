@@ -122,7 +122,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="Mandaluyong City"
                         android:textSize="13sp"
                         android:fontFamily="@font/redhat_display_medium" />
 
@@ -155,6 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <TextView
@@ -167,7 +167,7 @@
                 android:textColor="@color/grey5"
                 android:textSize="19sp"
                 android:drawablePadding="10dp"
-                app:drawableRightCompat="@drawable/ic_bell" />
+                app:drawableRightCompat="@drawable/ic_bell_black" />
 
             <TextView
                 android:layout_width="match_parent"

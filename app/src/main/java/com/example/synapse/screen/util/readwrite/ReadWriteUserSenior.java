@@ -5,7 +5,7 @@ public class ReadWriteUserSenior {
     public String city;
     public String dob;
     public String firstName;
-    public String imageURL;
+    public String image;
     public String lastName;
     public String middle;
     public String seniorID;
@@ -19,7 +19,7 @@ public class ReadWriteUserSenior {
         this.city = textCity;
         this.dob = textDOB;
         this.firstName = textFirstName;
-        this.imageURL = textImage;
+        this.image = textImage;
         this.lastName = textLastName;
         this.middle = textMiddle;
         this.seniorID = textSeniorID;
@@ -57,12 +57,12 @@ public class ReadWriteUserSenior {
         this.firstName = firstName;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImage(String imageURL) {
+        this.image = imageURL;
     }
 
     public String getLastName() {

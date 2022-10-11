@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,7 +98,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     FloatingActionButton fabAddPhysicalActivity;
     AppCompatEditText etDuration;
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
-    DatabaseReference referenceCompanion, referenceReminders, referenceProfile;
+    DatabaseReference referenceCompanion, referenceReminders, referenceCarer;
     FirebaseUser mUser;
 
     RequestQueue requestQueue;
@@ -104,7 +106,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     RecyclerView recyclerView;
     int count = 0;
     Dialog dialog;
-    String token, time, type_of_activity, seniorID, clickedRepeatBtn, key;
+    String token, time, type_of_activity, seniorID, clickedRepeatBtn;
     boolean isClicked = false;
     ImageView profilePic;
     final Calendar calendar = Calendar.getInstance();
@@ -167,9 +169,8 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         dialog.getWindow().getAttributes().gravity = Gravity.BOTTOM;
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
 
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         requestQueue = Volley.newRequestQueue(getActivity());
@@ -464,6 +465,11 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
 
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     // store schedule for medicine
     void addSchedule() {
         requestCode = (int) getCalendar().getTimeInMillis()/1000;
@@ -474,41 +480,30 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         hashMap.put("RepeatMode", clickedRepeatBtn);
         hashMap.put("RequestCode", requestCode);
 
-        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        seniorID = ds.getKey();
-                        assert seniorID != null;
-                        key = referenceReminders.push().getKey();
-                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            dialog.dismiss();
-                                            tvTime.setText("Add New Physical Activity");
-                                            etDuration.setText("");
-                                            Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
-                                            // start alarm and retrieve the unique id of newly created medicine
-                                            // so we can send it to alert receiver.
-                                            startAlarm(calendar, key);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-            }
+        String key = referenceReminders.push().getKey();
+        referenceReminders
+                .child(getDefaults("seniorKey",getActivity()))
+                .child(mUser.getUid())
+                .child(key)
+                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
+             @Override
+             public void onComplete(@NonNull Task task) {
+                 if (task.isSuccessful()) {
+                     referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
+                         if (task1.isSuccessful()) {
+                             dialog.dismiss();
+                             tvTime.setText("Add New Physical Activity");
+                             etDuration.setText("");
+                             Toast.makeText(getActivity(), "Alarm has been set", Toast.LENGTH_SHORT).show();
+                             // start alarm and retrieve the unique id of newly created medicine
+                             // so we can send it to alert receiver.
+                             startAlarm(calendar, key);
+                         }
+                     });
+                 }
+             }
+         });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(getActivity());
-            }
-        });
     }
 
     // store schedule when add button was clicked
@@ -587,7 +582,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     // display carer's profile pic
     private void showUserProfile(){
         // display carer profile pic
-        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCarer.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);

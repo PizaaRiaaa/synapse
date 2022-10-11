@@ -129,7 +129,7 @@ public class SettingsFragment extends Fragment {
 
         FirebaseAuth user = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        referenceUser = FirebaseDatabase.getInstance().getReference("Users");
+        referenceUser = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         // display carer information
         displayCarerInfo();

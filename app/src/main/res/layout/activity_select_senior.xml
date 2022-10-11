@@ -64,15 +64,34 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/osca_background"/>
 
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="90dp"
+                    android:src="@drawable/osca_logo"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/redhat_display_bold"
-                android:layout_marginBottom="60dp"
-                android:layout_gravity="center"
-                android:textSize="18sp"
+                android:fontFamily="@font/inter_bold"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="center|bottom"
+                android:textSize="40sp"
                 android:textColor="@color/white"
-                android:text="MANDALUYONG CITY"/>
+                android:textAlignment="center"
+                android:text="OSCA"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center|bottom"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:text="© 2022 City of Mandaluyong"/>
 
         </com.google.android.material.card.MaterialCardView>
 

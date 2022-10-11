@@ -5,10 +5,9 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,8 +43,6 @@ import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.notifications.AlertReceiver;
-import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
-import com.example.synapse.screen.util.notifications.FirebaseMessagingService;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
@@ -82,9 +81,9 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     PromptMessage promptMessage = new PromptMessage(); // custom prompt message
     Calendar calendar;
 
-    DatabaseReference referenceProfile, referenceCompanion, referenceRequest, referenceReminders;
+    DatabaseReference referenceCarer, referenceReminders;
     FirebaseUser mUser;
-    String seniorID, token;
+    String seniorID;
 
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun;
     TextView tv1, tv2, tv3, tv4, tv5, tv6, etDose, etName, tvTime;
@@ -155,10 +154,8 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
-        referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceReminders = FirebaseDatabase.getInstance().getReference().child("Medication Reminders");
-        referenceRequest = FirebaseDatabase.getInstance().getReference().child("Request");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         requestQueue = Volley.newRequestQueue(getActivity());
         calendar = Calendar.getInstance();
@@ -231,6 +228,11 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         });
 
         return view;
+    }
+
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 
     @Override
@@ -461,42 +463,35 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         hashMap.put("Color", color);
         hashMap.put("RequestCode", requestCode);
 
-        referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        String key = referenceReminders.push().getKey();
+        referenceReminders
+                .child(getDefaults("seniorKey",getActivity()))
+                .child(mUser.getUid())
+                .child(key)
+                .setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        seniorID = ds.getKey();
-                        assert seniorID != null;
-                        // create unique key
-                        key = referenceReminders.push().getKey();
-                        referenceReminders.child(seniorID).child(mUser.getUid()).child(key).setValue(hashMap).addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                if (task.isSuccessful()) {
-                                    referenceReminders.child(mUser.getUid()).child(seniorID).child(key).setValue(hashMap).addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            dialog.dismiss();
-                                            tvTime.setVisibility(View.INVISIBLE);
-                                            clearDialogText();
-                                            promptMessage.displayMessage(
-                                                    "Success",
-                                                    "Alarm has been set successfully",
-                                                    R.color.dark_green, getActivity());
-                                            // start alarm and retrieve the unique id of newly created medicine
-                                            // so we can send it to alert receiver.
-                                            startAlarm(getCalendar(), key);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    referenceReminders
+                            .child(mUser.getUid())
+                            .child(getDefaults("seniorKey",getActivity()))
+                            .child(key).setValue(hashMap).addOnCompleteListener(task0 -> {
+
+                        if (task0.isSuccessful()) {
+                            dialog.dismiss();
+                            tvTime.setVisibility(View.INVISIBLE);
+                            clearDialogText();
+                            promptMessage.displayMessage(
+                                    "Success",
+                                    "Alarm has been set successfully",
+                                    R.color.dark_green, getActivity());
+                            // start alarm and retrieve the unique id of newly created medicine
+                            // so we can send it to alert receiver.
+                            startAlarm(getCalendar(), key);
+                        }
+                    });
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(getActivity());
             }
         });
     }
@@ -504,47 +499,32 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     // store schedule when add button was clicked
     void addButton(){
         btnAddSchedule.setOnClickListener(v -> {
-            // check if carer has already assigned senior in companion node
-            referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.S)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String pillName = etName.getText().toString();
-                        String pillDose = etDose.getText().toString();
-
-                        if (TextUtils.isEmpty(pillName)) {
-                            Toast.makeText(getActivity(), "Please enter the name of the medicine", Toast.LENGTH_SHORT).show();
-                        } else if (TextUtils.isEmpty(pillDose)) {
-                            Toast.makeText(getActivity(), "Please enter the dose of the medicine", Toast.LENGTH_SHORT).show();
-                        } else if (Objects.equals(pillShape, "")) {
-                            Toast.makeText(getActivity(), "Please pick the shape the medicine", Toast.LENGTH_SHORT).show();
-                        } else if (Objects.equals(color, "")) {
-                            Toast.makeText(getActivity(), "Please pick the color the medicine", Toast.LENGTH_SHORT).show();
-                        } else if (!isClicked) {
-                            Toast.makeText(getActivity(), "Please pick a schedule for the medicine", Toast.LENGTH_SHORT).show();
-                        } else {
-                            addSchedule();
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            if (Build.VERSION.SDK_INT >= 26) {ft.setReorderingAllowed(false);}
-                            ft.detach(MedicationFragment.this).attach(MedicationFragment.this).commit();
-                        }
-                    } else {
-                        dialog.dismiss();
-                        promptMessage.displayMessage("Failed to set a medicine", "Wait for your senior to accept your request before sending notifications", R.color.red_decline_request, getActivity());
-                    }
+            String pillName = etName.getText().toString();
+            String pillDose = etDose.getText().toString();
+            if (TextUtils.isEmpty(pillName)) {
+                Toast.makeText(getActivity(), "Please enter the name of the medicine", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(pillDose)) {
+                Toast.makeText(getActivity(), "Please enter the dose of the medicine", Toast.LENGTH_SHORT).show();
+            } else if (Objects.equals(pillShape, "")) {
+                Toast.makeText(getActivity(), "Please pick the shape the medicine", Toast.LENGTH_SHORT).show();
+            } else if (Objects.equals(color, "")) {
+                Toast.makeText(getActivity(), "Please pick the color the medicine", Toast.LENGTH_SHORT).show();
+            } else if (!isClicked) {
+                Toast.makeText(getActivity(), "Please pick a schedule for the medicine", Toast.LENGTH_SHORT).show();
+            } else {
+                addSchedule();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    ft.setReorderingAllowed(false);
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    promptMessage.defaultErrorMessage(getActivity());
-                }
-            });
+                ft.detach(MedicationFragment.this).attach(MedicationFragment.this).commit();
+            }
         });
     }
 
     // display carer's profile pic
     void showUserProfile(){
-        referenceProfile.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceCarer.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetails userProfile = snapshot.getValue(ReadWriteUserDetails.class);
