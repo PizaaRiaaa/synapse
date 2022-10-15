@@ -1,5 +1,6 @@
 package com.example.synapse.screen.admin.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,11 @@ import android.widget.TextView;
 import com.example.synapse.R;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,9 +40,12 @@ public class HomeFragment extends Fragment {
 
     // Global variables
     PromptMessage promptMessage = new PromptMessage();
-    DatabaseReference totalUsersRef;
+    DatabaseReference totalUsersCarer;
+    DatabaseReference totalUsersSenior;
     DatabaseReference totalBarangay;
     TextView tvTotalUsers, tvTotalBarangay;
+    ArrayList barArraylist;
+    int countSenior, countCarer;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,8 +88,8 @@ public class HomeFragment extends Fragment {
     }
 
     void displayTotalUsers(){
-        Query query_senior = totalUsersRef.orderByChild("userType").equalTo("Senior");
-        Query query_carer = totalUsersRef.orderByChild("userType").equalTo("Carer");
+        Query query_senior = totalUsersSenior;
+        Query query_carer = totalUsersCarer;
         query_senior.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -121,13 +133,47 @@ public class HomeFragment extends Fragment {
     }
 
     void countUsers(String user, TextView textView){
-        Query query = totalUsersRef.orderByChild("userType").equalTo(user);
+        Query query = totalUsersCarer;
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                int count_user = (int) snapshot.getChildrenCount();
                String count = String.valueOf(count_user);
                textView.setText(count);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessage(getActivity());
+            }
+        });
+    }
+
+    void countSenior(TextView textView){
+        Query query = totalUsersSenior;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count_user = (int) snapshot.getChildrenCount();
+                String count = String.valueOf(count_user);
+                textView.setText(count);
+                countSenior = count_user;
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessage(getActivity());
+            }
+        });
+    }
+
+    void countCarer(TextView textView){
+        Query query = totalUsersCarer;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count_user = (int) snapshot.getChildrenCount();
+                String count = String.valueOf(count_user);
+                textView.setText(count);
+                countCarer = count_user;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -144,7 +190,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_home, container,false);
 
-       totalUsersRef = FirebaseDatabase.getInstance().getReference("Users");
+       totalUsersCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+       totalUsersSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
        totalBarangay = FirebaseDatabase.getInstance().getReference("Barangay");
 
        tvTotalUsers = view.findViewById(R.id.tvTotalUsers);
@@ -154,9 +201,30 @@ public class HomeFragment extends Fragment {
 
         displayTotalUsers();
         displayTotalBarangay();
-        countUsers("Senior",tvTotalSeniors);
-        countUsers("Carer",tvTotalCarers);
+       // countUsers("Senior",tvTotalSeniors);
+       // countUsers("Carer",tvTotalCarers);
+
+
+        countSenior(tvTotalSeniors);
+        countCarer(tvTotalCarers);
+
+        getData();
+
+        BarChart barChart = view.findViewById(R.id.barChart);
+        BarDataSet barDataSet = new BarDataSet(barArraylist, "Seniors and Carers");
+        BarData barData = new BarData(barDataSet);
+        barChart.setData(barData);
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(16f);
+        barChart.getDescription().setEnabled(true);
 
         return view;
+    }
+
+    void getData(){
+        barArraylist = new ArrayList();
+        barArraylist.add(new BarEntry(10f, 3));
+        barArraylist.add(new BarEntry(14f, 2));
     }
 }

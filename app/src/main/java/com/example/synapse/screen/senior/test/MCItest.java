@@ -30,7 +30,7 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
     int currentQuestionIndex = 0;
     int ctr = 0;
 
-    int totalQuestion = 5; // number of questions to be generated in front end (4 questions only)
+    int totalQuestion = 15; // number of questions to be generated in front end (4 questions only)
     String selectedAnswer = ""; // user selected answer
 
     @Override
@@ -73,8 +73,8 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
 
             currentProgress += 1;
             progressBar.setProgress(currentProgress);
-            progressBar.setMax(5);
-            countQuestion.setText(currentProgress + " of 5");
+            progressBar.setMax(15);
+            countQuestion.setText(currentProgress + " of 15");
 
             if(selectedAnswer.equals(QuestionAnswer.correctAnswers[currentQuestionIndex])){
                 score++;

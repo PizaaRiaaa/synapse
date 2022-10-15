@@ -85,7 +85,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             pill_shape_color = R.drawable.pill1_white_horizontal;
         }
 
-        builder.setSmallIcon(R.drawable.ic_pill2);
+        builder.setSmallIcon(R.drawable.ic_splash_logo);
         builder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_splash_logo));
         builder.setContentTitle(remoteMessage.getNotification().getTitle());
         builder.setContentText(remoteMessage.getNotification().getBody());
@@ -94,13 +94,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         builder.setColor(getResources().getColor(R.color.white));
         builder.setVibrate(new long[]{0, 1000, 500, 3000});
         builder.setLights(Color.RED, 3000, 3000);
-        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setPriority(Notification.PRIORITY_HIGH);
         builder.setOnlyAlertOnce(true);
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                 .setBigContentTitle(remoteMessage.getNotification().getTitle())
                 .bigPicture(BitmapFactory.decodeResource(this.getResources(), pill_shape_color)));
         builder.setSound(defaultSoundUri);
-        builder.setAutoCancel(true);
+        builder.setAutoCancel(false);
 
         mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 

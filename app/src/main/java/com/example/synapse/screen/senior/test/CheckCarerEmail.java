@@ -73,10 +73,11 @@ public class CheckCarerEmail extends AppCompatActivity {
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         finish();
                     }else {
-                        promptMessage.displayMessage(
-                                "Oops!",
-                                "Your email does not exist. Please try again.", R.color.red1,
-                                CheckCarerEmail.this);
+                       // promptMessage.displayMessage(
+                       //         "Oops!",
+                       //         "Your email does not exist. Please try again.", R.color.red1,
+                       //         CheckCarerEmail.this);
+                       // startActivity(new Intent(CheckCarerEmail.this, CheckCarerEmail.class));
                     }
                 }
             }

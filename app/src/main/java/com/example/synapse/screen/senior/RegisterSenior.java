@@ -431,6 +431,7 @@ public class RegisterSenior extends AppCompatActivity {
 
                                                         Log.d(TAG_1, "Download URL = "+ uri.toString());
 
+
                                                         //Adding that URL to Realtime database
                                                         referenceProfile.child(firebaseUser.getUid()).child("imageURL").setValue(uri.toString());
 
@@ -463,7 +464,6 @@ public class RegisterSenior extends AppCompatActivity {
                                                                         }
                                                                     }
                                                                 });
-
                                                     }
                                                 });
 

@@ -33,6 +33,7 @@ import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -49,16 +50,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Objects;
 
 public class Login extends AppCompatActivity {
-    // Global variables
-    PromptMessage promptMessage = new PromptMessage();
-    static final String TAG = "loginActivity";
-    DatabaseReference referenceCarer, referenceSenior, referenceAssignedSeniors;
+    private PromptMessage promptMessage = new PromptMessage();
+    private static final String TAG = "loginActivity";
+    private DatabaseReference referenceCarer, referenceSenior, referenceAssignedSeniors, referenceAdmin;
+    private FirebaseAuth mAuth;
     EditText etEmail, etPassword;
-    FirebaseAuth mAuth;
+    String textEmail, textPassword;
 
     void authenticateUser(){
-        String textEmail = etEmail.getText().toString();
-        String textPassword = etPassword.getText().toString();
+        textEmail = etEmail.getText().toString();
+        textPassword = etPassword.getText().toString();
         if(TextUtils.isEmpty(textEmail)){
             promptMessage.displayMessage(
                     "Empty field",
@@ -105,9 +106,30 @@ public class Login extends AppCompatActivity {
                                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                                 finish();
                                             }else{
-                                                startActivity(new Intent(Login.this, PromptToRegisterSenior.class));
-                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                                finish();
+                                                // startActivity(new Intent(Login.this, PromptToRegisterSenior.class));
+                                                // overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                // finish();
+                                                // admin
+                                                referenceAdmin.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for(DataSnapshot ds : snapshot.getChildren()){
+                                                            ReadWriteUserDetails rd = snapshot.getValue(ReadWriteUserDetails.class);
+                                                            String userType = rd.getUserType();
+
+                                                            if(userType.equals("Admin")){
+                                                                startActivity(new Intent(Login.this, LoadingScreen.class));
+                                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                                finish();
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
                                             }
                                         }
 
@@ -116,6 +138,7 @@ public class Login extends AppCompatActivity {
 
                                         }
                                     });
+
                                 }
                             }
 
@@ -140,7 +163,6 @@ public class Login extends AppCompatActivity {
                             }
                         });
 
-
                     }else{
                         firebaseUser.sendEmailVerification();
                         mAuth.signOut();
@@ -148,17 +170,30 @@ public class Login extends AppCompatActivity {
                     }
 
                 }else {
+
                     try {
                         throw Objects.requireNonNull(task.getException());
                     } catch (FirebaseAuthInvalidUserException e) {
-                        promptMessage.displayMessage("Error", "User does not exists. Please try again", R.color.red_decline_request, Login.this);
+                        promptMessage.displayMessage(
+                                "Error",
+                                "User does not exists. Please try again",
+                                R.color.red_decline_request,
+                                Login.this);
+                        changeColor();
                         etEmail.requestFocus();
                     } catch (FirebaseAuthInvalidCredentialsException e) {
-                        promptMessage.displayMessage("Error", "Invalid credentials. Kindly, check and re-enter", R.color.red_decline_request, Login.this);
+                        promptMessage.displayMessage(
+                                "Error",
+                                "Invalid credentials. Kindly, check and re-enter",
+                                R.color.red_decline_request,
+                                Login.this);
                         etPassword.requestFocus();
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
-                        promptMessage.displayMessage("Error", e.getMessage(), R.color.red_decline_request, Login.this);
+                        promptMessage.displayMessage(
+                                "Error", e.getMessage(),
+                                R.color.red_decline_request,
+                                Login.this);
                     }
                 }
             }
@@ -221,25 +256,16 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
-        referenceSenior = FirebaseDatabase.getInstance().getReference("Request").child("Seniors");
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
+        referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
 
-        // show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // make status bar transparent
         transparentStatusBar();
-
-        // proceed to PickRole screen
-        tvSwitchToPickRole.setOnClickListener(view -> startActivity(new Intent(Login.this, PickRole.class)));
-
-        // proceed to ForgotPassword screen
-        tvForgotPass.setOnClickListener(view -> startActivity(new Intent(Login.this, CarerVerifyEmail.class)));
-
-        // change substring color
         changeColor();
 
-        // authenticate user
+        tvSwitchToPickRole.setOnClickListener(view -> startActivity(new Intent(Login.this, PickRole.class)));
+        tvForgotPass.setOnClickListener(view -> startActivity(new Intent(Login.this, CarerVerifyEmail.class)));
         btnLogin.setOnClickListener(v -> authenticateUser());
 
         boolean finish = getIntent().getBooleanExtra("finish", false);

@@ -23,6 +23,7 @@ import com.example.synapse.screen.carer.SendRequest;
 import com.example.synapse.screen.carer.verification.OTP;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +38,7 @@ public class Splashscreen extends AppCompatActivity {
     // Global variables
     PromptMessage promptMessage = new PromptMessage();
     private FirebaseAuth mAuth;
-    private DatabaseReference referenceCarer, referenceSenior, referenceCompanion;
+    private DatabaseReference referenceCarer, referenceSenior, referenceAdmin;
     private String userType, checkStatus;
 
     // check if user is already logged in, then direct to their respective home screen
@@ -79,6 +80,27 @@ public class Splashscreen extends AppCompatActivity {
                }
            });
 
+            referenceAdmin.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot ds : snapshot.getChildren()){
+                        ReadWriteUserDetails rd = snapshot.getValue(ReadWriteUserDetails.class);
+                        String userType = rd.getUserType();
+
+                        if(userType.equals("Admin")){
+                            startActivity(new Intent(Splashscreen.this, LoadingScreen.class));
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            finish();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
 
         }
     }
@@ -93,6 +115,7 @@ public class Splashscreen extends AppCompatActivity {
 
         // extracting user reference from firebase nodes
         mAuth = FirebaseAuth.getInstance();
+        referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
 

@@ -73,6 +73,12 @@ public class SelectSenior extends AppCompatActivity {
         editor.apply();
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this, SelectSenior.class);
+        startActivity(intent);
+    }
+
 
     // display all assigned seniors
     void loadAssignedSeniors() {
@@ -82,7 +88,7 @@ public class SelectSenior extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
+                    for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds1 : snapshot.getChildren()) {
                             Query query = ds1.getRef();
 
@@ -127,7 +133,7 @@ public class SelectSenior extends AppCompatActivity {
                                            // SharedPreferences.Editor editor = sharedPref.edit();
                                            // editor.putString("userKey", getRef(position).getKey());
                                            // editor.apply();
-                                            setDefaults("seniorKey",ds.getKey(),getApplicationContext());
+                                            setDefaults("seniorKey", ignored.getKey(),getApplicationContext());
                                             startActivity(new Intent(SelectSenior.this, CarerMainActivity.class));
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         }
