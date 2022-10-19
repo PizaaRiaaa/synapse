@@ -17,7 +17,7 @@
         android:fontFamily="@font/inter_bold"
         android:textColor="@color/grey5"
         android:textSize="20sp"
-        android:text="1 of 5"
+        android:text="1 of 15"
         android:layout_gravity="center"/>
 
     <ProgressBar

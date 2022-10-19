@@ -476,7 +476,8 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                     referenceReminders
                             .child(mUser.getUid())
                             .child(getDefaults("seniorKey",getActivity()))
-                            .child(key).setValue(hashMap).addOnCompleteListener(task0 -> {
+                            .child(key)
+                            .setValue(hashMap).addOnCompleteListener(task0 -> {
 
                         if (task0.isSuccessful()) {
                             dialog.dismiss();

@@ -3,7 +3,6 @@ package com.example.synapse.screen.carer.verification;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.synapse.R;
-import com.example.synapse.screen.carer.RegisterCarer;
 import com.example.synapse.screen.util.PromptMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

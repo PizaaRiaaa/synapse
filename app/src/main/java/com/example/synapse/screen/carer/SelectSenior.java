@@ -83,15 +83,13 @@ public class SelectSenior extends AppCompatActivity {
     // display all assigned seniors
     void loadAssignedSeniors() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
+        DatabaseReference referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference().child("AssignedSeniors");
         referenceAssignedSeniors.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot ignored : snapshot.getChildren()) {
-                        for (DataSnapshot ds1 : snapshot.getChildren()) {
-                            Query query = ds1.getRef();
-
+                    DatabaseReference dsf = snapshot.getRef();
+                            Query query = dsf.getRef();
                             FirebaseRecyclerOptions<ReadWriteUserSenior> options = new FirebaseRecyclerOptions.Builder<ReadWriteUserSenior>().setQuery(query, ReadWriteUserSenior.class).build();
                             FirebaseRecyclerAdapter<ReadWriteUserSenior, SeniorViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteUserSenior, SeniorViewHolder>(options) {
                                 @Override
@@ -125,15 +123,15 @@ public class SelectSenior extends AppCompatActivity {
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                           // Intent intent = new Intent(SelectSenior.this, CarerMainActivity.class);
-                                           // intent.putExtra("userKey", getRef(position).getKey());
-                                           // startActivity(intent);
+                                            Intent intent = new Intent(SelectSenior.this, CarerMainActivity.class);
+                                            intent.putExtra("userKey", getRef(position).getKey());
+                                            startActivity(intent);
 
-                                           // SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                                           // SharedPreferences.Editor editor = sharedPref.edit();
-                                           // editor.putString("userKey", getRef(position).getKey());
-                                           // editor.apply();
-                                            setDefaults("seniorKey", ignored.getKey(),getApplicationContext());
+                                            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                            editor.putString("userKey", getRef(position).getKey());
+                                            editor.apply();
+                                            setDefaults("seniorKey", model.getSeniorID(),getApplicationContext());
                                             startActivity(new Intent(SelectSenior.this, CarerMainActivity.class));
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         }
@@ -149,9 +147,7 @@ public class SelectSenior extends AppCompatActivity {
                             };
                             adapter.startListening();
                             recyclerView.setAdapter(adapter);
-                        }
                     }
-                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -9,20 +9,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:background="#565555"
         android:padding="5dp"
         android:layout_gravity="center_horizontal">
 
-        <ImageButton
+        <TextView
             android:id="@+id/ibBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
             android:backgroundTint="#565555"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_menu" />
+            android:text="Sign out"
+            android:drawableStart="@drawable/ic_signout"
+            android:drawablePadding="15dp"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tvSample"
@@ -37,11 +41,10 @@
 
         <ImageView
             android:id="@+id/ivProfilePic"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/carer_profile_pic"
             android:backgroundTint="@color/carer_profile_pic"
             android:contentDescription="Carer profile pic"
@@ -51,7 +54,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="300dp">
+        android:layout_height="200dp">
 
         <com.google.android.material.card.MaterialCardView
             app:cardBackgroundColor="@color/black"
@@ -60,38 +63,28 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/osca_background"/>
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="90dp"
-                    android:src="@drawable/osca_logo"/>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="60dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/osca_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_bold"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="2dp"
                 android:layout_gravity="center|bottom"
                 android:textSize="40sp"
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:text="OSCA"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold"
-                android:layout_marginBottom="5dp"
-                android:layout_gravity="center|bottom"
-                android:textSize="13sp"
-                android:textColor="@color/white"
-                android:textAlignment="center"
-                android:text="© 2022 City of Mandaluyong"/>
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -101,15 +94,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select your senior"
-        android:layout_margin="20dp"
-        android:textSize="20sp"/>
+        android:textColor="@color/grey7"
+        android:fontFamily="@font/inter_bold"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="18sp"/>
 
     <!-- recycle view for current carer assigned seniors -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_seniors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal" />
 
 </LinearLayout>

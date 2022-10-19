@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 public class CheckCarerEmail extends AppCompatActivity {
     PromptMessage promptMessage = new PromptMessage();
     TextInputEditText text_email;
+    String userEmail;
 
     void registerButton(){
         MaterialButton btn = findViewById(R.id.btnRegisterSenior);
@@ -72,13 +73,13 @@ public class CheckCarerEmail extends AppCompatActivity {
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         finish();
-                    }else {
-                       // promptMessage.displayMessage(
-                       //         "Oops!",
-                       //         "Your email does not exist. Please try again.", R.color.red1,
-                       //         CheckCarerEmail.this);
-                       // startActivity(new Intent(CheckCarerEmail.this, CheckCarerEmail.class));
+                    }else if(!encodeUserEmail(rw.getEmail()).equals(encodeUserEmail(email))){
+                        Toast.makeText(
+                                CheckCarerEmail.this,
+                                "Oops! Your email does not exist. Please try again. ",
+                                Toast.LENGTH_SHORT).show();
                     }
+
                 }
             }
 
@@ -87,7 +88,6 @@ public class CheckCarerEmail extends AppCompatActivity {
 
             }
         });
-
     }
 
     @Override

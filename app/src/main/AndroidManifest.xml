@@ -27,7 +27,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".screen.carer.PromptToRegisterSenior"
+            android:name=".screen.carer.register.PromptToRegisterSenior"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -132,7 +132,7 @@
             android:name=".screen.senior.RegisterSenior"
             android:exported="false" />
         <activity
-            android:name=".screen.carer.RegisterCarer"
+            android:name=".screen.carer.register.RegisterCarer"
             android:exported="false" />
         <activity
             android:name=".screen.PickRole"

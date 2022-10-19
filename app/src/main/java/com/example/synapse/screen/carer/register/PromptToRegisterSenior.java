@@ -1,4 +1,4 @@
-package com.example.synapse.screen.carer;
+package com.example.synapse.screen.carer.register;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;

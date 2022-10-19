@@ -61,8 +61,8 @@ public class ReadWriteUserSenior {
         return image;
     }
 
-    public void setImage(String imageURL) {
-        this.image = imageURL;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getLastName() {

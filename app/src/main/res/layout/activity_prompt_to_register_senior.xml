@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
-    tools:context=".screen.carer.PromptToRegisterSenior">
+    tools:context=".screen.carer.register.PromptToRegisterSenior">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogout"
