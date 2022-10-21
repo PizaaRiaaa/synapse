@@ -73,13 +73,7 @@ public class CheckCarerEmail extends AppCompatActivity {
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         finish();
-                    }else if(!encodeUserEmail(rw.getEmail()).equals(encodeUserEmail(email))){
-                        Toast.makeText(
-                                CheckCarerEmail.this,
-                                "Oops! Your email does not exist. Please try again. ",
-                                Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
 

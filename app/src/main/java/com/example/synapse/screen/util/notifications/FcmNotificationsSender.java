@@ -1,8 +1,6 @@
 package com.example.synapse.screen.util.notifications;
 
-import android.app.Activity;
 import android.content.Context;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;

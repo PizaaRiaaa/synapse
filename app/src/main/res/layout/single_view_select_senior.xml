@@ -8,7 +8,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="140dp"
         android:layout_margin="10dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/search_view_stroke"
@@ -21,7 +21,7 @@
             android:background="@drawable/horizontal_bg_3"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivSeniorProfilePic"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -38,12 +38,20 @@
                 android:layout_marginStart="30dp"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="18dp"
+                    android:src="@drawable/ic_settings_no_bg"/>
+
                 <TextView
                     android:id="@+id/tvSeniorFullName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/redhat_display_bold"
+                    android:text="Rikki Mae Martinez"
                     android:textColor="@color/grey5"
                     android:textSize="15sp" />
 
@@ -53,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/redhat_display_medium"
+                    android:text="Brgy. Daang Bakal"
                     android:textColor="@color/grey5"
                     android:textSize="13sp" />
 
@@ -61,8 +70,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/grey5"
                     android:fontFamily="@font/redhat_display_semibold"
+                    android:text="Mandaluyong City"
+                    android:textColor="@color/grey5"
                     android:textSize="13sp" />
 
                 <TextView
@@ -71,13 +81,27 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="4dp"
-                    android:fontFamily="@font/redhat_display_bold"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:text="76 yrs"
                     android:textColor="@color/grey5"
                     android:textSize="15sp" />
+
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btnMedication"
+            android:layout_width="100dp"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom|end"
+            android:background="#C8C8C8"
+            android:clickable="true"
+            android:focusable="true"
+            app:contentPadding="9dp"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
+            app:srcCompat="@drawable/ic_down_right" />
 
     </com.google.android.material.card.MaterialCardView>
 

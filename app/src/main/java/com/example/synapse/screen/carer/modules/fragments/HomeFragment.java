@@ -199,7 +199,6 @@ public class HomeFragment extends Fragment {
                         imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
                         Picasso.get()
                                .load(imageURL)
-                               .fit()
                                .transform(new CropCircleTransformation())
                                .into(ivSeniorProfilePic);
                     }

@@ -70,7 +70,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 this, 1,
                 resultIntent, PendingIntent.FLAG_IMMUTABLE);
 
-
        // String pill_color = resultIntent.getExtras().getString("pill_color");
        // String pill_shape = resultIntent.getExtras().getString("pill_shape");
 
@@ -81,8 +80,90 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String tag = remoteMessage.getNotification().getTag();
         int pill_shape_color = 0;
 
-        if(tag.equals("Pill1White")){
-            pill_shape_color = R.drawable.pill1_white_horizontal;
+       // displayMedicine(tag);
+
+        switch (tag) {
+            case "Pill1White":
+                pill_shape_color = R.drawable.pill1_white_horizontal;
+                break;
+            case "Pill2Blue":
+                pill_shape_color = R.drawable.pill1_blue_horizontal;
+                break;
+            case "Pill1Brown":
+                pill_shape_color = R.drawable.pill1_brown_horizontal;
+                break;
+            case "Pill1Green":
+                pill_shape_color = R.drawable.pill1_green_horizontal;
+                break;
+            case "Pill1Pink":
+                pill_shape_color = R.drawable.pill1_pink_horizontal;
+                break;
+            case "Pill1Red":
+                pill_shape_color = R.drawable.pill1_red_horizontal;
+                break;
+        }
+
+        switch (tag) {
+            case "Pill2White":
+                pill_shape_color = R.drawable.pill2_white;
+                break;
+            case "Pill2Blue":
+                pill_shape_color = R.drawable.pill2_blue;
+                break;
+            case "Pill2Brown":
+                pill_shape_color = R.drawable.pill2_brown;
+                break;
+            case "Pill2Green":
+                pill_shape_color = R.drawable.pill2_green;
+                break;
+            case "Pill2Pink":
+                pill_shape_color = R.drawable.pill2_pink;
+                break;
+            case "Pill2Red":
+                pill_shape_color = R.drawable.pill2_red;
+                break;
+        }
+
+        switch (tag) {
+            case "Pill3White":
+                pill_shape_color = R.drawable.pill3_white_horizontal;
+                break;
+            case "Pill3Blue":
+                pill_shape_color = R.drawable.pill3_blue_horizontal;
+                break;
+            case "Pill3Brown":
+                pill_shape_color = R.drawable.pill3_brown_horizontal;
+                break;
+            case "Pill3Green":
+                pill_shape_color = R.drawable.pill3_green_horizontal;
+                break;
+            case "Pill3Pink":
+                pill_shape_color = R.drawable.pill3_pink_horizontal;
+                break;
+            case "Pill3Red":
+                pill_shape_color = R.drawable.pill3_red_horizontal;
+                break;
+        }
+
+        switch (tag) {
+            case "Pill4White":
+                pill_shape_color = R.drawable.pill4_white_horizontal;
+                break;
+            case "Pill4Blue":
+                pill_shape_color = R.drawable.pill4_blue_horizontal;
+                break;
+            case "Pill4Brown":
+                pill_shape_color = R.drawable.pill4_brown_horizontal;
+                break;
+            case "Pill4Green":
+                pill_shape_color = R.drawable.pill4_green_horizontal;
+                break;
+            case "Pill4Pink":
+                pill_shape_color = R.drawable.pill4_pink_horizontal;
+                break;
+            case "Pill4Red":
+                pill_shape_color = R.drawable.pill4_red_horizontal;
+                break;
         }
 
         builder.setSmallIcon(R.drawable.ic_splash_logo);
@@ -94,7 +175,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         builder.setColor(getResources().getColor(R.color.white));
         builder.setVibrate(new long[]{0, 1000, 500, 3000});
         builder.setLights(Color.RED, 3000, 3000);
-        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setPriority(Notification.PRIORITY_MAX);
         builder.setOnlyAlertOnce(true);
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                 .setBigContentTitle(remoteMessage.getNotification().getTitle())
@@ -126,63 +207,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         mp.start();
     }
 
-    void displayMedicine(String color, String shape){
+    void displayMedicine(String strTag){
 
-        if(color.equals("White") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_white_horizontal;
-        }else if(color.equals("Blue") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_blue_horizontal;
-        }else if(color.equals("Brown") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_brown_horizontal;
-        }else if(color.equals("Green") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_green_horizontal;
-        }else if(color.equals("Pink") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_pink_horizontal;
-        }else if(color.equals("Red") && shape.equals("Pill1")){
-            pill_shape_color = R.drawable.pill1_red_horizontal;
-        }
 
-        if(color.equals("White") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_white;
-        }else if(color.equals("Blue") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_blue;
-        }else if(color.equals("Brown") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_brown;
-        }else if(color.equals("Green") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_green;
-        }else if(color.equals("Pink") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_pink;
-        }else if(color.equals("Red") && shape.equals("Pill2")){
-            pill_shape_color = R.drawable.pill2_red;
-        }
-
-        if(color.equals("White") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_white_horizontal;
-        }else if(color.equals("Blue") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_blue_horizontal;
-        }else if(color.equals("Brown") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_brown_horizontal;
-        }else if(color.equals("Green") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_green_horizontal;
-        }else if(color.equals("Pink") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_pink_horizontal;
-        }else if(color.equals("Red") && shape.equals("Pill3")){
-            pill_shape_color = R.drawable.pill3_red_horizontal;
-        }
-
-        if(color.equals("White") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_white_horizontal;
-        }else if(color.equals("Blue") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_blue_horizontal;
-        }else if(color.equals("Brown") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_brown_horizontal;
-        }else if(color.equals("Green") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_green_horizontal;
-        }else if(color.equals("Pink") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_pink_horizontal;
-        }else if(color.equals("Red") && shape.equals("Pill4")){
-            pill_shape_color = R.drawable.pill4_red_horizontal;
-        }
 
     }
 }

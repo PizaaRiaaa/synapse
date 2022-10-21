@@ -1,6 +1,5 @@
 package com.example.synapse.screen.util.notifications;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,11 +13,9 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;

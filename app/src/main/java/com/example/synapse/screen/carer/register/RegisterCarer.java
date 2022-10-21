@@ -51,6 +51,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -169,8 +171,12 @@ public class RegisterCarer extends AppCompatActivity {
         // open date picker
         initDatePicker();
         dropdown_dob.setOnClickListener(v -> {
-            dropdown_dob.setText(getTodaysDate());
+            Calendar calendar = Calendar.getInstance();
+            // 18yrs and above 2022 - 18 = 2004
+            calendar.add(Calendar.YEAR, - 18);
+            datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
             datePickerDialog.show();
+            dropdown_dob.setText(getTodaysDate());
         });
 
         etFirstName.addTextChangedListener(textWatcher);
@@ -326,10 +332,6 @@ public class RegisterCarer extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
         }
     };
-
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
 
     // register user using the credentials given
     private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB,

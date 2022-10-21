@@ -115,7 +115,6 @@ public class SelectSenior extends AppCompatActivity {
 
                                     Picasso.get()
                                             .load(model.getImage())
-                                            .fit()
                                             .transform(new CropCircleTransformation())
                                             .into(holder.image);
 

@@ -195,6 +195,13 @@ public class RegisterSenior extends AppCompatActivity {
         // open date picker
         initDatePicker();
         dropdown_dob.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            // 60yrs and above 2022 - 60 = 1962
+            calendar.add(Calendar.YEAR, - 60);
+            dropdown_dob.setText(getTodaysDate());
+            datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+            datePickerDialog.show();
+
            dropdown_dob.setText(getTodaysDate());
            datePickerDialog.show();
         });
@@ -375,10 +382,6 @@ public class RegisterSenior extends AppCompatActivity {
         return month + " " + day + " " + year;
     }
 
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
-
     // register User using the credentials given
     private void signupUser(String textFirstName, String textMiddle, String textLastName, String textEmail, String textMobileNumber, String textPassword, String textDOB, String textAddress, String textCity,
                             String textGender, String userType, String imageURL, String textToken, String textDateCreated){
@@ -404,9 +407,6 @@ public class RegisterSenior extends AppCompatActivity {
 
                             // store profile picture of carer
                             storageReference = FirebaseStorage.getInstance().getReference("ProfilePics");
-
-
-                            Toast.makeText(RegisterSenior.this, " " + firebaseUser.getUid(), Toast.LENGTH_SHORT).show();
 
                             referenceProfile.child(firebaseUser.getUid()).setValue(writeUserDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -461,10 +461,6 @@ public class RegisterSenior extends AppCompatActivity {
                                                                         }
                                                                     }
                                                                 });
-
-
-
-
                                                     }
                                                 });
 
@@ -511,11 +507,6 @@ public class RegisterSenior extends AppCompatActivity {
                         }
                     }
                 });
-    }
-
-    void assignedCarerToSenior(){
-        // store senior in carer's module
-
     }
 
     private void openFileChooser(){

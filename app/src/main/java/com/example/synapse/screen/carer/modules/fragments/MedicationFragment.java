@@ -230,11 +230,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         return view;
     }
 
-    public static String getDefaults(String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, null);
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // layout for recycle view
@@ -259,52 +254,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
-
-    // listen if alarm is currently running so we can send notification to senior
-  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-  //      @Override
-  //      public void onReceive(Context context, Intent intent) {
-  //          if (intent != null) {
-  //              Intent fcm_intent = new Intent(getActivity(), FirebaseMessagingService.class);
-  //              fcm_intent.putExtra("Medication",1);
-  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-  //                  @Override
-  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                      for (DataSnapshot ds : snapshot.getChildren()) {
-  //                          seniorID = ds.getKey();
-  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-  //                              @Override
-  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-  //                                  token = seniorProfile.getToken();
-
-  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-  //                                          "Medicine Reminder",
-  //                                          "It's time to take your medicine",
-  //                                          getActivity());
-  //                                  notificationsSender.SendNotifications();
-  //                              }
-  //                              @Override
-  //                              public void onCancelled(@NonNull DatabaseError error) {
-  //                                  promptMessage.defaultErrorMessage(getActivity());
-  //                              }
-  //                          });
-  //                      }
-  //                  }
-  //                  @Override
-  //                  public void onCancelled(@NonNull DatabaseError error) {
-  //                      promptMessage.defaultErrorMessage(getActivity());
-  //                  }
-  //              });
-  //          }
-  //      }
-  //  };
-
-//   @Override
-//   public void onDestroy() {
-//       super.onDestroy();
-//       getActivity().unregisterReceiver(broadcastReceiver);
-//   }
 
     // increment for dose input
     void increment(View v) {
@@ -450,6 +399,11 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         // alarmManager.setExact(AlarmManager.RTC_WAKEUP,
         //         calendar.getTimeInMillis() ,
         //         pendingIntent);
+    }
+
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 
     // store schedule for medicine
