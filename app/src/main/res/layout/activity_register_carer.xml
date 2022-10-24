@@ -24,16 +24,6 @@
             android:contentDescription="@string/back"
             android:src="@drawable/ic_back" />
 
-        <!--<TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_weight="5.5"
-            android:fontFamily="@font/redhat_display_semibold"
-            android:text="Carer"
-            android:textAlignment="center"
-            android:textColor="@color/grey7"
-            android:textSize="22sp" />-->
         <ImageView
             android:layout_width="0dp"
             android:layout_height="100dp"
@@ -128,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="First Name"
+                android:hint="First Name *"
                 android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
@@ -167,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Middle"
+                    android:hint="Middle *"
                     android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
                     android:paddingTop="35dp"
                     android:textColorHint="@color/grey4"
@@ -196,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Last Name"
+                    android:hint="Last Name *"
                     android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
                     android:paddingTop="35dp"
                     android:textColorHint="@color/grey4"
@@ -222,7 +212,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:layout_marginEnd="10dp"
                 app:errorEnabled="true"
                 app:endIconMode="clear_text"
@@ -237,7 +227,7 @@
                     android:drawableEnd="@drawable/ic_dropdown"
                     android:fontFamily="@font/redhat_display_regular"
                     android:inputType="none"
-                    android:hint="Date of Birth"
+                    android:hint="Date of Birth *"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
                     android:textSize="18sp"
@@ -268,7 +258,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_text_login"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Gender"
+                    android:hint="Gender *"
                     android:inputType="none"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
@@ -294,14 +284,14 @@
                 android:id="@+id/etCarerEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword|textEmailAddress"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="@string/email_address"
-                app:boxStrokeWidthFocused="0dp"
+                android:hint="Email *"
+                android:inputType="textVisiblePassword|textEmailAddress"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:boxStrokeWidthFocused="0dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- address -->
@@ -325,7 +315,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="Address"
+                android:hint="Address *"
                 android:inputType="textCapWords|textVisiblePassword"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
@@ -358,12 +348,21 @@
                 android:fontFamily="@font/redhat_display_regular"
                 android:drawableStart="@drawable/ic_ph_flag"
                 android:drawablePadding="10dp"
-                android:hint="+63   Mobile Number"
+                android:hint="+63   Mobile Number *"
                 app:boxStrokeWidthFocused="0dp"
                 android:padding="20dp"
                 android:textColorHint="@color/grey4"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etCarerMobileNumber"
+                android:textSize="12sp"
+                android:text="* e.g. 09166992880"/>
+
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <!-- password -->
         <com.google.android.material.textfield.TextInputLayout
@@ -385,13 +384,21 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_text_login"
                 android:fontFamily="@font/redhat_display_regular"
-                android:hint="@string/login_password"
+                android:hint="Password *"
                 android:inputType="textPassword"
                 android:maxLength="20"
                 android:paddingTop="35dp"
                 android:textColorHint="@color/grey4"
                 android:textSize="18sp"
                 app:boxStrokeWidthFocused="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etRegisterCarerPassword"
+                android:textSize="12sp"
+                android:text="* Atleast 6 charaters, 1 upper case, and 1  number"/>
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -400,19 +407,38 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/cbAgree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="13sp"
-            android:text="By signing up, you agrees to our Terms \n and Data Policy"/>
+                <CheckBox
+                    android:id="@+id/cbAgree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textAlignment="center"
+                   android:textSize="12sp"
+                   android:text="I agree to the "/>
+
+                <TextView
+                    android:id="@+id/termsAndDataPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#049599"
+                    android:text="Terms and Data Policy"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

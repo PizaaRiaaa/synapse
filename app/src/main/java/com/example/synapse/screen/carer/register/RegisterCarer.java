@@ -25,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.PickRole;
@@ -109,8 +110,6 @@ public class RegisterCarer extends AppCompatActivity {
            textDateCreated,
            user_token;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +118,7 @@ public class RegisterCarer extends AppCompatActivity {
         ImageButton ibBack = findViewById(R.id.ibRegisterCarerBack);
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_carer_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupCarer);
+        TextView termsAndDataPolicy = findViewById(R.id.termsAndDataPolicy);
         progressBar = findViewById(R.id.progressBarRegister);
         cbAgree = findViewById(R.id.cbAgree);
         etFirstName = findViewById(R.id.etCarerFirstName);
@@ -141,7 +141,6 @@ public class RegisterCarer extends AppCompatActivity {
         tilMobileNumber = findViewById(R.id.tilMobileNumber);
         tilPassword = findViewById(R.id.tilPassword);
 
-        // get user token
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -162,13 +161,10 @@ public class RegisterCarer extends AppCompatActivity {
         ArrayAdapter<String> itemAdapter2 = new ArrayAdapter<>(RegisterCarer.this, R.layout.dropdown_items, gender);
         autocompleteGender.setAdapter(itemAdapter2);
 
-        // (ImageButton) bring user back to PickRole screen
         ibBack.setOnClickListener(view -> startActivity(new Intent(RegisterCarer.this, PickRole.class)));
-
-        // open file dialog for profile pic
         chooseProfilePic.setOnClickListener(view -> openFileChooser());
+        termsAndDataPolicy.setOnClickListener(view -> startActivity(new Intent(RegisterCarer.this, TermsAndDataPolicy.class)));
 
-        // open date picker
         initDatePicker();
         dropdown_dob.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -176,7 +172,7 @@ public class RegisterCarer extends AppCompatActivity {
             calendar.add(Calendar.YEAR, - 18);
             datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
             datePickerDialog.show();
-            dropdown_dob.setText(getTodaysDate());
+           // dropdown_dob.setText(getTodaysDate());
         });
 
         etFirstName.addTextChangedListener(textWatcher);
@@ -186,9 +182,9 @@ public class RegisterCarer extends AppCompatActivity {
         etAddress.addTextChangedListener(textWatcher);
         etMobileNumber.addTextChangedListener(textWatcher);
         etPassword.addTextChangedListener(textWatcher);
-
         btnSignup.setOnClickListener(v -> checkValidation());
     }
+
     String getTodaysDate(){
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -241,7 +237,7 @@ public class RegisterCarer extends AppCompatActivity {
         textDateCreated = timestamp.toString();
 
         // validate mobile number using matcher and regex
-        String mobileRegex = "^(9|\\+639)\\d{9}$"; // first no. can be {09 or +639} and rest 9 no. can be any no.
+        String mobileRegex = "^(09|\\+639)\\d{9}$"; // first no. can be {09 or +639} and rest 9 no. can be any no.
         Matcher mobileMatcher;
         Pattern mobilePattern = Pattern.compile(mobileRegex);
         mobileMatcher = mobilePattern.matcher(etMobileNumber.getText());
@@ -453,7 +449,7 @@ public class RegisterCarer extends AppCompatActivity {
             uriImage = data.getData();
             Picasso.get()
                     .load(uriImage)
-                    .fit()
+                    //.fit()
                     .transform(new CropCircleTransformation())
                     .into(ivProfilePic);
         }

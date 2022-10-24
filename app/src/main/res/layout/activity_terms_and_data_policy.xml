@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".screen.carer.register.TermsAndDataPolicy">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_terms"/>
+
+    <TextView
+        android:fontFamily="@font/redhat_display_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@color/dark_green"
+        android:layout_marginTop="20sp"
+        android:layout_marginStart="10dp"
+        android:text="Terms of Service"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:orientation="vertical">
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="1. Terms and Conditions"
+           android:fontFamily="@font/redhat_display_bold"
+           android:textColor="@color/grey7"
+           android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey4"
+            android:layout_marginTop="20dp"
+            android:text="Don\'t misuse our Services. You may use our Services only as permitted by law, including applicable export and re-export control laws and regulations. We may suspend or stop providing our Services to you if you do not comply with our terms or policies if we are investigating suspected misconduct."/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="2. Privacy Policy"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey7"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey4"
+            android:layout_marginTop="20dp"
+            android:text="If you prefer not to have you data used for this application, you can opt-out at anytime. The user agrees that Synapse may use, process and/or host customer confidential information/data such as email address, mobile number, address etc.."/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="3. Eligibility"
+            android:fontFamily="@font/redhat_display_bold"
+            android:textColor="@color/grey7"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_regular"
+            android:textColor="@color/grey4"
+            android:layout_marginTop="20dp"
+            android:text="The Service is designed for use by carer who are atleast 18 years old, while for senior who are atleast 60 years old. You promise to use that you have never been suspended from the Service, and promise that your use of the Service won't break any laws and regulations."/>
+
+    </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClose"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_margin="25dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            app:backgroundTint="@color/dark_green"
+            android:enabled="true"
+            android:text="Close"
+            app:cornerRadius="15dp"
+            android:textSize="10sp" />
+
+</LinearLayout>

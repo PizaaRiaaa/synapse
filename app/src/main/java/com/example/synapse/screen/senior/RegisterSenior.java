@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import com.example.synapse.R;
 import com.example.synapse.screen.PickRole;
+import com.example.synapse.screen.carer.register.RegisterCarer;
+import com.example.synapse.screen.carer.register.TermsAndDataPolicy;
 import com.example.synapse.screen.carer.verification.OTP;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
@@ -50,6 +52,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -127,6 +130,7 @@ public class RegisterSenior extends AppCompatActivity {
 
         AppCompatImageView chooseProfilePic = findViewById(R.id.ic_senior_choose_profile_pic);
         Button btnSignup = findViewById(R.id.btnSignupSenior);
+        TextView termsAndDataPolicy = findViewById(R.id.termsAndDataPolicy);
         progressBar = findViewById(R.id.progressBarRegister);
         autocompleteBarangay = findViewById(R.id.drop_barangay);
         autocompleteGender = findViewById(R.id.drop_gender);
@@ -180,7 +184,6 @@ public class RegisterSenior extends AppCompatActivity {
         ArrayAdapter<String> itemAdapter2 = new ArrayAdapter<>(RegisterSenior.this, R.layout.dropdown_items, gender);
         autocompleteGender.setAdapter(itemAdapter2);
 
-        // bring user back to PickRole screen
         ImageButton ibBack = findViewById(R.id.ibRegisterSeniorBack);
         ibBack.setOnClickListener(view -> startActivity(new Intent(RegisterSenior.this, PickRole.class)));
 
@@ -198,12 +201,12 @@ public class RegisterSenior extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             // 60yrs and above 2022 - 60 = 1962
             calendar.add(Calendar.YEAR, - 60);
-            dropdown_dob.setText(getTodaysDate());
+           // dropdown_dob.setText(getTodaysDate());
             datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
             datePickerDialog.show();
 
-           dropdown_dob.setText(getTodaysDate());
-           datePickerDialog.show();
+            //dropdown_dob.setText(getTodaysDate());
+            datePickerDialog.show();
         });
 
         etFirstName.addTextChangedListener(textWatcher);
@@ -217,7 +220,7 @@ public class RegisterSenior extends AppCompatActivity {
         etPassword.addTextChangedListener(textWatcher);
 
         btnSignup.setOnClickListener(v -> checkValidation());
-
+        termsAndDataPolicy.setOnClickListener(view -> startActivity(new Intent(RegisterSenior.this, TermsAndDataPolicy.class)));
         isAppRunning();
     }
 
@@ -524,7 +527,7 @@ public class RegisterSenior extends AppCompatActivity {
             uriImage = data.getData();
             Picasso.get()
                     .load(uriImage)
-                    .fit()
+                    //.fit()
                     .transform(new CropCircleTransformation())
                     .into(ivProfilePic);
         }

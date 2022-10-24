@@ -3,7 +3,6 @@ package com.example.synapse.screen.senior;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import com.example.synapse.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -15,23 +14,44 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
-
+import com.google.android.material.card.MaterialCardView;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MyLocation extends AppCompatActivity {
 
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
+    TextView tvCurrentLocation;
+    String latitude, longtitude, addresss, city, country;
+    File imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +60,15 @@ public class MyLocation extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        MaterialCardView btnGetLocation = findViewById(R.id.btnGetLocation);
+        MaterialCardView btnLocationDetails = findViewById(R.id.bottomLocation);
+        MaterialCardView btnScreenshot = findViewById(R.id.screenShot);
+        tvCurrentLocation = findViewById(R.id.tvCurrentLocation);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE},
+                PackageManager.PERMISSION_GRANTED);
 
         // initialized fused location
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -51,12 +80,29 @@ public class MyLocation extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(MyLocation.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-
         }
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        btnGetLocation.setOnClickListener(v -> getCurrentLocation());
+        btnLocationDetails.setOnClickListener(v -> locationDetails());
+        btnScreenshot.setOnClickListener(v -> {
+            //View v1 = getWindow().getDecorView().getRootView();
+            //v1.setDrawingCacheEnabled(true);
+            //v1.buildDrawingCache();
+            //share(screenShot(v1));
+            takeAndShareScreenshot();
+        });
     }
 
     private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -82,13 +128,24 @@ public class MyLocation extends AppCompatActivity {
                                     .title("I am here");
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                             googleMap.addMarker(options);
+                            Geocoder geocoder = new Geocoder(MyLocation.this, Locale.getDefault());
+                            List<Address> current_address = null;
+                            try {
+                                current_address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            tvCurrentLocation.setText(current_address.get(0).getAddressLine(0));
+                            latitude = String.valueOf(current_address.get(0).getLatitude());
+                            longtitude = String.valueOf(current_address.get(0).getLongitude());
+                            city = current_address.get(0).getLocality();
+                            country = current_address.get(0).getCountryName();
+                            addresss = current_address.get(0).getAddressLine(0);
                         }
                     });
                 }
             }
         });
-
-
     }
 
     @Override
@@ -100,4 +157,80 @@ public class MyLocation extends AppCompatActivity {
             }
         }
     }
+
+    void locationDetails(){
+        new AlertDialog.Builder(this)
+                .setTitle("Your Current Location")
+                .setMessage("Lattitude: " + latitude + "\n" +
+                        "Longtitude: " + longtitude + "\n" +
+                        "Address: " + addresss + "\n" +
+                        "Country: " + country + "\n" +
+                        "City: " + city + "\n")
+                .setPositiveButton("Close",(dialogInterface, i) -> dialogInterface.cancel())
+                .setCancelable(false)
+                .show();
+    }
+
+  //  private Bitmap screenShot(View view) {
+  //      Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
+  //      Canvas canvas = new Canvas(bitmap);
+  //      view.layout(0, 0, view.getLayoutParams().width, view.getLayoutParams().height);
+  //      view.draw(canvas);
+  //      return bitmap;
+  //  }
+
+  //  private void share(Bitmap bitmap){
+  //      String pathofBmp=
+  //              MediaStore.Images.Media.insertImage(this.getContentResolver(),
+  //                      bitmap,"My Current Location", null);
+  //      Uri uri = Uri.parse(pathofBmp);
+  //      Intent shareIntent = new Intent(Intent.ACTION_SEND);
+  //      shareIntent.setType("image/*");
+  //      shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Synapse-My-Current-Location");
+  //      shareIntent.putExtra(Intent.EXTRA_TEXT, "");
+  //      shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+  //      this.startActivity(Intent.createChooser(shareIntent, "Share Current Location Via..."));
+  //  }
+
+    private void takeAndShareScreenshot(){
+        Bitmap ss = takeScreenshot();
+        saveBitmap(ss);
+        shareIt();
+    }
+
+    private Bitmap takeScreenshot() {
+        View v1 = getWindow().getDecorView().getRootView();
+        v1.setDrawingCacheEnabled(true);
+        return v1.getDrawingCache();
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
+// path to store screenshot and name of the file
+        imagePath = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + "name_of_file" + ".jpg");
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(imagePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            Log.e("GREC", e.getMessage(), e);
+        }
+    }
+
+    private void shareIt() {
+        try {
+            Uri uri = Uri.fromFile(imagePath);
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("image/*");
+            String shareBody = getString(R.string.already_have_account);
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
