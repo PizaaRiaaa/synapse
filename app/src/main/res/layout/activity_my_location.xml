@@ -100,6 +100,7 @@
             app:cardCornerRadius="50dp">
 
             <ImageView
+                android:id="@+id/sendMyLocation"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -146,7 +147,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:fontFamily="@font/redhat_display_semibold"
-            android:text="Near 12 Ana Maria, Binangonan, Rizal"
             android:textColor="@color/grey5"
             android:layout_gravity="center"
             android:textAlignment="center"

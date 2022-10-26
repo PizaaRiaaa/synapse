@@ -39,29 +39,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     NotificationManager mNotificationManager;
     Uri defaultSoundUri= RingtoneManager.getDefaultUri(R.raw.alarm);
     NotificationCompat.Builder builder;
-    int pill_shape_color = 0;
     String channelId = "hello";
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
-        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
-        switch (Objects.requireNonNull(title)) {
-            case "Medicine Reminder":
-                playVoiceReminder(R.raw.medicine_reminder);
-                break;
-            case "Physical Activity Reminder":
-                playVoiceReminder(R.raw.physical_activity_reminder);
-                break;
-            case "Game Reminder":
-                playVoiceReminder(R.raw.game_reminder);
-                break;
-            default:
-                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
-                break;
-        }
-
 
         builder = new NotificationCompat.Builder(this, "hello");
         Intent resultIntent = new Intent(this, HomeFragment.class);
@@ -69,13 +51,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 PendingIntent.getActivity(
                 this, 1,
                 resultIntent, PendingIntent.FLAG_IMMUTABLE);
-
-       // String pill_color = resultIntent.getExtras().getString("pill_color");
-       // String pill_shape = resultIntent.getExtras().getString("pill_shape");
-
-//        Toast.makeText(this, "pill color" + pill_color , Toast.LENGTH_SHORT).show();
-
- ///       displayMedicine(pill_color, pill_shape);
 
         String tag = remoteMessage.getNotification().getTag();
         int pill_shape_color = 0;
@@ -166,6 +141,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 break;
         }
 
+        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
+        switch (Objects.requireNonNull(title)) {
+            case "Medicine Reminder":
+                playVoiceReminder(R.raw.medicine_reminder);
+                break;
+            case "Physical Activity Reminder":
+                playVoiceReminder(R.raw.physical_activity_reminder);
+                break;
+            case "Game Reminder":
+                playVoiceReminder(R.raw.game_reminder);
+                break;
+            case "Appointment Reminder":
+                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+                break;
+            default:
+                break;
+        }
+
         builder.setSmallIcon(R.drawable.ic_splash_logo);
         builder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_splash_logo));
         builder.setContentTitle(remoteMessage.getNotification().getTitle());
@@ -207,11 +200,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         mp.start();
     }
 
-    void displayMedicine(String strTag){
-
-
-
-    }
 }
 
 

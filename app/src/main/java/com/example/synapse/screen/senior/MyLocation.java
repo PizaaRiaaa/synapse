@@ -1,13 +1,24 @@
 package com.example.synapse.screen.senior;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentContainerView;
+
 import com.example.synapse.R;
+import com.example.synapse.screen.util.PromptMessage;
+import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
+import com.example.synapse.screen.util.notifications.FirebaseMessagingService;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserSenior;
+import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,43 +26,58 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
-public class MyLocation extends AppCompatActivity {
+public class MyLocation extends AppCompatActivity{
 
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     TextView tvCurrentLocation;
+    DatabaseReference referenceAssignedCarer, referenceCarer;
     String latitude, longtitude, addresss, city, country;
-    File imagePath;
+    PromptMessage promptMessage = new PromptMessage();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +85,15 @@ public class MyLocation extends AppCompatActivity {
         setContentView(R.layout.activity_my_location);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+
+        referenceAssignedCarer = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         MaterialCardView btnGetLocation = findViewById(R.id.btnGetLocation);
         MaterialCardView btnLocationDetails = findViewById(R.id.bottomLocation);
         MaterialCardView btnScreenshot = findViewById(R.id.screenShot);
+        ImageView btnSendMyLocation = findViewById(R.id.sendMyLocation);
         tvCurrentLocation = findViewById(R.id.tvCurrentLocation);
 
         ActivityCompat.requestPermissions(this,
@@ -88,11 +119,14 @@ public class MyLocation extends AppCompatActivity {
         btnGetLocation.setOnClickListener(v -> getCurrentLocation());
         btnLocationDetails.setOnClickListener(v -> locationDetails());
         btnScreenshot.setOnClickListener(v -> {
-            //View v1 = getWindow().getDecorView().getRootView();
-            //v1.setDrawingCacheEnabled(true);
-            //v1.buildDrawingCache();
-            //share(screenShot(v1));
-            takeAndShareScreenshot();
+           View v1 = getWindow().getDecorView().getRootView();
+           v1.setDrawingCacheEnabled(true);
+           v1.buildDrawingCache();
+           share(screenShot(v1));
+        });
+
+        btnSendMyLocation.setOnClickListener(v -> {
+            sendMyLocation();
         });
     }
 
@@ -171,66 +205,130 @@ public class MyLocation extends AppCompatActivity {
                 .show();
     }
 
-  //  private Bitmap screenShot(View view) {
-  //      Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
-  //      Canvas canvas = new Canvas(bitmap);
-  //      view.layout(0, 0, view.getLayoutParams().width, view.getLayoutParams().height);
-  //      view.draw(canvas);
-  //      return bitmap;
-  //  }
-
-  //  private void share(Bitmap bitmap){
-  //      String pathofBmp=
-  //              MediaStore.Images.Media.insertImage(this.getContentResolver(),
-  //                      bitmap,"My Current Location", null);
-  //      Uri uri = Uri.parse(pathofBmp);
-  //      Intent shareIntent = new Intent(Intent.ACTION_SEND);
-  //      shareIntent.setType("image/*");
-  //      shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Synapse-My-Current-Location");
-  //      shareIntent.putExtra(Intent.EXTRA_TEXT, "");
-  //      shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-  //      this.startActivity(Intent.createChooser(shareIntent, "Share Current Location Via..."));
-  //  }
-
-    private void takeAndShareScreenshot(){
-        Bitmap ss = takeScreenshot();
-        saveBitmap(ss);
-        shareIt();
+    private Bitmap screenShot(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        view.layout(0, 0, view.getLayoutParams().width, view.getLayoutParams().height);
+        view.draw(canvas);
+        return bitmap;
     }
 
-    private Bitmap takeScreenshot() {
-        View v1 = getWindow().getDecorView().getRootView();
-        v1.setDrawingCacheEnabled(true);
-        return v1.getDrawingCache();
+    private void share(Bitmap bitmap){
+        String pathofBmp=
+                MediaStore.Images.Media.insertImage(this.getContentResolver(),
+                        bitmap,"My Current Location", null);
+        Uri uri = Uri.parse(pathofBmp);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Synapse-My-Current-Location");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        this.startActivity(Intent.createChooser(shareIntent, "Share Current Location Via..."));
     }
 
-    private void saveBitmap(Bitmap bitmap) {
-// path to store screenshot and name of the file
-        imagePath = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + "name_of_file" + ".jpg");
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            Log.e("GREC", e.getMessage(), e);
+    private void sendMyLocation(){
+            AlertDialog.Builder boite;
+            boite = new AlertDialog.Builder(this);
+            boite.setTitle("Send Location to Your Carer");
+            boite.setIcon(getDrawable(R.drawable.ic_gps_senior));
+            boite.setMessage("I am near " + addresss);
+
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            boite.setView(input);
+
+            boite.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //whatever action
+                    getCarerTokenAndSendLocation(input.getText() + " - I am near ", addresss);
+                }
+            });
+            boite.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //whatever action
+                }
+            });
+            boite.show();
         }
-    }
 
-    private void shareIt() {
-        try {
-            Uri uri = Uri.fromFile(imagePath);
-            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            sharingIntent.setType("image/*");
-            String shareBody = getString(R.string.already_have_account);
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+  private void getCarerTokenAndSendLocation(String message, String location) {
+      referenceAssignedCarer.addListenerForSingleValueEvent(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot snapshot) {
+              for (DataSnapshot key : snapshot.getChildren()) {
+                  String carerKey = key.getKey();
 
-            startActivity(Intent.createChooser(sharingIntent, "Share via"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                  referenceAssignedCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                      @Override
+                      public void onDataChange(@NonNull DataSnapshot snapshot) {
+                          for (DataSnapshot key : snapshot.getChildren()) {
+                              String key1 = key.getKey();
+
+                              referenceAssignedCarer.child(carerKey).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                  @Override
+                                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                      if(snapshot.hasChild("seniorID")){
+                                          ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
+                                          String seniorID = senior.getSeniorID();
+
+                                          FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                          if(seniorID.equals(mUser.getUid())){
+                                              referenceCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                  @Override
+                                                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                      if(snapshot.exists()){
+                                                          ReadWriteUserDetails carer = snapshot.getValue(ReadWriteUserDetails.class);
+                                                          String carerToken = carer.getToken();
+
+                                                                           FcmNotificationsSender notificationsSender = new FcmNotificationsSender(
+                                                                                   carerToken,
+                                                                                   senior.getFirstName() + " " + senior.getLastName() + " current location",
+                                                                                   message + " " + location,
+                                                                                   "",
+                                                                                   MyLocation.this);
+                                                                           notificationsSender.SendNotifications();
+
+                                                      }
+
+                                                  }
+
+                                                  @Override
+                                                  public void onCancelled(@NonNull DatabaseError error) {
+                                                      promptMessage.defaultErrorMessageContext(MyLocation.this);
+                                                  }
+                                              });
+
+                                          }
+                                      }
+                                  }
+
+                                  @Override
+                                  public void onCancelled(@NonNull DatabaseError error) {
+                                      promptMessage.defaultErrorMessageContext(MyLocation.this);
+                                  }
+                              });
+
+                          }
+
+                      }
+
+                      @Override
+                      public void onCancelled(@NonNull DatabaseError error) {
+                          promptMessage.defaultErrorMessageContext(MyLocation.this);
+                      }
+                  });
+                 }
+              }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError error) {
+              promptMessage.defaultErrorMessageContext(MyLocation.this);
+          }
+      });
+  }
 
 }
