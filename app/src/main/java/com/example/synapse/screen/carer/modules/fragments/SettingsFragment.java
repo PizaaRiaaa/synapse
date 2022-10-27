@@ -1,26 +1,25 @@
 package com.example.synapse.screen.carer.modules.fragments;
 
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.synapse.R;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -139,6 +140,10 @@ public class SettingsFragment extends Fragment {
 
         // sign-out the user and redirect to login screen
         tvLogout.setOnClickListener(v -> {
+
+            SharedPreferences myPrefs = getActivity().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
+            myPrefs.edit().remove("seniorKey").apply();
+
            user.signOut();
             Intent intent = new Intent(getActivity(), Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK

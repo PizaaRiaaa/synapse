@@ -154,9 +154,9 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceReminders = FirebaseDatabase.getInstance().getReference().child("Medication Reminders");
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
         requestQueue = Volley.newRequestQueue(getActivity());
         calendar = Calendar.getInstance();
         ImageButton ibBack, btnClose;
@@ -293,9 +293,14 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         return calendar;
     }
 
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
     // display all schedules for medication
     void LoadScheduleForMedication() {
-        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -399,11 +404,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         // alarmManager.setExact(AlarmManager.RTC_WAKEUP,
         //         calendar.getTimeInMillis() ,
         //         pendingIntent);
-    }
-
-    public static String getDefaults(String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, null);
     }
 
     // store schedule for medicine

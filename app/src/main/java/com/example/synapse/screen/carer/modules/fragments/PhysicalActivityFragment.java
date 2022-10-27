@@ -352,7 +352,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
 
     // display all schedules for medication
     private void loadScheduleForPhysicalActivity() {
-        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

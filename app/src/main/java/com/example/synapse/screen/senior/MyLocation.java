@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentContainerView;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.senior.modules.fragments.HomeFragment;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
 import com.example.synapse.screen.util.notifications.FirebaseMessagingService;
@@ -85,21 +86,23 @@ public class MyLocation extends AppCompatActivity{
         setContentView(R.layout.activity_my_location);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
         referenceAssignedCarer = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
-
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         MaterialCardView btnGetLocation = findViewById(R.id.btnGetLocation);
         MaterialCardView btnLocationDetails = findViewById(R.id.bottomLocation);
         MaterialCardView btnScreenshot = findViewById(R.id.screenShot);
         ImageView btnSendMyLocation = findViewById(R.id.sendMyLocation);
+        ImageView btnBack = findViewById(R.id.ibBack);
         tvCurrentLocation = findViewById(R.id.tvCurrentLocation);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE},
                 PackageManager.PERMISSION_GRANTED);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         // initialized fused location
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -113,9 +116,6 @@ public class MyLocation extends AppCompatActivity{
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
         btnGetLocation.setOnClickListener(v -> getCurrentLocation());
         btnLocationDetails.setOnClickListener(v -> locationDetails());
         btnScreenshot.setOnClickListener(v -> {
@@ -125,9 +125,8 @@ public class MyLocation extends AppCompatActivity{
            share(screenShot(v1));
         });
 
-        btnSendMyLocation.setOnClickListener(v -> {
-            sendMyLocation();
-        });
+        btnSendMyLocation.setOnClickListener(v -> sendMyLocation());
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void getCurrentLocation() {

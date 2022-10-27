@@ -6,8 +6,12 @@ import com.example.synapse.R;
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.carer.modules.fragments.SettingsFragment;
+import com.example.synapse.screen.carer.modules.view.SeniorLocation;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 public class CarerMainActivity extends AppCompatActivity {
@@ -24,8 +28,11 @@ public class CarerMainActivity extends AppCompatActivity {
         replaceFragment.replaceFragment(new HomeFragment(), CarerMainActivity.this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        FloatingActionButton floatingActionButton = findViewById(R.id.fabLocateSenior);
 
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+
+        floatingActionButton.setOnClickListener(v -> startActivity(new Intent(this, SeniorLocation.class)));
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){

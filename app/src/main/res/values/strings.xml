@@ -16,7 +16,7 @@
     <string name="btnLogin">LOGIN</string>
     <string name="btnRegister">Create new account</string>
     <string name="tvDontHaveAccount">Don\'t have an account? Register!</string>
-    <string name="tvSub_header">Notify your senior loved ones</string>
+    <string name="tvSub_header">Make your life easier and safer</string>
 
     <!-- pick role screen -->
     <string name="carer">Carer</string>

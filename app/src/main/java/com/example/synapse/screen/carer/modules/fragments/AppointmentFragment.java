@@ -457,7 +457,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
 
     // display all schedules for appointments
     private void loadScheduleForAppointments() {
-        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

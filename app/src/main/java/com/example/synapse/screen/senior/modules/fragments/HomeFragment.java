@@ -1,11 +1,18 @@
 package com.example.synapse.screen.senior.modules.fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -19,10 +26,19 @@ import android.widget.Toast;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.Login;
+import com.example.synapse.screen.senior.MyLocation;
 import com.example.synapse.screen.senior.SearchPeople;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +51,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -47,14 +66,16 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class HomeFragment extends Fragment {
 
     // Global variables
-     static final String TAG = "";
-     DatabaseReference referenceSenior;
-     FirebaseUser mUser;
-     String token;
-     TextView tvSeniorName;
-     AppCompatImageView ivProfilePic;
-     ReplaceFragment replaceFragment = new ReplaceFragment();
-
+    static final String TAG = "";
+    DatabaseReference referenceSenior, referenceSeniorLocation;
+    FirebaseUser mUser;
+    String token;
+    TextView tvSeniorName;
+    AppCompatImageView ivProfilePic;
+    ReplaceFragment replaceFragment = new ReplaceFragment();
+    FusedLocationProviderClient client;
+    String city, country, address;
+    Double latitude, longtitude;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -112,14 +133,15 @@ public class HomeFragment extends Fragment {
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
 
-        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         String userID = mUser.getUid();
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
+        referenceSeniorLocation = FirebaseDatabase.getInstance().getReference("SeniorLocation").child(mUser.getUid());
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
-        btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(),getActivity()));
+        btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(), getActivity()));
         btnSearchPeople.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchPeople.class)));
         currentTime.setFormat12Hour("hh:mm a");
 
@@ -141,10 +163,15 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // retrieve  and generate token everytime user access the app
     @Override
     public void onStart() {
         super.onStart();
+        generateToken();
+        getLocation();
+    }
+
+    public void generateToken(){
+        // retrieve  and generate token everytime user access the app
         HashMap hashMap = new HashMap();
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -165,6 +192,69 @@ public class HomeFragment extends Fragment {
                         Log.d("Token:", msg);
                     }
                 });
+    }
+
+    public void getLocation(){
+        // retrieve senior's current location and store to firebase
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        client.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                            List<Address> current_address = null;
+
+                            try {
+                                current_address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            address = current_address.get(0).getAddressLine(0);
+                            latitude = current_address.get(0).getLatitude();
+                            longtitude = current_address.get(0).getLongitude();
+                            city = current_address.get(0).getLocality();
+                            country = current_address.get(0).getCountryName();
+
+                            storeLocation(address, latitude, longtitude, city, country);
+                        }
+                    }
+                });
+    }
+
+    public void storeLocation(String address, Double latitude,
+                              Double longtitude, String city, String country){
+
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("Address", address);
+        hashMap.put("Latitude", latitude);
+        hashMap.put("Longtitude", longtitude);
+        hashMap.put("City", city);
+        hashMap.put("Country", country);
+
+        referenceSeniorLocation.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("Location", "Location is successfully stored");
+                }
+            }
+        });
     }
 
     // retrieve senior's profile picture
@@ -193,4 +283,5 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }

@@ -31,6 +31,7 @@
         app:cardBackgroundColor="@color/grey5">
 
         <ImageView
+            android:id="@+id/ibBack"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_margin="5dp"
@@ -50,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your Location"
+                android:text="My Location"
                 android:layout_margin="5dp"
                 android:layout_gravity="center"
                 android:fontFamily="@font/redhat_display_regular"

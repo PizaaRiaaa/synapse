@@ -307,7 +307,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
 
     // display all schedules for games
     private void loadScheduleForGames() {
-        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

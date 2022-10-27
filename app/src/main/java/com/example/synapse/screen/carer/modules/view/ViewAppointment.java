@@ -92,7 +92,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         ImageButton ibBack = findViewById(R.id.ibBack);
         MaterialButton btnChangeSchedule = findViewById(R.id.btnChangeSchedule);
         AppCompatButton btnUpdate = findViewById(R.id.btnUpdate);
-        ImageButton btnHelp = findViewById(R.id.ibHelp);
         etConcern = findViewById(R.id.etConcern);
         etDrName = findViewById(R.id.etDrName);
         tvDateAndTime = findViewById(R.id.tvDateAndTime);
