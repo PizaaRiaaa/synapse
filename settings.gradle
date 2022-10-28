@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Synapse"
 include ':app'
-include ':app:osca-admin'

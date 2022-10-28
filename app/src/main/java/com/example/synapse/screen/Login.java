@@ -43,9 +43,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Objects;
 
 public class Login extends AppCompatActivity {
-    private PromptMessage promptMessage = new PromptMessage();
+    private final PromptMessage promptMessage = new PromptMessage();
     private static final String TAG = "loginActivity";
-    private DatabaseReference referenceCarer, referenceSenior, referenceAssignedSeniors, referenceAdmin;
+    private DatabaseReference referenceCarer, referenceSenior,
+            referenceAssignedSeniors, referenceAdmin;
     private FirebaseAuth mAuth;
     EditText etEmail, etPassword;
     String textEmail, textPassword;
@@ -85,7 +86,6 @@ public class Login extends AppCompatActivity {
                     assert firebaseUser != null;
 
                     if(firebaseUser.isEmailVerified()){
-
                         // carer
                         referenceCarer.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -250,7 +250,7 @@ public class Login extends AppCompatActivity {
 
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
-        referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Admins");
         referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -79,7 +79,6 @@ public class SelectSenior extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     // display all assigned seniors
     void loadAssignedSeniors() {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -178,8 +177,12 @@ public class SelectSenior extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_senior);
 
-        SharedPreferences myPrefs = getApplicationContext().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
-        myPrefs.edit().remove("seniorKey").apply();
+       // SharedPreferences myPrefs = getApplicationContext().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
+       // myPrefs.edit().remove("seniorKey").apply();
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.remove("seniorKey");
+        editor.commit();
 
         recyclerView = findViewById(R.id.recyclerview_seniors);
         recyclerView.setLayoutManager(new LinearLayoutManager(SelectSenior.this));

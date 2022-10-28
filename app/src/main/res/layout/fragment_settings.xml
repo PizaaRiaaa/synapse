@@ -10,7 +10,6 @@
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,9 +25,10 @@
                 android:id="@+id/ibBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
                 android:backgroundTint="@android:color/transparent"
-                android:contentDescription="TODO" />
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -170,9 +170,6 @@
 
         </LinearLayout>
             
-
-
     </LinearLayout>
-
 
 </FrameLayout>
