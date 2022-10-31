@@ -30,6 +30,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    lintOptions {
+        disable "Instantiatable"
+    }
 }
 
 dependencies {
@@ -42,6 +46,8 @@ dependencies {
     implementation 'com.android.support:wear:32.0.0'
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
     implementation 'org.tensorflow:tensorflow-android:1.13.1'
+    implementation "androidx.wear:wear-tiles:1.0.0-alpha01"
+    debugImplementation "androidx.wear:wear-tiles-renderer:1.0.0-alpha01"
 
     // gif extension support
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'

@@ -2,6 +2,8 @@
 <resources>
     <color name="colorAccent">#FFC107</color>
     <color name="colorTransparent">#00000000</color>
-    <color name="colorBlue">#FFEB3B</color>
+    <color name="colorGray">#878787</color>
+    <color name="lightGray">#9F9F9F</color>
     <color name="red">#F44336</color>
+
 </resources>

@@ -91,8 +91,6 @@ public class MainActivity extends FragmentActivity implements
     private TFClassifier classifier;
     private String[] labels = {"jumping", "standing","walking","falling"};
 
-
-
     private static final String TAG = "MainActivity";
     private SensorManager sensorManager;
     private boolean permission_to_record = false;
@@ -370,13 +368,13 @@ public class MainActivity extends FragmentActivity implements
         jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
 
         if (idx == 0)
-            standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBlue, null));
+            standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
         else if (idx == 1)
-            walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBlue, null));
+            walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
         else if (idx == 2)
-            jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBlue, null));
+            jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
         else if (idx == 3)
-            fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorBlue, null));
+            fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
     }
 
     private float[] toFloatArray(List<Float> list) {

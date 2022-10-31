@@ -5,30 +5,167 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    android:background="@color/black"
     tools:deviceIds="wear">
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:layout_gravity="center"
         android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:id="@+id/firstTile"
+            android:orientation="vertical">
+
+            <!-- synapse title -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/red_hatdisplay_light"
+                    android:text="Synapse"
+                    android:textSize="11sp"/>
+
+            </LinearLayout>
+
+            <!-- hear rate -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hr">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/bh" />
+
+            <TextView
+                android:id="@+id/heart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="88"
+                android:textColor="#B6EDFF"
+                android:textSize="36sp"
+                android:fontFamily="@font/redhat_display_regular"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="bpm"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:textColor="@color/lightGray"
+                android:textSize="12dp"
+                android:fontFamily="@font/redhat_display_regular" />
+
+        </LinearLayout>
+
+        <!-- status -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/hr"
+            android:layout_marginTop="10dp"
+            android:id="@+id/Stat">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_standing" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:text="Standing"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:text="Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="11sp"
+                android:textColor="#B3F6B9"
+                android:textStyle="bold" />
+
+            <!-- dot -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:text="........"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- activity -->
 
         <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/har"
+            android:layout_below="@+id/firstTile"
+            android:layout_marginTop="60dp"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             tools:context=".MainActivity">
 
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@color/white"
-                android:src="@drawable/ic_logo" />
+            <!-- height divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/Stat" />
+
+            <TextView
+                android:layout_width="132dp"
+                android:layout_weight="@integer/complicationDrawable_borderStyle"
+                android:fontFamily="sans-serif-thin"
+                android:text="Summary"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="70dp"
+                android:textAlignment="center"
+                android:textColor="#B6EDFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:textAlignment="center">
 
                 <TextView
@@ -39,11 +176,12 @@
                     android:text="Activity"
                     android:textAlignment="0"
                     android:textColor="@color/white"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
             </TableRow>
 
+            <!-- standing -->
             <TableRow
                 android:id="@+id/standing_row"
                 android:layout_width="fill_parent"
@@ -54,18 +192,21 @@
                     android:layout_weight="1"
                     android:text="Jumping"
                     android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textColor="@color/lightGray"
                     android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/standing_prob"
                     android:layout_weight="1"
-                    android:textColor="@color/green"
+                    android:textColor="@color/white"
                     android:textAlignment="center"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:text="0.0"
                     android:textSize="18sp" />
             </TableRow>
 
+            <!-- walking -->
             <TableRow
                 android:id="@+id/walking_row"
                 android:layout_width="match_parent"
@@ -76,21 +217,23 @@
                     android:layout_weight="1"
                     android:text="Standing"
                     android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textColor="@color/lightGray"
                     android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/walking_prob"
-
                     android:layout_width="119dp"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textAlignment="center"
-                    android:textColor="@color/green"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:text="0.0"
                     android:textSize="18sp" />
+
             </TableRow>
 
-
+            <!-- jumping -->
             <TableRow
                 android:id="@+id/jumping_row"
                 android:layout_width="match_parent"
@@ -101,19 +244,22 @@
                     android:layout_weight="1"
                     android:text="Walking"
                     android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textColor="@color/lightGray"
                     android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/jumping_prob"
                     android:layout_width="119dp"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textAlignment="center"
-                    android:textColor="@color/green"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:text="0.0"
                     android:textSize="18sp" />
             </TableRow>
 
+            <!-- falling -->
             <TableRow
                 android:id="@+id/falling_row"
                 android:layout_width="match_parent"
@@ -123,121 +269,113 @@
                 <TextView
                     android:layout_weight="1"
                     android:text="Falling"
+                    android:textSize="12sp"
                     android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lightGray"
                     android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/falling_prob"
-
                     android:layout_width="119dp"
                     android:layout_weight="1"
                     android:textAlignment="center"
-                    android:textColor="@color/green"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:text="0.0"
                     android:textSize="18sp" />
+
             </TableRow>
 
         </TableLayout>
 
+        <!-- dot -->
         <LinearLayout
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
+            android:id="@+id/dot"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/har"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:id="@+id/Stat">
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"/>
-
-            <TextView
-                android:text="Status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_marginTop="10dp"
-                android:textSize="20sp"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="italic"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Stat"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal"
-            android:id="@+id/hr">
-
-            <pl.droidsonroids.gif.GifImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignTop="@+id/Save"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/bh" />
-
-            <TextView
-                android:id="@+id/heart"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="- -"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-
+            android:layout_below="@+id/har"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="BPM"
-                android:textColor="@color/red"
-                android:textSize="14dp"
-                android:textStyle="bold" />
+                android:layout_height="15dp"
+                android:text="......." />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/measure"
-            android:layout_width="wrap_content"
+        <!-- bottom stat -->
+        <LinearLayout
+            android:id="@+id/bellowStat"
+            android:layout_below="@+id/dot"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/hr"
-            android:layout_centerInParent="true"
-            android:text="Measuring..."
-            android:textColor="@color/light_grey"
-            android:textSize="12dp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_below="@+id/measure"
-            android:text="© 2022 • OSCA"
-            android:textSize="11sp"
             android:layout_marginTop="20dp"
-            android:textColor="@color/light_grey"
-            android:layout_centerHorizontal="true"
-            android:paddingBottom="20dp" />
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_footprints"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textSize="18sp"
+                android:textColor="#F1C8FF"
+                android:text="4,346"/>
+
+            <TextView
+                android:id="@+id/steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steps"
+                android:textSize="12sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/lightGray"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+        <!-- height divider -->
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_below="@+id/bellowStat" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:src="@drawable/ic_osca"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="11sp"
+                android:layout_marginTop="10dp"
+                android:text="© 2022 • OSCA"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
-
 
 </ScrollView>
