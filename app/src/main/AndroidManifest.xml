@@ -215,6 +215,28 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".screen.util.notifications.wearmessage.MessageServiceHighHR"
+            android:enabled="true"
+            android:exported="true">
+            <!--add the gms.wearable.MESSAGE_RECEIVED intent filter-->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/myapp/synapse/hhr" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".screen.util.notifications.wearmessage.MessageServiceLowHR"
+            android:enabled="true"
+            android:exported="true">
+            <!--add the gms.wearable.MESSAGE_RECEIVED intent filter-->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/myapp/synapse/lhr" />
+            </intent-filter>
+        </service>
+
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more.

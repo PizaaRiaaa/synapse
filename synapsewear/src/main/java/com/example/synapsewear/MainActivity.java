@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -105,6 +106,8 @@ public class MainActivity extends FragmentActivity implements
     private TableRow standingTableRow;
     private TableRow walkingTableRow;
 
+    private ImageView ivPosition;
+
     private TextToSpeech textToSpeech;
     private float[] results;
     private TFClassifier classifier;
@@ -164,6 +167,8 @@ public class MainActivity extends FragmentActivity implements
         jumpingTableRow = (TableRow) findViewById(R.id.jumping_row);
         fallingTableRow = (TableRow) findViewById(R.id.falling_row);
         String[] items1 = new String[]{"ID : 1", "ID : 2", "ID : 3", "ID : 4"};
+
+        ivPosition = findViewById(R.id.ivPosition);
 
         Status = (TextView) findViewById(R.id.status);
         Heart = (TextView) findViewById(R.id.heart);
@@ -306,7 +311,7 @@ public class MainActivity extends FragmentActivity implements
             }
 
             // LOW HEART RATE
-            if(mHeartRate < 40 && statusPosition.equals("standing")){
+            if(mHeartRate < 40 && mHeartRate > 0){
                 startActivity(new Intent(this, LowBP.class));
                 String lhr = String.valueOf(mHeartRate);
                 String datapath3 = "/myapp/synapse/lhr";

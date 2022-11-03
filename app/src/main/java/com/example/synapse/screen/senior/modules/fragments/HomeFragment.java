@@ -3,7 +3,9 @@ package com.example.synapse.screen.senior.modules.fragments;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +39,15 @@ import com.example.synapse.R;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.senior.MyLocation;
 import com.example.synapse.screen.senior.SearchPeople;
+import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
+import com.example.synapse.screen.util.notifications.FcmNotificationsSender;
 import com.example.synapse.screen.util.notifications.wearmessage.MessageServiceStatus;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserSenior;
+import com.example.synapse.screen.util.viewholder.SeniorViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -60,6 +69,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
@@ -85,8 +95,13 @@ public class HomeFragment extends Fragment {
 
     DatabaseReference referenceSeniorLocation;
     DatabaseReference referenceSenior;
+    DatabaseReference referenceAssignedCarer;
+    DatabaseReference referenceCarer;
     FirebaseUser mUser;
     String token;
+
+    PromptMessage promptMessage;
+
 
     TextView tvSeniorName;
     AppCompatImageView ivProfilePic;
@@ -97,11 +112,15 @@ public class HomeFragment extends Fragment {
     TextView tvStatus;
     TextView tvStepCounts;
 
-    String city, country, address;
-    Double latitude, longtitude;
+    String city;
+    String country;
+    String address;
+    String carerID;
+
+    Double latitude;
+    Double longtitude;
 
     protected Handler handler;
-    int receivedMessageNumber;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -152,6 +171,8 @@ public class HomeFragment extends Fragment {
 
         FirebaseMessaging.getInstance().subscribeToTopic("hello");
 
+        promptMessage = new PromptMessage();
+
         TextClock currentTime = view.findViewById(R.id.tcTime);
         MaterialCardView btnMedication = view.findViewById(R.id.btnMedication);
         MaterialCardView btnGames = view.findViewById(R.id.btnGames);
@@ -169,6 +190,8 @@ public class HomeFragment extends Fragment {
         String userID = mUser.getUid();
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         referenceSeniorLocation = FirebaseDatabase.getInstance().getReference("SeniorLocation").child(mUser.getUid());
+        referenceAssignedCarer = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -219,9 +242,14 @@ public class HomeFragment extends Fragment {
             String heartrate = intent.getStringExtra("heartrate");
             String status = intent.getStringExtra("status");
             String stepcounts = intent.getStringExtra("stepcounts");
+            String hhr = intent.getStringExtra("hhr");
+            String lhr = intent.getStringExtra("lhr");
+
             Log.v(TAG, "Main activity received message: " + heartrate);
             Log.v(TAG, "Main activity received message: " + status);
             Log.v(TAG, "Main activity received message: " + stepcounts);
+            Log.v(TAG, "Main activity received message: " + hhr);
+            Log.v(TAG, "Main activity received message: " + lhr);
 
             // Display message in UI
             if(heartrate != null) {
@@ -234,6 +262,16 @@ public class HomeFragment extends Fragment {
 
             if(stepcounts != null) {
                 logthisStepCounts(stepcounts);
+            }
+
+            if(hhr != null) {
+                alertHighHR(hhr);
+                sendCarerAlertHighHR(hhr);
+            }
+
+            if(lhr != null){
+                alertLowHR(lhr);
+                sendCarerAlertLowHR(lhr);
             }
         }
     }
@@ -257,6 +295,180 @@ public class HomeFragment extends Fragment {
         if (newinfo.compareTo("") != 0) {
             tvStepCounts.setText(newinfo);
         }
+    }
+
+    public void alertHighHR(String newinfo) {
+        if (newinfo.compareTo("") != 0) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("High Heart Rate!!")
+                    .setIcon(R.drawable.heartrate)
+                    .setMessage("WE DETECTED THAT YOUR HEART RATE ROSE ABOVE ⬆ 120 BPM WHILE YOUR INACTIVE")
+                    .setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.cancel())
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    public void alertLowHR(String newinfo){
+        if(newinfo.compareTo("") != 0) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Low Heart Rate!!")
+                    .setIcon(R.drawable.heartrate)
+                    .setMessage("WE DETECTED THAT YOUR HEART RATE FELL BELOW ⬇ 40 BPM WHILE YOUR INACTIVE")
+                    .setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.cancel())
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    public void sendCarerAlertHighHR(String newinfo) {
+        referenceAssignedCarer.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot key : snapshot.getChildren()) {
+                    String carerKey = key.getKey();
+
+                    referenceAssignedCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot key : snapshot.getChildren()) {
+                                String key1 = key.getKey();
+
+                                referenceAssignedCarer.child(carerKey).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.hasChild("seniorID")){
+                                            ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
+                                            String seniorID = senior.getSeniorID();
+
+                                            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            if(seniorID.equals(mUser.getUid())){
+                                                referenceCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        if(snapshot.exists()){
+                                                            ReadWriteUserDetails carer = snapshot.getValue(ReadWriteUserDetails.class);
+                                                            String carerToken = carer.getToken();
+
+                                                            FcmNotificationsSender notificationsSender = new FcmNotificationsSender(
+                                                                    carerToken,
+                                                                    "Alert! High Heart Rate of " + newinfo,
+                                                                    "WE DETECTED THAT " + senior.getFirstName().toUpperCase() +
+                                                                            " " +  senior.getLastName().toUpperCase() + " " +
+                                                                          " HEART RATE ROSE ABOVE ⬆ 120 BPM ",
+                                                                    "hhr",
+                                                                    getActivity());
+                                                            notificationsSender.SendNotifications();
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        promptMessage.defaultErrorMessageContext(getActivity());
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        promptMessage.defaultErrorMessageContext(getActivity());
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(getActivity());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(getActivity());
+            }
+        });
+    }
+
+    public void sendCarerAlertLowHR(String newinfo) {
+        referenceAssignedCarer.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot key : snapshot.getChildren()) {
+                    String carerKey = key.getKey();
+
+                    referenceAssignedCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot key : snapshot.getChildren()) {
+                                String key1 = key.getKey();
+
+                                referenceAssignedCarer.child(carerKey).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.hasChild("seniorID")){
+                                            ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
+                                            String seniorID = senior.getSeniorID();
+
+                                            FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            if(seniorID.equals(mUser.getUid())){
+                                                referenceCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        if(snapshot.exists()){
+                                                            ReadWriteUserDetails carer = snapshot.getValue(ReadWriteUserDetails.class);
+                                                            String carerToken = carer.getToken();
+
+                                                            FcmNotificationsSender notificationsSender = new FcmNotificationsSender(
+                                                                    carerToken,
+                                                                    "Alert! Low Heart Rate of " + newinfo ,
+                                                                    "WE DETECTED THAT " + senior.getFirstName().toUpperCase() + " " +
+                                                                            senior.getLastName().toUpperCase() +
+                                                                            " HEART RATE FELL BELOW ⬇ 40 BPM",
+                                                                    "lhr",
+                                                                    getActivity());
+                                                            notificationsSender.SendNotifications();
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        promptMessage.defaultErrorMessageContext(getActivity());
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        promptMessage.defaultErrorMessageContext(getActivity());
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            promptMessage.defaultErrorMessageContext(getActivity());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessageContext(getActivity());
+            }
+        });
     }
 
     @Override
