@@ -23,29 +23,7 @@
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchViewCarer"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="16dp"
-                android:background="@drawable/search_view"
-                android:searchIcon="@drawable/ic_black_search"
-                app:queryBackground="@android:color/transparent"
-                app:iconifiedByDefault="false"
-                app:queryHint="Search"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1" />
 
-            <ImageView
-                android:id="@+id/ivCarerProfilePic"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/carer_profile_pic"
-                android:backgroundTint="@color/carer_profile_pic"
-                android:scaleType="fitCenter"
-                android:contentDescription="Carer profile pic" />
 
         </LinearLayout>
 
@@ -66,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
-                    android:text="@string/tvAssignedSenior"
+                    android:text="Selected Senior"
                     android:textSize="11sp"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="3dp"
@@ -149,12 +127,243 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvHealthStatusTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/grey5"
+                    android:text="Health Status • Let\'s check Jane\'s Health"/>
+
+                <!-- health eklabush -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- heart rate -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        app:cardCornerRadius="30dp"
+                        android:layout_marginEnd="10dp"
+                        app:strokeColor="@color/light_green"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginTop="20dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvHeartRate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/redhat_display_bold"
+                                    android:text="60"
+                                    android:textColor="#7E7E7E"
+                                    android:textSize="40sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/redhat_display_regular"
+                                    android:text="bmp"
+                                    android:textColor="#7E7E7E"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <pl.droidsonroids.gif.GifImageView
+                                android:layout_width="40dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="5dp"
+                                android:src="@drawable/heartrate" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_gravity="center"
+                                android:text="Heart Rate"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- step counts -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="170dp"
+                            android:layout_height="80dp"
+                            android:layout_marginStart="20dp"
+                            app:cardCornerRadius="30dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/horizontal_bg_1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:tint="@color/white"
+                                android:src="@drawable/ic_stepcounts"/>
+
+                            <View
+                                android:layout_width="10dp"
+                                android:layout_height="2dp"/>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvStepCounts"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/white"
+                                    android:text="4,346"/>
+                                
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/white"
+                                    android:text="Step Counts"
+                                    android:textAlignment="center"
+                                    android:textSize="14sp"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"/>
+
+                        <!-- status -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="170dp"
+                            android:layout_height="80dp"
+                            android:layout_marginStart="20dp"
+                            app:cardCornerRadius="30dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:background="@drawable/horizontal_bg_1"
+                                android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/horizontal_bg_1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    app:tint="@color/white"
+                                    android:src="@drawable/ic_standing"/>
+
+                                <View
+                                    android:layout_width="10dp"
+                                    android:layout_height="2dp"/>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_marginEnd="20dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvStatus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:text="Standing"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:text="Status"
+                                        android:layout_marginEnd="2dp"
+                                        android:textSize="14sp"/>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivCarerProfilePic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/carer_profile_pic"
+            android:scaleType="fitCenter"
+            android:contentDescription="Carer profile pic" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <TextView
@@ -166,7 +375,6 @@
                 android:text="@string/tvNotify"
                 android:textColor="@color/grey5"
                 android:textSize="19sp"
-                android:drawablePadding="10dp"
                 app:drawableRightCompat="@drawable/ic_bell_black" />
 
             <TextView
@@ -428,5 +636,10 @@
 
         </LinearLayout>
 
+         </LinearLayout>
+
+        </ScrollView>
+
     </LinearLayout>
-</FrameLayout>
+
+    </FrameLayout>

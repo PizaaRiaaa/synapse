@@ -254,14 +254,17 @@ public class HomeFragment extends Fragment {
             // Display message in UI
             if(heartrate != null) {
                 logthisHeartRate(heartrate);
+                updateHealthStatus("heartrate", heartrate);
             }
 
             if(status != null) {
                 logthisStatus(status);
+                updateHealthStatus("status", status);
             }
 
             if(stepcounts != null) {
                 logthisStepCounts(stepcounts);
+                updateHealthStatus("stepcounts", stepcounts);
             }
 
             if(hhr != null) {
@@ -319,6 +322,18 @@ public class HomeFragment extends Fragment {
                     .setCancelable(false)
                     .show();
         }
+    }
+
+    public void updateHealthStatus(String title, String newinfo){
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put(title, newinfo);
+
+        referenceSenior.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.v(TAG, "Updated successfully");
+            }
+        });
     }
 
     public void sendCarerAlertHighHR(String newinfo) {
