@@ -8,11 +8,16 @@
     android:background="@color/black"
     tools:deviceIds="wear">
 
+    <androidx.wear.widget.BoxInsetLayout android:clickable="true"
+        android:id="@+id/MainLayout"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="match_parent">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_height="wrap_content">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -264,6 +269,7 @@
                 android:id="@+id/falling_row"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:padding="0dp">
 
                 <TextView
@@ -321,18 +327,18 @@
                 android:src="@drawable/ic_footprints"/>
 
             <TextView
+                android:id="@+id/steps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textAlignment="center"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/redhat_display_bold"
-                android:textSize="18sp"
+                android:text=""
+                android:textAlignment="center"
                 android:textColor="#F1C8FF"
-                android:text="4,346"/>
+                android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/steps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Steps"
@@ -376,6 +382,11 @@
 
         </LinearLayout>
 
+
     </RelativeLayout>
+
+    </androidx.wear.widget.BoxInsetLayout>
+
+
 
 </ScrollView>

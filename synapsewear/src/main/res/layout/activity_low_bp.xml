@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LowBP">
+
+
+    <androidx.wear.widget.BoxInsetLayout android:clickable="true"
+        android:id="@+id/MainLayout"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            app:layout_box="all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            tools:background="@color/black">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:layout_marginBottom="10dp"
+                android:textAlignment="center"
+                android:text="WE DETECTED THAT YOUR \n HEART RATE \n FELL BELOW ⬇ 40 BPM \n WHILE YOUR INACTIVE"/>
+
+            <androidx.wear.widget.SwipeDismissFrameLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:id="@+id/swipe_dismiss_root" >
+                <ImageButton
+                    android:id="@+id/btnClose"
+                    android:background="@drawable/round_button"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:src="@drawable/ic_cc_clear"  />
+
+            </androidx.wear.widget.SwipeDismissFrameLayout>
+
+        </LinearLayout>
+
+    </androidx.wear.widget.BoxInsetLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:theme="@style/Theme.AppCompat" android:clickable="false"
+        android:id="@+id/timerProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="false"
+        app:trackThickness="1dp"
+        app:indicatorColor="@color/red"
+        app:trackColor="@android:color/transparent"
+        android:progress="100"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:tooltipText="Loading"
+        android:indeterminateTint="@color/red"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

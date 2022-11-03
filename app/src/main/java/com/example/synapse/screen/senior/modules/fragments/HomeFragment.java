@@ -1,8 +1,13 @@
 package com.example.synapse.screen.senior.modules.fragments;
 
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +37,9 @@ import com.example.synapse.screen.Login;
 import com.example.synapse.screen.senior.MyLocation;
 import com.example.synapse.screen.senior.SearchPeople;
 import com.example.synapse.screen.util.ReplaceFragment;
+import com.example.synapse.screen.util.notifications.wearmessage.MessageServiceStatus;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +50,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,6 +68,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -66,16 +80,29 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class HomeFragment extends Fragment {
 
     // Global variables
-    static final String TAG = "";
-    DatabaseReference referenceSenior, referenceSeniorLocation;
+    static final String TAG = "wear";
+    ReplaceFragment replaceFragment = new ReplaceFragment();
+
+    DatabaseReference referenceSeniorLocation;
+    DatabaseReference referenceSenior;
     FirebaseUser mUser;
     String token;
+
     TextView tvSeniorName;
     AppCompatImageView ivProfilePic;
-    ReplaceFragment replaceFragment = new ReplaceFragment();
     FusedLocationProviderClient client;
+
+    TextView swap;
+    TextView tvHeartRate;
+    TextView tvStatus;
+    TextView tvStepCounts;
+
     String city, country, address;
     Double latitude, longtitude;
+
+    protected Handler handler;
+    int receivedMessageNumber;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -132,6 +159,11 @@ public class HomeFragment extends Fragment {
         MaterialCardView btnLogout = view.findViewById(R.id.btnLogout);
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
+        tvHeartRate = view.findViewById(R.id.tvHeartRate);
+        tvStatus = view.findViewById(R.id.tvStatus);
+        tvStepCounts = view.findViewById(R.id.tvStepCounts);
+
+        swap = view.findViewById(R.id.swipe);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         String userID = mUser.getUid();
@@ -160,7 +192,71 @@ public class HomeFragment extends Fragment {
             //getActivity().getFragmentManager().popBackStack();
         });
 
+        //message handler for the send thread.
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                Bundle stuff = msg.getData();
+                logthisHeartRate(stuff.getString("logthis1"));
+                logthisStatus(stuff.getString("logthis2"));
+                logthisStepCounts(stuff.getString("logthis3"));
+                return true;
+            }
+        });
+
+        // Register the local broadcast receiver
+        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        MessageReceiver messageReceiver = new MessageReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageReceiver, messageFilter);
+
         return view;
+    }
+
+    //setup a broadcast receiver to receive the messages from the wear device via the MessageService.
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String heartrate = intent.getStringExtra("heartrate");
+            String status = intent.getStringExtra("status");
+            String stepcounts = intent.getStringExtra("stepcounts");
+            Log.v(TAG, "Main activity received message: " + heartrate);
+            Log.v(TAG, "Main activity received message: " + status);
+            Log.v(TAG, "Main activity received message: " + stepcounts);
+
+            // Display message in UI
+            if(heartrate != null) {
+                logthisHeartRate(heartrate);
+            }
+
+            if(status != null) {
+                logthisStatus(status);
+            }
+
+            if(stepcounts != null) {
+                logthisStepCounts(stepcounts);
+            }
+        }
+    }
+
+    /*
+     * simple method to add the log TextView.
+     */
+    public void logthisHeartRate(String newinfo1) {
+        if (newinfo1.compareTo("") != 0) {
+            tvHeartRate.setText(newinfo1);
+        }
+    }
+
+    public void logthisStatus(String newinfo) {
+        if (newinfo.compareTo("") != 0) {
+            tvStatus.setText(newinfo);
+        }
+    }
+
+    public void logthisStepCounts(String newinfo) {
+        if (newinfo.compareTo("") != 0) {
+            tvStepCounts.setText(newinfo);
+        }
     }
 
     @Override
@@ -283,5 +379,15 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    
+   // public class Receiver extends BroadcastReceiver{
+   //     @Override
+   //     public void onReceive(Context context, Intent intent){
+   //         // upon receiving message from wearable , display the following text
+   //         String message = intent.getExtras().getString("message");
+   //         Toast.makeText(getActivity(), "I just received a message from the wearable" + message, Toast.LENGTH_SHORT).show();
+   //     }
+   // }
+
 
 }

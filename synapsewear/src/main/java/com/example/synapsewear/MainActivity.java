@@ -1,23 +1,37 @@
 package com.example.synapsewear;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.wear.ambient.AmbientModeSupport;
+
 import com.example.synapsewear.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
@@ -28,6 +42,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends FragmentActivity implements
@@ -50,7 +65,7 @@ public class MainActivity extends FragmentActivity implements
     private static List<Float> gx;
     private static List<Float> gy;
     private static List<Float> gz;
-    //
+
     private static List<Float> ma;
     private static List<Float> ml;
     private static List<Float> mg;
@@ -72,10 +87,14 @@ public class MainActivity extends FragmentActivity implements
     private Sensor mLinearAcceleration;
     private Sensor mMagnetometer;
     private Sensor heartRate;
+    private Sensor stepCount;
+    private Sensor stepDetector;
+    private Sensor pressure;
     private Sensor mRot;
 
-    private  TextView Heart;
+    private TextView Heart;
     private TextView Status;
+    private TextView stepCounts;
     private TextView jumpingTextView;;
     private TextView fallingTextView;
     private TextView standingTextView;
@@ -100,13 +119,18 @@ public class MainActivity extends FragmentActivity implements
     String modified_DATA = "";
     String dateCurrent;
     String dateCurrentTemp = "";
+    String statusPosition = "";
     private FileWriter writer;
+
+    ProgressBar progressBar;
+
     File gpxfile;
     int Sit = 0;
     int Stand = 0;
     int Walk = 0;
     int Jump = 0;
     int Fall = 0;
+    int step_count = 0;
     String Stat ="";
     String heartValue ="";
     Context context = this;
@@ -128,6 +152,7 @@ public class MainActivity extends FragmentActivity implements
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+
 //        AmbientModeSupport.attach(this);
         standingTextView = (TextView) findViewById(R.id.standing_prob);
         walkingTextView = (TextView) findViewById(R.id.walking_prob);
@@ -142,29 +167,42 @@ public class MainActivity extends FragmentActivity implements
 
         Status = (TextView) findViewById(R.id.status);
         Heart = (TextView) findViewById(R.id.heart);
-
+        stepCounts = (TextView) findViewById(R.id.steps);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         heartRate = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        stepCount = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        stepDetector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        pressure = mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
+
+
+        mSensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, stepCount, SensorManager.SENSOR_DELAY_FASTEST);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mAccelerometer , SensorManager.SENSOR_DELAY_FASTEST);
 
-//        mLinearAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-//        mSensorManager.registerListener(this, mLinearAcceleration , SensorManager.SENSOR_DELAY_NORMAL);
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){ //ask for permission
+            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
+        }
+
+  //      mLinearAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+  //      mSensorManager.registerListener(this, mLinearAcceleration , SensorManager.SENSOR_DELAY_NORMAL);
 
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mSensorManager.registerListener(this, mGyroscope , SensorManager.SENSOR_DELAY_FASTEST);
 
 
-//        mRot = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-//        mSensorManager.registerListener(this, mRot , SensorManager.SENSOR_DELAY_NORMAL);
-
+  //      mRot = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+ //       mSensorManager.registerListener(this, mRot , SensorManager.SENSOR_DELAY_NORMAL);
 
         classifier = new TFClassifier(getApplicationContext());
 
         textToSpeech = new TextToSpeech(this, this);
         textToSpeech.setLanguage(Locale.US);
+
 
         startMeasure();
 
@@ -179,21 +217,19 @@ public class MainActivity extends FragmentActivity implements
                 finish();
                 System.exit(0);
                 return true;
-
-
         }
 
         return super.onKeyDown(keyCode, event);
 
     }
+
     protected void onResume() {
         super.onResume();
         getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
-//        getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
+ //     getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
         getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_FASTEST);
-//        getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_FASTEST);
-//        getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_UI);
-
+  //    getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_FASTEST);
+ //     getSensorManager().registerListener(this, getSensorManager().getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -204,6 +240,7 @@ public class MainActivity extends FragmentActivity implements
         }
         super.onDestroy();
     }
+
     private void stopMeasure() {
         mSensorManager.unregisterListener(this,heartRate);
     }
@@ -250,12 +287,38 @@ public class MainActivity extends FragmentActivity implements
 //
 //        }
 
-
         if (sensor.getType() == Sensor.TYPE_HEART_RATE){
             float mHeartRateFloat = event.values[0];
             int mHeartRate = Math.round(mHeartRateFloat);
             Heart.setText(Integer.toString(mHeartRate));
             heartValue = Integer.toString(mHeartRate);
+
+            String message = heartValue;
+            String datapath = "/myapp/synapse/heartrate";
+            new SendMessage(datapath, message).start();
+
+            // HIGH HEART RATE
+            if(mHeartRate > 120 && statusPosition.equals("standing")){
+                startActivity(new Intent(this, HighBP.class));
+                String hhr = String.valueOf(mHeartRate);
+                String datapath2 = "/myapp/synapse/hhr";
+                new SendMessage(datapath2, hhr).start();
+            }
+
+            // LOW HEART RATE
+            if(mHeartRate < 40 && statusPosition.equals("standing")){
+                startActivity(new Intent(this, LowBP.class));
+                String lhr = String.valueOf(mHeartRate);
+                String datapath3 = "/myapp/synapse/lhr";
+                new SendMessage(datapath3, lhr).start();
+            }
+        }
+
+        if(sensor.getType() == Sensor.TYPE_STEP_COUNTER){
+            if(event.values.length > 0){
+                String steps = " " + (int)event.values[0];
+                stepCounts.setText(steps);
+            }
         }
 
         activityPrediction();
@@ -444,6 +507,14 @@ public class MainActivity extends FragmentActivity implements
                     textToSpeech.speak(labels[idx], TextToSpeech.QUEUE_ADD, null,
                             Integer.toString(new Random().nextInt()));
                     Status.setText(labels[idx]);
+
+                    // status position na binabato sa mobile ni senior
+                    statusPosition = labels[idx];
+                    String datapath = "/myapp/synapse/status";
+                    new SendMessage(datapath, statusPosition).start();
+
+                    stepCount(statusPosition);
+
 //                    if(idx==0){
 //                        Stand = 0;
 //                        Walk = 0;
@@ -481,6 +552,86 @@ public class MainActivity extends FragmentActivity implements
         }, 400, 1300);
 //    }, 750, 2000);
     }
+
+    public void stepCount(String status){
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(status.equals("walking")){
+                    step_count++;
+                    stepCounts.setText(String.valueOf(step_count));
+
+                    // step count na binabato sa mobile ni senior
+                    String datapath = "/myapp/synapse/stepcounts";
+                    new SendMessage(datapath, String.valueOf(step_count)).start();
+                }
+
+            }
+        }, 1000);
+
+    }
+
+    class SendMessage extends Thread {
+        String path;
+        String message;
+
+//Constructor for sending information to the Data Layer//
+
+        SendMessage(String p, String m) {
+            path = p;
+            message = m;
+        }
+
+        public void run() {
+
+//Retrieve the connected devices//
+
+            Task<List<Node>> nodeListTask =
+                    Wearable.getNodeClient(getApplicationContext()).getConnectedNodes();
+            try {
+
+//Block on a task and get the result synchronously//
+
+                List<Node> nodes = Tasks.await(nodeListTask);
+                for (Node node : nodes) {
+
+//Send the message///
+
+                    Task<Integer> sendMessageTask =
+                            Wearable.getMessageClient(MainActivity.this).sendMessage(node.getId(), path, message.getBytes());
+
+                    try {
+
+                        Integer result = Tasks.await(sendMessageTask);
+
+//Handle the errors//
+
+                    } catch (ExecutionException exception) {
+
+//TO DO//
+
+                    } catch (InterruptedException exception) {
+
+//TO DO//
+
+                    }
+
+                }
+
+            } catch (ExecutionException exception) {
+
+//TO DO//
+
+            } catch (InterruptedException exception) {
+
+//TO DO//
+
+            }
+        }
+    }
+
+
     protected void onPause() {
         super.onPause();
     }

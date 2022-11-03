@@ -83,6 +83,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/swipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_scroll_right"
@@ -303,7 +304,6 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- logout -->
-            <!-- search people -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btnLogout"
                 android:layout_width="160dp"
@@ -391,7 +391,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/redhat_display_bold"
-                            android:text="4,346"
+                            android:text="..."
                             android:textColor="#7E7E7E"
                             android:textSize="20sp" />
 
@@ -423,7 +423,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/redhat_display_bold"
-                                android:text="72"
+                                android:text=""
                                 android:textColor="#7E7E7E"
                                 android:textSize="40sp" />
 
@@ -469,7 +469,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/redhat_display_bold"
-                            android:text="Standing"
+                            android:text="..."
                             android:textColor="#7E7E7E"
                             android:textSize="15sp" />
 
@@ -669,7 +669,6 @@
                 <View android:layout_width="match_parent"
                     android:layout_height="100dp" />
             </LinearLayout>
-
 
         </ScrollView>
 
