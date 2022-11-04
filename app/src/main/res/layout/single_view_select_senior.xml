@@ -92,7 +92,7 @@
         </LinearLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btnMedication"
+            android:id="@+id/btnSelectSenior"
             android:layout_width="100dp"
             android:layout_height="38dp"
             android:layout_gravity="bottom|end"

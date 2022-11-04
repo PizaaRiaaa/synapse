@@ -1,20 +1,24 @@
-package com.example.synapse.screen.carer.modules.fragments;
+package com.example.synapse.screen.senior.modules.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.synapse.R;
 import com.example.synapse.screen.Login;
+import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
@@ -34,6 +38,9 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
+
 public class SettingsFragment extends Fragment {
 
     // global variables
@@ -67,7 +74,7 @@ public class SettingsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment Settings.
      */
     // TODO: Rename and change types and number of parameters
     public static SettingsFragment newInstance(String param1, String param2) {
@@ -85,7 +92,6 @@ public class SettingsFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-
         }
     }
 
@@ -116,7 +122,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_carer_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_senior_settings, container, false);
+
 
         ivUserPicture = view.findViewById(R.id.ivCarerProfilePic);
         ibBack = view.findViewById(R.id.ibBack);
@@ -126,7 +133,7 @@ public class SettingsFragment extends Fragment {
 
         FirebaseAuth user = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        referenceUser = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceUser = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
 
         // display carer information
         displayCarerInfo();
@@ -137,10 +144,7 @@ public class SettingsFragment extends Fragment {
         // sign-out the user and redirect to login screen
         tvLogout.setOnClickListener(v -> {
 
-            SharedPreferences myPrefs = getActivity().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
-            myPrefs.edit().remove("seniorKey").apply();
-
-           user.signOut();
+            user.signOut();
             Intent intent = new Intent(getActivity(), Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP

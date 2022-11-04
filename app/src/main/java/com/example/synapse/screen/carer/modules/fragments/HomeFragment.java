@@ -22,6 +22,7 @@ import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
+import com.example.synapse.screen.util.readwrite.ReadWriteUserSenior;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -52,16 +53,25 @@ public class HomeFragment extends Fragment {
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    private DatabaseReference referenceSenior, referenceCarer;
-    private ImageView ivProfilePic, ivSeniorProfilePic;
+    private DatabaseReference referenceSenior;
+    private DatabaseReference referenceCarer;
+    private FirebaseUser user;
+
+    private ImageView ivProfilePic;
+    private ImageView ivSeniorProfilePic;
+
     private TextView tvSeniorFullName;
     private TextView tvBarangay;
     private TextView tvSeniorAge;
     private TextView tvSeniorCity;
-    private String imageURL;
-    private FirebaseUser user;
+    private TextView tvHeartRate;
+    private TextView tvStatus;
+    private TextView tvStepCounts;
+    private TextView tvHealthStatusTitle;
 
+    private String imageURL;
     private String TAG, token;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -118,6 +128,11 @@ public class HomeFragment extends Fragment {
         tvSeniorCity = view.findViewById(R.id.tvSeniorCity);
         tvBarangay = view.findViewById(R.id.tvSeniorBarangay);
         tvSeniorAge = view.findViewById(R.id.tvSeniorAge);
+        tvHeartRate = view.findViewById(R.id.tvHeartRate);
+        tvStatus = view.findViewById(R.id.tvStatus);
+        tvStepCounts = view.findViewById(R.id.tvStepCounts);
+        tvHealthStatusTitle = view.findViewById(R.id.tvHealthStatusTitle);
+
         btnMedication = view.findViewById(R.id.btnMedication);
         btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
         btnAppointment = view.findViewById(R.id.btnAppointment);
@@ -132,6 +147,8 @@ public class HomeFragment extends Fragment {
         showUserProfile(userID);
         showSeniorProfile(getDefaults("seniorKey",getActivity()));
 
+        displayHealthStatus();
+
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
         btnPhysicalActivity.setOnClickListener(v -> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
         btnAppointment.setOnClickListener(v -> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));
@@ -143,6 +160,41 @@ public class HomeFragment extends Fragment {
     public static String getDefaults(String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key, null);
+    }
+
+    private void displayHealthStatus(){
+        referenceSenior.child(getDefaults("seniorKey",getActivity())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("heartrate")){
+                    ReadWriteUserSenior rw = snapshot.getValue(ReadWriteUserSenior.class);
+                    String heartrate = rw.getHeartrate();
+                    tvHeartRate.setText(heartrate);
+                }
+
+                if(snapshot.hasChild("status")){
+                    ReadWriteUserSenior rw = snapshot.getValue(ReadWriteUserSenior.class);
+                    String status = rw.getStatus();
+                    tvStatus.setText(status);
+
+                }
+
+                if(snapshot.hasChild("stepcounts")){
+                    ReadWriteUserSenior rw = snapshot.getValue(ReadWriteUserSenior.class);
+                    String stepcounts = rw.getStepcounts();
+                    tvStepCounts.setText(stepcounts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void setTvHealthStatusTitle(String firstName){
+        tvHealthStatusTitle.setText("Health Status • Let\'s check " + firstName + "\'s Health");
     }
 
     // display carer profile pic
@@ -189,6 +241,8 @@ public class HomeFragment extends Fragment {
                         String fullName = senior.firstName + " " + senior.lastName;
                         String barangay = senior.address;
                         String city = senior.city;
+
+                        setTvHealthStatusTitle(senior.firstName);
 
                         Calendar cal = Calendar.getInstance();
                         SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);

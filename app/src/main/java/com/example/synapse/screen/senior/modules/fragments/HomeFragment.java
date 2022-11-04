@@ -176,8 +176,10 @@ public class HomeFragment extends Fragment {
         TextClock currentTime = view.findViewById(R.id.tcTime);
         MaterialCardView btnMedication = view.findViewById(R.id.btnMedication);
         MaterialCardView btnGames = view.findViewById(R.id.btnGames);
-        MaterialCardView btnSearchPeople = view.findViewById(R.id.btnSearchPeople);
         MaterialCardView btnLogout = view.findViewById(R.id.btnLogout);
+        MaterialCardView btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
+        MaterialCardView btnAppointment = view.findViewById(R.id.btnAppointment);
+        MaterialCardView btnMyLocation = view.findViewById(R.id.btnMyLocation);
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
         tvHeartRate = view.findViewById(R.id.tvHeartRate);
@@ -197,7 +199,10 @@ public class HomeFragment extends Fragment {
 
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
         btnGames.setOnClickListener(v -> replaceFragment.replaceFragment(new GamesFragment(), getActivity()));
-        btnSearchPeople.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchPeople.class)));
+        btnPhysicalActivity.setOnClickListener(v-> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
+        btnAppointment.setOnClickListener(v-> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));
+        btnMyLocation.setOnClickListener(v -> startActivity(new Intent(getActivity(), MyLocation.class)));
+
         currentTime.setFormat12Hour("hh:mm a");
 
         showUserProfile(userID);

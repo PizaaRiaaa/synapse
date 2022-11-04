@@ -5,6 +5,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.register.RegisterCarer;
+import com.example.synapse.screen.senior.test.CheckCarerEmail;
 import com.example.synapse.screen.senior.test.MCIpromptMessage;
 
 import android.annotation.SuppressLint;
@@ -62,6 +63,7 @@ public class PickRole extends AppCompatActivity {
             ibSenior.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.rounded_button_pick_role));
             ibCarer.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.custom_button_selector));
             btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, MCIpromptMessage.class)));
+           //  btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, CheckCarerEmail.class)));
         });
 
 

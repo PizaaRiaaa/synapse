@@ -27,6 +27,7 @@ public class CheckCarerEmail extends AppCompatActivity {
     TextInputEditText text_email;
     String userEmail;
 
+
     void registerButton(){
         MaterialButton btn = findViewById(R.id.btnRegisterSenior);
         btn.setOnClickListener(v -> {
@@ -73,6 +74,8 @@ public class CheckCarerEmail extends AppCompatActivity {
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         finish();
+                    }else{
+
                     }
                 }
             }
@@ -82,6 +85,8 @@ public class CheckCarerEmail extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @Override

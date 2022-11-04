@@ -16,9 +16,12 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/ibSignout"
+            android:id="@+id/tvSignout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
             android:layout_marginTop="5dp"
             android:layout_marginStart="5dp"
             android:backgroundTint="#565555"
@@ -29,7 +32,10 @@
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/ib"
+            android:id="@+id/tvAddSenior"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

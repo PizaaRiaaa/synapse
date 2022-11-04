@@ -96,10 +96,10 @@ public class MyLocation extends AppCompatActivity{
         ImageView btnBack = findViewById(R.id.ibBack);
         tvCurrentLocation = findViewById(R.id.tvCurrentLocation);
 
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE},
-                PackageManager.PERMISSION_GRANTED);
+      //  ActivityCompat.requestPermissions(this,
+      //          new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+      //                  Manifest.permission.READ_EXTERNAL_STORAGE},
+      //          PackageManager.PERMISSION_GRANTED);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());

@@ -26,6 +26,7 @@ import com.example.synapse.screen.admin.LoadingScreen;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.senior.SeniorMainActivity;
+import com.example.synapse.screen.senior.test.MCIpromptMessage;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,6 +49,7 @@ public class Login extends AppCompatActivity {
     private DatabaseReference referenceCarer, referenceSenior,
             referenceAssignedSeniors, referenceAdmin;
     private FirebaseAuth mAuth;
+    FirebaseUser firebaseUser;
     EditText etEmail, etPassword;
     String textEmail, textPassword;
 
@@ -82,7 +84,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    firebaseUser = mAuth.getCurrentUser();
                     assert firebaseUser != null;
 
                     if(firebaseUser.isEmailVerified()){
@@ -95,26 +97,28 @@ public class Login extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if(snapshot.exists()){
+
                                                 startActivity(new Intent(Login.this, SelectSenior.class));
                                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                                 finish();
+                                            }else if(!snapshot.exists()){
+                                                new android.app.AlertDialog.Builder(Login.this)
+                                                        .setTitle("Register your senior's account")
+                                                        .setMessage("Currently you don't have senior assigned to your account.")
+                                                        .setPositiveButton("Register",
+                                                                (dialogInterface, i) -> redirectCarerToRegisterSenior())
+                                                        .setNegativeButton("Cancel", (dialogInteface, i) -> dialogInteface.cancel())
+                                                        .setCancelable(false)
+                                                        .show();
                                             }else{
-                                                // startActivity(new Intent(Login.this, PromptToRegisterSenior.class));
-                                                // overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                                // finish();
-                                                // admin
-                                                referenceAdmin.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                // senior
+                                                referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for(DataSnapshot ds : snapshot.getChildren()){
-                                                            ReadWriteUserDetails rd = snapshot.getValue(ReadWriteUserDetails.class);
-                                                            String userType = rd.getUserType();
-
-                                                            if(userType.equals("Admin")){
-                                                                startActivity(new Intent(Login.this, LoadingScreen.class));
-                                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                                                finish();
-                                                            }
+                                                        if(snapshot.exists()){
+                                                            startActivity(new Intent(Login.this, SeniorMainActivity.class));
+                                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                            finish();
                                                         }
                                                     }
 
@@ -123,6 +127,7 @@ public class Login extends AppCompatActivity {
 
                                                     }
                                                 });
+
                                             }
                                         }
 
@@ -133,21 +138,6 @@ public class Login extends AppCompatActivity {
                                     });
 
                                 }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                        // senior
-                        referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                startActivity(new Intent(Login.this, SeniorMainActivity.class));
-                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                finish();
                             }
 
                             @Override
@@ -191,6 +181,14 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    void redirectCarerToRegisterSenior(){
+        if(firebaseUser != null) {
+            mAuth.signOut();
+            startActivity(new Intent(Login.this, MCIpromptMessage.class));
+        }
+
     }
 
     // display dialog if user's email is not verified

@@ -19,9 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.Login;
 import com.example.synapse.screen.PickRole;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
@@ -31,6 +33,7 @@ import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
 import com.example.synapse.screen.util.viewholder.SeniorViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +57,7 @@ public class SelectSenior extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView carerImage;
     private FirebaseUser user;
+    private FirebaseAuth mAuth;
 
     int calculateAge(long date){
         Calendar dob = Calendar.getInstance();
@@ -117,6 +121,22 @@ public class SelectSenior extends AppCompatActivity {
                                             .transform(new CropCircleTransformation())
                                             .into(holder.image);
 
+                                    holder.btnSelectSenior.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(SelectSenior.this, CarerMainActivity.class);
+                                            intent.putExtra("userKey", getRef(position).getKey());
+                                            startActivity(intent);
+
+                                            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                            editor.putString("userKey", getRef(position).getKey());
+                                            editor.apply();
+                                            setDefaults("seniorKey", model.getSeniorID(),getApplicationContext());
+                                            startActivity(new Intent(SelectSenior.this, CarerMainActivity.class));
+                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                        }
+                                    });
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -179,17 +199,28 @@ public class SelectSenior extends AppCompatActivity {
 
        // SharedPreferences myPrefs = getApplicationContext().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
        // myPrefs.edit().remove("seniorKey").apply();
+        mAuth = FirebaseAuth.getInstance();
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.remove("seniorKey");
         editor.commit();
 
+
         recyclerView = findViewById(R.id.recyclerview_seniors);
         recyclerView.setLayoutManager(new LinearLayoutManager(SelectSenior.this));
         carerImage = findViewById(R.id.ivProfilePic);
 
+        TextView tvSignOut = findViewById(R.id.tvSignout);
+        tvSignOut.setOnClickListener(v -> {
+            mAuth.signOut();
+            Toast.makeText(this, "Sign out successfully", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, Login.class));
+            finish();
+        });
+
         loadAssignedSeniors();
         loadCarerImage();
+
 
     }
 }

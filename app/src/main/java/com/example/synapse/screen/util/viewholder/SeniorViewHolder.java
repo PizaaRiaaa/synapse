@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.synapse.R;
+import com.google.android.material.imageview.ShapeableImageView;
 
 public class SeniorViewHolder extends RecyclerView.ViewHolder {
 
@@ -14,6 +15,7 @@ public class SeniorViewHolder extends RecyclerView.ViewHolder {
     public TextView city;
     public TextView dob;
     public ImageView image;
+    public ShapeableImageView btnSelectSenior;
 
     public SeniorViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -23,5 +25,6 @@ public class SeniorViewHolder extends RecyclerView.ViewHolder {
         city = itemView.findViewById(R.id.tvSeniorCity);
         dob = itemView.findViewById(R.id.tvSeniorAge);
         image = itemView.findViewById(R.id.ivSeniorProfilePic);
+        btnSelectSenior = itemView.findViewById(R.id.btnSelectSenior);
     }
 }

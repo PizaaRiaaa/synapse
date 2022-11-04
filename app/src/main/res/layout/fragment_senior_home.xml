@@ -148,6 +148,7 @@
 
             <!-- gps -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnMyLocation"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -185,84 +186,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- search people -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnSearchPeople"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp"
-                android:elevation="6dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="30dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_search_people"
-                        android:contentDescription="@string/pick_carer"
-                        android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/redhat_display_bold"
-                        android:text="Search"
-                        android:textColor="@color/grey5"
-                        android:textAlignment="center"
-                        android:layout_marginTop="15dp"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- message carer -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="20dp"
-                android:elevation="6dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="30dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_message_carer"
-                        android:contentDescription="@string/pick_carer"
-                        android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/redhat_display_bold"
-                        android:text="Chat"
-                        android:textColor="@color/grey5"
-                        android:textAlignment="center"
-                        android:layout_marginTop="15dp"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
 
             <!-- settings -->
             <com.google.android.material.card.MaterialCardView
@@ -537,6 +460,7 @@
 
                 <!-- physical activity module -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnPhysicalActivity"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
                     android:layout_margin="10dp"
@@ -584,6 +508,7 @@
 
                 <!-- appointment module -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnAppointment"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
                     android:layout_margin="12dp"

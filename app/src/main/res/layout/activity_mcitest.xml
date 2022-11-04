@@ -100,6 +100,7 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/rounded_button_login"
             android:fontFamily="@font/inter_bold"
+            android:enabled="false"
             android:text="Next"
             android:textSize="14sp" />
 

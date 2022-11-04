@@ -8,12 +8,16 @@ public class ReadWriteUserSenior {
     public String image;
     public String lastName;
     public String middle;
+    public String heartrate;
+    public String status;
+    public String stepcounts;
     public String seniorID;
 
     public ReadWriteUserSenior(){}
 
     public ReadWriteUserSenior(String textBarangay, String textCity, String textDOB, String textFirstName, String textImage,
-                               String textLastName, String textMiddle, String textSeniorID){
+                               String textLastName, String textMiddle, String textSeniorID, String textHeartRate, String textStatus,
+                               String textStepCounts){
 
         this.barangay = textBarangay;
         this.city = textCity;
@@ -22,6 +26,9 @@ public class ReadWriteUserSenior {
         this.image = textImage;
         this.lastName = textLastName;
         this.middle = textMiddle;
+        this.heartrate = textHeartRate;
+        this.status = textStatus;
+        this.stepcounts = textStepCounts;
         this.seniorID = textSeniorID;
     }
 
@@ -80,6 +87,18 @@ public class ReadWriteUserSenior {
     public void setMiddle(String middle) {
         this.middle = middle;
     }
+
+    public void setHeartrate(String heartrate) { this.heartrate = heartrate;}
+
+    public String getHeartrate() { return heartrate;}
+
+    public void setStatus(String status) { this.status = status;}
+
+    public String getStatus() { return status;}
+
+    public void setStepcounts(String stepcounts) { this.stepcounts = stepcounts;}
+
+    public String getStepcounts() { return stepcounts;}
 
     public String getSeniorID() {
         return seniorID;

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_settings"
+    tools:context=".screen.senior.modules.fragments.SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:textColor="@color/grey7"
+                    android:text="Settings"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ivCarerProfilePic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/pick_carer"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/carer_profile_pic"
+                android:backgroundTint="@color/carer_profile_pic"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/tvCarerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textAlignment="center"
+                android:fontFamily="@font/redhat_display_bold"
+                android:textColor="@color/grey7"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tvCarerEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:layout_gravity="start">
+
+            <TextView
+                android:id="@+id/tvUpdateProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="Update Profile"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_profile" />
+
+            <TextView
+                android:id="@+id/tvUpdateEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="Change Email"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_email" />
+
+            <TextView
+                android:id="@+id/tvAssignedCarer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="Assigned Carer"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_assigned_senior" />
+
+            <TextView
+                android:id="@+id/tvChangePassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="Change Password"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_password" />
+
+            <TextView
+                android:id="@+id/tvAboutApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp"
+                android:text="About App"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_about" />
+
+            <TextView
+                android:id="@+id/tvLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:text="Logout"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:textSize="16sp"
+                app:drawableStartCompat="@drawable/ic_logout" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

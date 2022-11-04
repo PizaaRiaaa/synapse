@@ -48,7 +48,6 @@ tools:context=".screen.senior.modules.fragments.MedicationFragment">
             android:id="@+id/ivProfilePic"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_gravity="bottom|center_horizontal"
             android:layout_marginEnd="20dp"
             android:background="@drawable/carer_profile_pic"
             android:backgroundTint="@color/carer_profile_pic"

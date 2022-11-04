@@ -85,12 +85,14 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
             //choices button clicked
             selectedAnswer = clickedButton.getText().toString();
             clickedButton.setBackgroundColor(getResources().getColor(R.color.mid_violet));
+            submitBtn.setEnabled(true);
         }
 
     }
 
     void loadNewQuestion(){
         Log.d("COUNTER", String.valueOf(ctr)); // print current question counter
+        submitBtn.setEnabled(false);
         if(ctr == totalQuestion){
             finishQuiz();
             return;

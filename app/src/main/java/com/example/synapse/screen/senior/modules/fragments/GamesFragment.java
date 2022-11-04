@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.senior.games.MathGame;
 import com.example.synapse.screen.senior.games.TriviaQuiz;
 import com.example.synapse.screen.senior.modules.view.TicTacToeHome;
@@ -88,7 +89,7 @@ public class GamesFragment extends Fragment {
         btnTriviaQuiz.setOnClickListener(v -> startActivity(new Intent(getActivity(), TriviaQuiz.class)));
 
         // redirect user to senior home scree
-        //ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), SeniorHome.class)));
+        ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), SeniorMainActivity.class)));
 
         return view;
     }

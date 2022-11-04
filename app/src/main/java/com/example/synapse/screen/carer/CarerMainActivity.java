@@ -40,6 +40,8 @@ public class CarerMainActivity extends AppCompatActivity {
                     replaceFragment.replaceFragment(new HomeFragment(), CarerMainActivity.this);
                     break;
                 case R.id.miChat:
+                    startActivity(new Intent(this, SelectSenior.class));
+                    finish();
                     break;
                 case R.id.miProfile:
                     break;

@@ -6,8 +6,8 @@
         android:icon="@drawable/ic_home"/>
 
     <item android:id="@+id/miChat"
-        android:title="@string/menuChat"
-        android:icon="@drawable/ic_chat"/>
+        android:title="Seniors"
+        android:icon="@drawable/ic_seniors"/>
 
     <item android:id="@+id/placeholder"
         android:title=""/>

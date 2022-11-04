@@ -43,7 +43,7 @@
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"
                 android:fontFamily="@font/redhat_display_regular"
-                android:text="@string/tvSub_header"
+                android:text="Make senior\'s life easier and safer"
                 android:textColor="@color/grey1"
                 android:textSize="15sp" />
 
