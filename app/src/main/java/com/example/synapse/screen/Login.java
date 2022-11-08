@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import com.example.synapse.R;
 import com.example.synapse.screen.admin.LoadingScreen;
@@ -110,24 +111,6 @@ public class Login extends AppCompatActivity {
                                                         .setNegativeButton("Cancel", (dialogInteface, i) -> dialogInteface.cancel())
                                                         .setCancelable(false)
                                                         .show();
-                                            }else{
-                                                // senior
-                                                referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        if(snapshot.exists()){
-                                                            startActivity(new Intent(Login.this, SeniorMainActivity.class));
-                                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                                            finish();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-
                                             }
                                         }
 
@@ -137,6 +120,23 @@ public class Login extends AppCompatActivity {
                                         }
                                     });
 
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        // senior
+                        referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    startActivity(new Intent(Login.this, SeniorMainActivity.class));
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
                                 }
                             }
 
@@ -237,6 +237,12 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // force app to lightmode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        transparentStatusBar();
+
         setContentView(R.layout.activity_login);
 
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -251,8 +257,6 @@ public class Login extends AppCompatActivity {
         referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Admins");
         referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
 
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        transparentStatusBar();
         changeColor();
 
         tvSwitchToPickRole.setOnClickListener(view -> startActivity(new Intent(Login.this, PickRole.class)));

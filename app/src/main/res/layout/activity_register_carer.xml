@@ -81,397 +81,397 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:fillViewport="true"
         android:fadeScrollbars="false"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarThumbVertical="@color/dark_green"
+        android:fillViewport="true"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:layout_height="match_parent">
+        android:scrollbarFadeDuration="0"
+        android:scrollbarThumbVertical="@color/dark_green">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="?actionBarSize"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-
-        <!-- full name -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilFirstName"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="15dp"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true"
-            app:boxStrokeColor="@color/light_green"
-            app:boxStrokeErrorColor="@color/red_decline_request"
-            app:endIconMode="clear_text"
-            app:hintEnabled="true"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="?actionBarSize"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCarerFirstName"
+            <!-- full name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_text_login"
-                android:fontFamily="@font/redhat_display_regular"
-                android:hint="First Name *"
-                android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
-                android:paddingTop="35dp"
-                android:textColorHint="@color/grey4"
-                android:textSize="18sp"
-                app:boxStrokeWidthFocused="0dp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/tilMiddleAndLast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:layout_below="@+id/tilFirstName"
-            android:baselineAligned="false">
-
-            <!-- middle -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilMiddle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                app:errorEnabled="true"
+                android:layout_marginTop="15dp"
                 app:boxStrokeColor="@color/light_green"
                 app:boxStrokeErrorColor="@color/red_decline_request"
-                app:endIconMode="clear_text"
-                app:hintEnabled="true"
                 app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCarerMiddle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_text_login"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Middle *"
-                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
-                    android:paddingTop="35dp"
-                    android:textColorHint="@color/grey4"
-                    android:textSize="18sp"
-                    app:boxStrokeWidthFocused="0dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- lastname -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilLastName"
-                android:layout_width="0dp"
-                android:layout_weight="1.5"
-                android:layout_height="wrap_content"
-                app:errorEnabled="true"
-                app:boxStrokeColor="@color/light_green"
-                app:boxStrokeErrorColor="@color/red_decline_request"
-                app:endIconMode="clear_text"
-                app:hintEnabled="true"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCarerLastName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_text_login"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Last Name *"
-                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
-                    android:paddingTop="35dp"
-                    android:textColorHint="@color/grey4"
-                    android:textSize="18sp"
-                    app:boxStrokeWidthFocused="0dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tilDOBAndGender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:layout_below="@id/tilMiddleAndLast"
-            android:baselineAligned="false">
-
-            <!-- DOB dropdown -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDOB"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:layout_marginEnd="10dp"
-                app:errorEnabled="true"
-                app:endIconMode="clear_text"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/dropdown_dob"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_text_login"
-                    android:drawableEnd="@drawable/ic_dropdown"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:inputType="none"
-                    android:hint="Date of Birth *"
-                    android:padding="20dp"
-                    android:textColorHint="@color/grey4"
-                    android:textSize="18sp"
-                    app:boxStrokeWidthFocused="0dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- gender dropdown -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilGender"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:errorEnabled="true"
-                app:hintEnabled="true"
-                app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
-                app:boxStrokeErrorColor="@color/mtrl_textinput_default_box_stroke_color"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                android:textColorHint="@color/grey4">
-
-                <AutoCompleteTextView
-                    android:id="@+id/drop_gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_text_login"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:hint="Gender *"
-                    android:inputType="none"
-                    android:padding="20dp"
-                    android:textColorHint="@color/grey4"
-                    android:textSize="18sp"
-                    app:boxStrokeWidthFocused="0dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <!-- email address -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tilDOBAndGender"
-            app:errorEnabled="true"
-            app:endIconMode="clear_text"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCarerEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_text_login"
-                android:fontFamily="@font/redhat_display_regular"
-                android:hint="Email *"
-                android:inputType="textVisiblePassword|textEmailAddress"
-                android:paddingTop="35dp"
-                android:textColorHint="@color/grey4"
-                android:textSize="18sp"
-                app:boxStrokeWidthFocused="0dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- address -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_below="@+id/tilEmail"
-            app:errorEnabled="true"
-            app:endIconMode="clear_text"
-            app:counterMaxLength="30"
-            app:counterEnabled="true"
-            app:hintEnabled="true"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_text_login"
-                android:fontFamily="@font/redhat_display_regular"
-                android:hint="Address *"
-                android:inputType="textCapWords|textVisiblePassword"
-                android:paddingTop="35dp"
-                android:textColorHint="@color/grey4"
-                android:textSize="18sp"
-                app:boxStrokeWidthFocused="0dp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- mobile number -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilMobileNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_below="@+id/tilAddress"
-            app:counterEnabled="true"
-            app:counterMaxLength="11"
-            app:errorEnabled="true"
-            app:endIconMode="clear_text"
-            app:hintEnabled="true"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCarerMobileNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword|number"
-                android:background="@drawable/rounded_text_login"
-                android:fontFamily="@font/redhat_display_regular"
-                android:drawableStart="@drawable/ic_ph_flag"
-                android:drawablePadding="10dp"
-                android:hint="+63   Mobile Number *"
                 app:boxStrokeWidthFocused="0dp"
-                android:padding="20dp"
-                android:textColorHint="@color/grey4"
-                android:textSize="18sp" />
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etCarerMobileNumber"
-                android:textSize="12sp"
-                android:text="* e.g. 09166992880"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCarerFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="First Name *"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <!-- password -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tilMobileNumber"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:endIconDrawable="@drawable/custom_eye"
-            app:endIconMode="password_toggle"
-            app:endIconTint="@color/grey4"
-            app:errorEnabled="true"
-            app:hintEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRegisterCarerPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_text_login"
-                android:fontFamily="@font/redhat_display_regular"
-                android:hint="Password *"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:paddingTop="35dp"
-                android:textColorHint="@color/grey4"
-                android:textSize="18sp"
-                app:boxStrokeWidthFocused="0dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etRegisterCarerPassword"
-                android:textSize="12sp"
-                android:text="* Atleast 6 charaters, 1 upper case, and 1  number"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/tilCheckBox"
-            android:layout_below="@+id/tilPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/tilMiddleAndLast"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_below="@+id/tilFirstName"
+                android:layout_gravity="center_horizontal"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/cbAgree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:textAlignment="center"
-                   android:textSize="12sp"
-                   android:text="I agree to the "/>
-
-                <TextView
-                    android:id="@+id/termsAndDataPolicy"
-                    android:layout_width="wrap_content"
+                <!-- middle -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMiddle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="#049599"
-                    android:text="Terms and Data Policy"/>
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red_decline_request"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCarerMiddle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Middle *"
+                        android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                        android:paddingTop="35dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- lastname -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLastName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red_decline_request"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCarerLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Last Name *"
+                        android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                        android:paddingTop="35dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/tilDOBAndGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tilMiddleAndLast"
+                android:layout_gravity="center_horizontal"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSignupCarer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="?actionBarSize"
-            android:layout_below="@+id/tilCheckBox"
-            android:background="@drawable/rounded_button_login"
-            android:fontFamily="@font/redhat_display_bold"
-            android:enabled="true"
-            android:text="@string/signup"
-            android:textSize="14sp" />
+                <!-- DOB dropdown -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDOB"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1.2"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="20dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dropdown_dob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:drawableEnd="@drawable/ic_dropdown"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Date of Birth *"
+                        android:inputType="none"
+                        android:padding="20dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
 
-            <ProgressBar
-                android:id="@+id/progressBarRegister"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- gender dropdown -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilGender"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColorHint="@color/grey4"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+                    app:boxStrokeErrorColor="@color/mtrl_textinput_default_box_stroke_color"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/drop_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Gender *"
+                        android:inputType="none"
+                        android:padding="20dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- email address -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilDOBAndGender"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCarerEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Email *"
+                    android:inputType="textVisiblePassword|textEmailAddress"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- address -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilEmail"
+                android:layout_marginBottom="15dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Address *"
+                    android:inputType="textCapWords|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- mobile number -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilAddress"
+                android:layout_marginBottom="15dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="11"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCarerMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:drawableStart="@drawable/ic_ph_flag"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="+63   Mobile Number *"
+                    android:inputType="textVisiblePassword|number"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/etCarerMobileNumber"
+                    android:text="* e.g. 09166992880"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- password -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilMobileNumber"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconDrawable="@drawable/custom_eye"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/grey4"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRegisterCarerPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Password *"
+                    android:inputType="textPassword"
+                    android:maxLength="20"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/etRegisterCarerPassword"
+                    android:text="* Atleast 6 charaters, 1 upper case, and 1  number"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/tilCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tilPassword"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cbAgree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="I agree to the "
+                        android:textAlignment="center"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/termsAndDataPolicy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Terms and Data Policy"
+                        android:textAlignment="center"
+                        android:textColor="#049599"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSignupCarer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilCheckBox"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="?actionBarSize"
+                android:background="@drawable/rounded_button_login"
+                android:enabled="true"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="@string/signup"
+                android:textSize="14sp" />
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                android:layout_gravity="center" />
+                android:layout_centerInParent="true"
+                android:padding="20dp">
+
+                <ProgressBar
+                    android:id="@+id/progressBarRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
-
-    </RelativeLayout>
 
 
     </ScrollView>

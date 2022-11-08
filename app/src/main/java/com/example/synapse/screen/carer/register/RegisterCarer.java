@@ -266,7 +266,7 @@ public class RegisterCarer extends AppCompatActivity {
         }else if(checkIfEmpty(etEmail)){
             tilEmail.setError("This field can't be empty");
             tilEmail.requestFocus();
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText()).matches()){
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString().trim()).matches()){
             tilEmail.setError("Invalid email. Please re-enter your email");
             tilEmail.requestFocus();
         }else if(checkIfEmpty(etAddress)){
