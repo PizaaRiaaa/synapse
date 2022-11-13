@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -318,14 +319,16 @@ public class HomeFragment extends Fragment {
     }
 
     public void alertLowHR(String newinfo){
-        if(newinfo.compareTo("") != 0) {
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Low Heart Rate!!")
-                    .setIcon(R.drawable.heartrate)
-                    .setMessage("WE DETECTED THAT YOUR HEART RATE FELL BELOW ⬇ 40 BPM WHILE YOUR INACTIVE")
-                    .setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.cancel())
-                    .setCancelable(false)
-                    .show();
+        if(getActivity() != null){
+            if(newinfo.compareTo("") != 0) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Low Heart Rate!!")
+                        .setIcon(R.drawable.heartrate)
+                        .setMessage("WE DETECTED THAT YOUR HEART RATE FELL BELOW ⬇ 40 BPM WHILE YOUR INACTIVE")
+                        .setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.cancel())
+                        .setCancelable(false)
+                        .show();
+            }
         }
     }
 

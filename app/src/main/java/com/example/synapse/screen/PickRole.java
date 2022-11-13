@@ -63,7 +63,7 @@ public class PickRole extends AppCompatActivity {
             ibSenior.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.rounded_button_pick_role));
             ibCarer.setBackground(AppCompatResources.getDrawable(PickRole.this, R.drawable.custom_button_selector));
             btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, MCIpromptMessage.class)));
-           //  btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, CheckCarerEmail.class)));
+            // btnContinue.setOnClickListener(view -> startActivity(new Intent(PickRole.this, CheckCarerEmail.class)));
         });
 
 

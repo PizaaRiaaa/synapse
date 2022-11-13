@@ -9,12 +9,14 @@ import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -35,6 +37,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
+import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.adapter.ItemPillColorAdapter;
@@ -65,13 +68,8 @@ import java.util.Objects;
 
 public class ViewMedicine extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
-    ReplaceFragment replaceFragment = new ReplaceFragment();
     private FirebaseUser mUser;
-    private DatabaseReference
-            referenceReminders,
-            referenceProfile,
-            referenceCompanion;
-
+    private DatabaseReference referenceReminders;
     private final String[] PILL_SHAPE_NAMES = {"Pill1", "Pill2","Pill3","Pill4"};
     private final String[] PILL_COLOR_NAMES = {"Green","Red","Brown","Pink","Blue","White"};
     private final int [] PILL_SHAPES_ICS = {R.drawable.ic_pill1, R.drawable.ic_pill2, R.drawable.ic_pill3, R.drawable.ic_pill4};
@@ -87,8 +85,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     private Long request_code;
     int code, requestCode;
 
-    String medicineID, seniorID, name,
-           dosage, token, color, shape, dose,
+    String medicineID, name,
+           dosage, color, shape, dose,
            time, description, quantity;
 
     RequestQueue requestQueue;
@@ -102,6 +100,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     Spinner pillShapeSpinner, pillColorSpinner;
     ItemPillShapeAdapter adapter;
     ItemPillColorAdapter adapter2;
+
+    PromptMessage promptMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +134,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         adapter2.notifyDataSetChanged();
         pillColorSpinner.setAdapter(adapter2);
 
-        referenceCompanion = FirebaseDatabase.getInstance().getReference().child("Companion");
-        referenceProfile = FirebaseDatabase.getInstance().getReference().child("Users");
+        promptMessage = new PromptMessage();
+
         referenceReminders = FirebaseDatabase.getInstance().getReference("Medication Reminders");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -153,6 +153,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         else showMedicineInfo(medicineID);
 
         btnUpdate.setOnClickListener(v -> updatePill(medicineID));
+
 
         deleteMedicine();
 
@@ -223,7 +224,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                 pendingIntent);
     }
 
-
     public void cancelAlarm(int requestCode){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         intent = new Intent(this, AlertReceiver.class);
@@ -251,62 +251,21 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    //  listen if alarm is currently running so we can send notification to senior
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent != null) {
-//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                        for (DataSnapshot ds : snapshot.getChildren()) {
-//                            seniorID = ds.getKey();
-//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-//                                    token = seniorProfile.getToken();
-//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-//                                            "Medicine Reminder",
-//                                            "It's time to take your medicine",
-//                                            ViewMedicine.this);
-//                                    notificationsSender.SendNotifications();
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
-//                                }
-//                            });
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
-//                    }
-//                });
-//            }
-//        }
-//    };
-//
     public void showMedicineInfo(String medicineID){
         // userID >
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
-               for(DataSnapshot ds1: snapshot.getChildren()){
-                  String key1 = ds1.getKey();
+               for(DataSnapshot ignored: snapshot.getChildren()){
 
                   // userID > seniorID
-                   referenceReminders.child(mUser.getUid()).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+                   referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                           for(DataSnapshot ignored : snapshot.getChildren()) {
 
                               // userID > seniorID > medicineID
-                              referenceReminders.child(mUser.getUid()).child(key1).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                              referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                   @SuppressLint("UseCompatLoadingForDrawables")
                                   @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                                       if(snapshot.exists()){
@@ -356,21 +315,21 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                   }
                                   @Override
                                   public void onCancelled(@NonNull DatabaseError error) {
-                                      promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                      promptMessage.defaultErrorMessage(ViewMedicine.this);
                                   }
                               });
                           }
                        }
                        @Override
                        public void onCancelled(@NonNull DatabaseError error) {
-                           promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                           promptMessage.defaultErrorMessage(ViewMedicine.this);
                        }
                    });
                }
            }
            @Override
            public void onCancelled(@NonNull DatabaseError error) {
-               promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+               promptMessage.defaultErrorMessage(ViewMedicine.this);
             }
        });
     }
@@ -406,9 +365,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
     // update pill for both carer and senior nodes
     public void updatePill(String medicineID){
-
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Name", Objects.requireNonNull(etPillName.getText()).toString());
         hashMap.put("Dose", Objects.requireNonNull(etDose.getText()).toString());
         hashMap.put("Dosage", Objects.requireNonNull(etPillDosage.getText()).toString());
@@ -420,10 +377,9 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds1 : snapshot.getChildren()){
-                    String seniorID = ds1.getKey();
+                for(DataSnapshot ignored : snapshot.getChildren()){
 
-                    referenceReminders.child(mUser.getUid()).child(seniorID).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored : snapshot.getChildren()){
@@ -447,13 +403,13 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                     startAlarm(calendar);
                                 }
 
-                                referenceReminders.child(seniorID).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot ds3 : snapshot.getChildren()){
                                             String senior_medicineID  = ds3.getKey();
 
-                                            referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).child(senior_medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     ReadWriteMedication rw2 = snapshot.getValue(ReadWriteMedication.class);
@@ -461,10 +417,10 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                                     // update both nodes
                                                     if(senior_request_code.equals(carer_request_code)){
-                                                        referenceReminders.child(mUser.getUid()).child(seniorID).child(medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                referenceReminders.child(seniorID).child(mUser.getUid()).child(senior_medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).child(senior_medicineID).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                     }
@@ -476,7 +432,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                    promptMessage.defaultErrorMessage(ViewMedicine.this);
                                                 }
                                             });
                                         }
@@ -484,7 +440,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                        promptMessage.defaultErrorMessage(ViewMedicine.this);
                                     }
                                 });
                             }
@@ -492,7 +448,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                            promptMessage.defaultErrorMessage(ViewMedicine.this);
                         }
                     });
                 }
@@ -500,25 +456,22 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                promptMessage.defaultErrorMessage(ViewMedicine.this);
             }
         });
-        promptMessage("Medicine Info","Successfully updated the medicine information", R.color.dark_green);
+        promptMessage.defaultErrorMessage(ViewMedicine.this);
     }
 
     // delete medicine for both carer and senior nodes
     public void deleteMedicine(){
                ibBin.setOnClickListener(v -> {
-
                    // userID
                    referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                           for(DataSnapshot ds1: snapshot.getChildren()){
-                               String key = ds1.getKey();
-
+                           for(DataSnapshot ignored: snapshot.getChildren()){
                                // userID > seniorID > medicineID (retrieve)
-                               referenceReminders.child(mUser.getUid()).child(key).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
+                               referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                    @Override
                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -531,20 +484,20 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                        cancelAlarm(code);
 
                                        // userID > seniorID > medicineID (remove)
-                                       referenceReminders.child(mUser.getUid()).child(key).child(medicineID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                       referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                            @Override
                                            public void onComplete(@NonNull Task<Void> task) {
 
                                                if(task.isSuccessful()){
                                                    // seniorID > carerID
-                                                   referenceReminders.child(key).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                   referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                        @Override
                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                            for(DataSnapshot ds2: snapshot.getChildren()){
                                                                String medicine_key = ds2.getKey();
 
                                                                // seniorID > carerID > medicineID (retrieve)
-                                                               referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                               referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).child(medicine_key).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                    @Override
                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                        for(DataSnapshot ignored : snapshot.getChildren()){
@@ -554,7 +507,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                                                                            Long request_code2 = rw.getRequestCode();
                                                                            if (request_code2.equals(request_code)) {
                                                                                // seniorID > carerID > medicineID (remove)
-                                                                               referenceReminders.child(key).child(mUser.getUid()).child(medicine_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                               referenceReminders.child(getDefaults("seniorKey",ViewMedicine.this)).child(mUser.getUid()).child(medicine_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                    @Override
                                                                                    public void onComplete(@NonNull Task<Void> task) {
                                                                                        finish();
@@ -566,7 +519,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                                                    @Override
                                                                    public void onCancelled(@NonNull DatabaseError error) {
-                                                                       promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                                       promptMessage.defaultErrorMessage(ViewMedicine.this);
                                                                    }
                                                                });
                                                            }
@@ -574,7 +527,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                                        @Override
                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                           promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                                           promptMessage.defaultErrorMessage(ViewMedicine.this);
                                                        }
                                                    });
                                                }
@@ -584,7 +537,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                    @Override
                                    public void onCancelled(@NonNull DatabaseError error) {
-                                       promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                                       promptMessage.defaultErrorMessage(ViewMedicine.this);
                                    }
                                });
                            }
@@ -592,20 +545,15 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                        @Override
                        public void onCancelled(@NonNull DatabaseError error) {
-                           promptMessage("Error","Something went wrong! Please try again.", R.color.red_decline_request);
+                           promptMessage.defaultErrorMessage(ViewMedicine.this);
                        }
                    });
                });
            }
 
-           // custom prompt message
-           public void promptMessage(String title, String message, int background){
-               CookieBar.build(ViewMedicine.this)
-                       .setTitle(title)
-                       .setMessage(message)
-                       .setBackgroundColor(background)
-                       .setCookiePosition(CookieBar.TOP)
-                       .setDuration(5000)
-                       .show();
-           }
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
+    }
+
 }

@@ -249,7 +249,7 @@ public class AppointmentFragment extends Fragment {
 
                                     String specialist = model.getSpecialist();
                                     switch (specialist) {
-                                        case "General Doctor":
+                                        case "General Physician":
                                             holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_doctor));
                                             break;
                                         case "Geriatrician":

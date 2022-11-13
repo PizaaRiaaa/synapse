@@ -509,8 +509,8 @@ public class MainActivity extends FragmentActivity implements
                     prevIdx = idx;
                 }
                 if(max > 0.90 && idx != prevIdx && Stat!=labels[3]) {
-                    textToSpeech.speak(labels[idx], TextToSpeech.QUEUE_ADD, null,
-                            Integer.toString(new Random().nextInt()));
+                   // textToSpeech.speak(labels[idx], TextToSpeech.QUEUE_ADD, null,
+                    //        Integer.toString(new Random().nextInt()));
                     Status.setText(labels[idx]);
 
                     // status position na binabato sa mobile ni senior
@@ -566,10 +566,11 @@ public class MainActivity extends FragmentActivity implements
                 if(status.equals("walking")){
                     step_count++;
                     stepCounts.setText(String.valueOf(step_count));
+                    String step = stepCounts.getText().toString();
 
                     // step count na binabato sa mobile ni senior
                     String datapath = "/myapp/synapse/stepcounts";
-                    new SendMessage(datapath, String.valueOf(step_count)).start();
+                    new SendMessage(datapath, String.valueOf(step)).start();
                 }
 
             }

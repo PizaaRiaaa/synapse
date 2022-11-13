@@ -45,7 +45,7 @@ public class AlertReceiver extends BroadcastReceiver {
     FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference referenceSenior,medicationReminder,
             physicalActivityReminder, appointmentReminder, gameReminder;
-    String med_id, physical_id, appointment_id, game_id, seniorID, token;
+    String med_id, physical_id, appointment_id, game_id, token;
     PromptMessage promptMessage = new PromptMessage();
     NotificationCompat.Builder nb;
     MedicineNotificationHelper medicineNotificationHelper;
@@ -116,7 +116,6 @@ public class AlertReceiver extends BroadcastReceiver {
     }
 
     void displayMedicine(String color, String shape){
-
         if(color.equals("White") && shape.equals("Pill1")){
             pill_shape_color = R.drawable.pill1_white_horizontal;
         }else if(color.equals("Blue") && shape.equals("Pill1")){
@@ -179,13 +178,12 @@ public class AlertReceiver extends BroadcastReceiver {
         medicationReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds1:snapshot.getChildren()){
-                    seniorID = ds1.getKey();
-                    medicationReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                for(DataSnapshot ignored:snapshot.getChildren()){
+                    medicationReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored:snapshot.getChildren()){
-                                medicationReminder.child(mUser.getUid()).child(seniorID).child(med_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                medicationReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).child(med_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         ReadWriteMedication rm = snapshot.getValue(ReadWriteMedication.class);
@@ -200,7 +198,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                            intent.putExtra("pill_shape", pill_shape);
                                            intent.putExtra("pill_color", pill_color);
 
-                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @RequiresApi(api = Build.VERSION_CODES.S)
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -274,13 +272,12 @@ public class AlertReceiver extends BroadcastReceiver {
         physicalActivityReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds1:snapshot.getChildren()){
-                    seniorID = ds1.getKey();
-                    physicalActivityReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                for(DataSnapshot ignored:snapshot.getChildren()){
+                    physicalActivityReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored:snapshot.getChildren()){
-                                physicalActivityReminder.child(mUser.getUid()).child(seniorID).child(physical_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                physicalActivityReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).child(physical_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         ReadWritePhysicalActivity rm = snapshot.getValue(ReadWritePhysicalActivity.class);
@@ -289,7 +286,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                             String activity_name = rm.getActivity();
                                             String duration = rm.getDuration();
 
-                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -354,13 +351,12 @@ public class AlertReceiver extends BroadcastReceiver {
         appointmentReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds1:snapshot.getChildren()){
-                    seniorID = ds1.getKey();
-                    appointmentReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                for(DataSnapshot ignored:snapshot.getChildren()){
+                    appointmentReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored:snapshot.getChildren()){
-                                appointmentReminder.child(mUser.getUid()).child(seniorID).child(appointment_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                appointmentReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).child(appointment_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         ReadWriteAppointment rm = snapshot.getValue(ReadWriteAppointment.class);
@@ -368,7 +364,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                         if(code == requestCode){
                                             String time = rm.getTime();
 
-                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -438,13 +434,12 @@ public class AlertReceiver extends BroadcastReceiver {
         gameReminder.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds1:snapshot.getChildren()){
-                    seniorID = ds1.getKey();
-                    gameReminder.child(mUser.getUid()).child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                for(DataSnapshot ignored:snapshot.getChildren()){
+                    gameReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot ignored:snapshot.getChildren()){
-                               gameReminder.child(mUser.getUid()).child(seniorID).child(game_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                               gameReminder.child(mUser.getUid()).child(getDefaults("seniorKey",context)).child(game_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         ReadWriteGames rm = snapshot.getValue(ReadWriteGames.class);
@@ -452,7 +447,7 @@ public class AlertReceiver extends BroadcastReceiver {
                                         if(code == requestCode){
                                             String game = rm.getGame();
 
-                                            referenceSenior.child(seniorID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            referenceSenior.child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
@@ -542,16 +537,18 @@ public class AlertReceiver extends BroadcastReceiver {
     void sendFCMtoSeniorNotification(Context context, String title, String body, String tag){
         Intent fcm_intent = new Intent(context, FirebaseMessagingService.class);
         fcm_intent.putExtra("Medication",1);
-                    referenceSenior.child(getDefaults("seniorKey",context)).addValueEventListener(new ValueEventListener() {
+                    referenceSenior.child(getDefaults("seniorKey",context)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-                            token = seniorProfile.getToken();
+                            if(snapshot.exists()){
+                                ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
+                                token = seniorProfile.getToken();
 
-                            FcmNotificationsSender notificationsSender =
-                                    new FcmNotificationsSender(token, title, body, tag, context);
-                           FirebaseMessagingService fs = new FirebaseMessagingService();
-                            notificationsSender.SendNotifications();
+                                FcmNotificationsSender notificationsSender =
+                                        new FcmNotificationsSender(token, title, body, tag, context);
+                                FirebaseMessagingService fs = new FirebaseMessagingService();
+                                notificationsSender.SendNotifications();
+                            }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {

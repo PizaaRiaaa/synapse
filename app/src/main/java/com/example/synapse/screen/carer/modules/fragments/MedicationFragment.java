@@ -259,7 +259,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     void increment(View v) {
         count++;
         etDose.setText("");
-        etDose.setText("" + count + " pills");
+        etDose.setText("" + count + " pill");
     }
 
     // decrement for dose input
@@ -267,7 +267,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         if (count <= 0) count = 0;
         else count--;
         etDose.setText("");
-        etDose.setText("" + count + " pills");
+        etDose.setText("" + count + " pill");
     }
 
     // set hour and minute for time picker
