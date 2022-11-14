@@ -109,30 +109,6 @@
                 app:drawableStartCompat="@drawable/ic_profile" />
 
             <TextView
-                android:id="@+id/tvUpdateEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:text="Change Email"
-                android:drawablePadding="20dp"
-                android:fontFamily="@font/redhat_display_semibold"
-                android:textColor="@color/grey5"
-                android:textSize="16sp"
-                app:drawableStartCompat="@drawable/ic_email" />
-
-            <TextView
-                android:id="@+id/tvAssignedSenior"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:text="Assigned Senior"
-                android:drawablePadding="20dp"
-                android:fontFamily="@font/redhat_display_semibold"
-                android:textColor="@color/grey5"
-                android:textSize="16sp"
-                app:drawableStartCompat="@drawable/ic_assigned_senior" />
-
-            <TextView
                 android:id="@+id/tvChangePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

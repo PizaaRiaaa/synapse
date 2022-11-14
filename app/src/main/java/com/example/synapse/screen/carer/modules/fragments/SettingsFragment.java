@@ -37,13 +37,17 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class SettingsFragment extends Fragment {
 
     // global variables
-
     FirebaseUser mUser;
     DatabaseReference referenceUser;
 
     ImageView ivUserPicture;
     ImageButton ibBack;
-    TextView tvName, tvEmail, tvLogout;
+
+    TextView tvName;
+    TextView tvEmail;
+    TextView tvLogout;
+    TextView tvChangePassword;
+    TextView tvUpdateProfile;
 
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
@@ -123,6 +127,8 @@ public class SettingsFragment extends Fragment {
         tvName = view.findViewById(R.id.tvCarerName);
         tvEmail = view.findViewById(R.id.tvCarerEmail);
         tvLogout = view.findViewById(R.id.tvLogout);
+        tvChangePassword = view.findViewById(R.id.tvChangePassword);
+        tvUpdateProfile = view.findViewById(R.id.tvUpdateProfile);
 
         FirebaseAuth user = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -133,6 +139,12 @@ public class SettingsFragment extends Fragment {
 
         // bring back the user
         ibBack.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
+
+        // change password
+        tvChangePassword.setOnClickListener(v -> replaceFragment.replaceFragment(new ChangePassword(), getActivity()));
+
+        // update profile
+        tvUpdateProfile.setOnClickListener(v -> replaceFragment.replaceFragment(new UpdateProfileFragment(), getActivity()));
 
         // sign-out the user and redirect to login screen
         tvLogout.setOnClickListener(v -> {

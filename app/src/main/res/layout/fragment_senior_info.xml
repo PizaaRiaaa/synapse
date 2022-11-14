@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screen.carer.modules.fragments.SeniorInfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:textColor="@color/grey7"
+                    android:text="Senior Info"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ivSeniorProfilePic"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/pick_carer"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/carer_profile_pic"
+                android:backgroundTint="@color/carer_profile_pic"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSeniorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey7"
+                android:text="Name: Jane Doe"
+                android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey3"/>
+
+                <TextView
+                    android:id="@+id/tvSeniorGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/redhat_display_semibold"
+                    android:textColor="@color/grey5"
+                    android:text="Gender: Female"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey3"/>
+
+            <TextView
+                android:id="@+id/tvSeniorDOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:text="Date of Birth: 1/12/1955"
+                android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey3"/>
+
+            <TextView
+                android:id="@+id/tvSeniorBarangay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:text="Barangay: Adition Hills"
+                android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey3"/>
+
+            <TextView
+                android:id="@+id/tvSeniorEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="textStart"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:text="Email: jane.doe@gmail.com"
+                android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/grey3"/>
+
+            <TextView
+                android:id="@+id/tvSeniorMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:textColor="@color/grey5"
+                android:text="Mobile no. : 09166992880"
+                android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

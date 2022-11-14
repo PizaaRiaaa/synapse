@@ -121,7 +121,12 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carer_home, container, false);
 
-        ShapeableImageView btnMedication, btnPhysicalActivity, btnAppointment, btnGames;
+        ShapeableImageView btnMedication;
+        ShapeableImageView btnPhysicalActivity;
+        ShapeableImageView btnAppointment;
+        ShapeableImageView btnGames;
+        ShapeableImageView btnSeniorInfo;
+
         ivProfilePic = view.findViewById(R.id.ivCarerProfilePic);
         ivSeniorProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorFullName = view.findViewById(R.id.tvSeniorFullName);
@@ -137,6 +142,7 @@ public class HomeFragment extends Fragment {
         btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
         btnAppointment = view.findViewById(R.id.btnAppointment);
         btnGames = view.findViewById(R.id.btnGames);
+        btnSeniorInfo = view.findViewById(R.id.btnSeniorInfo);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
@@ -149,6 +155,7 @@ public class HomeFragment extends Fragment {
 
         displayHealthStatus();
 
+        btnSeniorInfo.setOnClickListener(v -> replaceFragment.replaceFragment(new SeniorInfoFragment(), getActivity()));
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
         btnPhysicalActivity.setOnClickListener(v -> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
         btnAppointment.setOnClickListener(v -> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));

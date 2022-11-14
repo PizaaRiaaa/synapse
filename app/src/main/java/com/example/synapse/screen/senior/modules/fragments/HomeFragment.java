@@ -181,6 +181,7 @@ public class HomeFragment extends Fragment {
         MaterialCardView btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
         MaterialCardView btnAppointment = view.findViewById(R.id.btnAppointment);
         MaterialCardView btnMyLocation = view.findViewById(R.id.btnMyLocation);
+        MaterialCardView btnEmergency = view.findViewById(R.id.btnEmergency);
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
         tvHeartRate = view.findViewById(R.id.tvHeartRate);
@@ -203,6 +204,7 @@ public class HomeFragment extends Fragment {
         btnPhysicalActivity.setOnClickListener(v-> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
         btnAppointment.setOnClickListener(v-> replaceFragment.replaceFragment(new AppointmentFragment(), getActivity()));
         btnMyLocation.setOnClickListener(v -> startActivity(new Intent(getActivity(), MyLocation.class)));
+        btnEmergency.setOnClickListener(v -> replaceFragment.replaceFragment(new EmergencyFragment(), getActivity()));
 
         currentTime.setFormat12Hour("hh:mm a");
 

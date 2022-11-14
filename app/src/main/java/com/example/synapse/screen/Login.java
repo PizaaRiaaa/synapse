@@ -3,6 +3,7 @@ package com.example.synapse.screen;
 import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -16,12 +17,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+
+import com.example.synapse.ForgotPassword;
 import com.example.synapse.R;
 import com.example.synapse.screen.admin.LoadingScreen;
 import com.example.synapse.screen.carer.CarerVerifyEmail;
@@ -54,6 +58,8 @@ public class Login extends AppCompatActivity {
     EditText etEmail, etPassword;
     String textEmail, textPassword;
 
+    ProgressDialog progressDialog;
+
     void authenticateUser(){
         textEmail = etEmail.getText().toString();
         textPassword = etPassword.getText().toString();
@@ -81,6 +87,7 @@ public class Login extends AppCompatActivity {
     }
 
     void loginUser(String email, String password){
+        progressDialog.show();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -98,6 +105,7 @@ public class Login extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if(snapshot.exists()){
+                                                progressDialog.dismiss();
 
                                                 startActivity(new Intent(Login.this, SelectSenior.class));
                                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -134,6 +142,7 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
+                                    progressDialog.dismiss();
                                     startActivity(new Intent(Login.this, SeniorMainActivity.class));
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
@@ -252,6 +261,10 @@ public class Login extends AppCompatActivity {
         etPassword = findViewById(R.id.etLoginPassword);
         mAuth = FirebaseAuth.getInstance();
 
+        progressDialog = new ProgressDialog(Login.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading....");
+
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Admins");
@@ -260,7 +273,7 @@ public class Login extends AppCompatActivity {
         changeColor();
 
         tvSwitchToPickRole.setOnClickListener(view -> startActivity(new Intent(Login.this, PickRole.class)));
-        tvForgotPass.setOnClickListener(view -> startActivity(new Intent(Login.this, CarerVerifyEmail.class)));
+        tvForgotPass.setOnClickListener(view -> startActivity(new Intent(Login.this, ForgotPassword.class)));
         btnLogin.setOnClickListener(v -> authenticateUser());
 
         boolean finish = getIntent().getBooleanExtra("finish", false);

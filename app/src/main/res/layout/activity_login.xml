@@ -71,6 +71,7 @@
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
                     android:textSize="18sp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- PASSWORD -->

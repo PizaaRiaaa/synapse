@@ -53,7 +53,25 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 resultIntent, PendingIntent.FLAG_IMMUTABLE);
 
         String tag = remoteMessage.getNotification().getTag();
+
         int pill_shape_color = 0;
+        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
+        switch (Objects.requireNonNull(title)) {
+            case "Medicine Reminder":
+                playVoiceReminder(R.raw.medicine_reminder);
+                break;
+            case "Physical Activity Reminder":
+                playVoiceReminder(R.raw.physical_activity_reminder);
+                break;
+            case "Game Reminder":
+                playVoiceReminder(R.raw.game_reminder);
+                break;
+            case "Appointment Reminder":
+                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+                break;
+            default:
+                break;
+        }
 
        // displayMedicine(tag);
 
@@ -138,24 +156,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 break;
             case "Pill4Red":
                 pill_shape_color = R.drawable.pill4_red_horizontal;
-                break;
-        }
-
-        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
-        switch (Objects.requireNonNull(title)) {
-            case "Medicine Reminder":
-                playVoiceReminder(R.raw.medicine_reminder);
-                break;
-            case "Physical Activity Reminder":
-                playVoiceReminder(R.raw.physical_activity_reminder);
-                break;
-            case "Game Reminder":
-                playVoiceReminder(R.raw.game_reminder);
-                break;
-            case "Appointment Reminder":
-                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
-                break;
-            default:
                 break;
         }
 

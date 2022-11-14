@@ -6,6 +6,7 @@ import com.example.synapse.R;
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.carer.modules.fragments.SettingsFragment;
+import com.example.synapse.screen.carer.modules.fragments.UpdateProfileFragment;
 import com.example.synapse.screen.carer.modules.view.SeniorLocation;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,6 +45,7 @@ public class CarerMainActivity extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.miProfile:
+                    replaceFragment.replaceFragment(new UpdateProfileFragment(), CarerMainActivity.this);
                     break;
                 case R.id.miSettings:
                     replaceFragment.replaceFragment(new SettingsFragment(), CarerMainActivity.this);

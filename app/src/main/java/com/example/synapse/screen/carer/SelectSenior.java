@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import com.example.synapse.R;
 import com.example.synapse.screen.Login;
 import com.example.synapse.screen.PickRole;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;
+import com.example.synapse.screen.senior.test.MCIpromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserSenior;
@@ -192,6 +195,29 @@ public class SelectSenior extends AppCompatActivity {
        });
     }
 
+    void addNewSenior(){
+       mAuth.signOut();
+       startActivity(new Intent(SelectSenior.this, MCIpromptMessage.class));
+       finish();
+    }
+
+    void signOutCarer(){
+        mAuth.signOut();
+        Toast.makeText(this, "Sign out successfully", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, Login.class));
+        finish();
+    }
+
+    void displaySignOutDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Sign out")
+                .setMessage("Are you sure you want to sign out your account?")
+                .setPositiveButton("YES",(dialogInterface, i) -> signOutCarer())
+                .setNegativeButton("CANCEL",(dialogInterface, i) -> dialogInterface.cancel())
+                .setCancelable(false)
+                .show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,22 +231,25 @@ public class SelectSenior extends AppCompatActivity {
         editor.remove("seniorKey");
         editor.commit();
 
-
         recyclerView = findViewById(R.id.recyclerview_seniors);
         recyclerView.setLayoutManager(new LinearLayoutManager(SelectSenior.this));
         carerImage = findViewById(R.id.ivProfilePic);
 
         TextView tvSignOut = findViewById(R.id.tvSignout);
-        tvSignOut.setOnClickListener(v -> {
-            mAuth.signOut();
-            Toast.makeText(this, "Sign out successfully", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, Login.class));
-            finish();
+        tvSignOut.setOnClickListener(v -> displaySignOutDialog());
+
+        TextView tvAddSenior = findViewById(R.id.tvAddSenior);
+        tvAddSenior.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Add New Senior")
+                    .setMessage("Your need to sign out in order to register your new senior")
+                    .setPositiveButton("OK",(dialogInterface, i) -> addNewSenior())
+                    .setNegativeButton("CANCEL",(dialogInterface, i) -> dialogInterface.cancel())
+                    .setCancelable(false)
+                    .show();
         });
 
         loadAssignedSeniors();
         loadCarerImage();
-
-
     }
 }
