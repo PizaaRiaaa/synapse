@@ -14,7 +14,7 @@
 
     <item android:id="@+id/miProfile"
         android:title="@string/menuProfile"
-        android:icon="@drawable/ic_profile_nav"/>
+        android:icon="@drawable/ic_profile"/>
 
     <item android:id="@+id/miSettings"
         android:title="@string/menuSettings"

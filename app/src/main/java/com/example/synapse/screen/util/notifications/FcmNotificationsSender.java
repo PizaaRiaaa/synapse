@@ -21,6 +21,7 @@ public class FcmNotificationsSender  {
     String body;
     //Activity activity;
     String tag;
+    String key;
     Context context;
 
     private RequestQueue requestQueue;
@@ -32,6 +33,7 @@ public class FcmNotificationsSender  {
         this.title = title;
         this.body = body;
         this.tag = tag;
+        this.key = key;
         this.context = context;
     }
 
@@ -45,7 +47,7 @@ public class FcmNotificationsSender  {
             notiObject.put("title", title);
             notiObject.put("body", body);
             notiObject.put("tag", tag);
-            notiObject.put("icon", R.drawable.ic_splash_logo); // enter icon that exists in drawable only
+            notiObject.put("icon", R.drawable.ic_clock_notif); // enter icon that exists in drawable only
 
             mainObj.put("notification", notiObject);
 

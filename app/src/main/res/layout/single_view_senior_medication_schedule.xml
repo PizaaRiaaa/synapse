@@ -7,7 +7,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         android:layout_margin="10dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/search_view_stroke"
@@ -29,63 +29,96 @@
 
                 <ImageView
                     android:id="@+id/ivShapeOfPill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"/>
+                    android:layout_width="150dp"
+                    android:layout_height="55dp"
+                    android:scaleType="fitXY"/>
 
                 <TextView
                     android:id="@+id/tvNameOfPill"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/redhat_display_bold"
+                    android:layout_marginTop="5dp"
                     android:text="Levothyroxide"
                     android:textAlignment="textStart"
                     android:textColor="@color/white"
-                    android:textSize="22sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvDoseOfPill"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/redhat_display_bold"
-                    android:text="2 times today"
-                    android:textSize="15sp"
+                    android:text="dose 2 | dosage 100mg"
                     android:textAlignment="textStart"
                     android:textColor="#EFEFEF" />
 
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="17dp"
-                android:layout_height="17dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_clock_white" />
-
-            <TextView
-                android:id="@+id/tvTimeOfMedicine"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/redhat_display_bold"
-                android:text="4:30 PM"
-                android:textSize="30sp"
-                android:textAlignment="textEnd"
-                android:textColor="@color/white" />
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_clock_white" />
+
+                <TextView
+                    android:id="@+id/tvTimeOfMedicine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="4:30 PM"
+                    android:textSize="26sp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvIsTaken"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="5dp"
+                        android:paddingRight="15dp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:cardCornerRadius="100dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/white"
+                        android:layout_marginRight="20dp"
+                        app:cardBackgroundColor="@android:color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivIsTaken"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        </LinearLayout>
-
-
 
     </com.google.android.material.card.MaterialCardView>
 

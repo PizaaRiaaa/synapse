@@ -347,7 +347,7 @@
                     android:drawableStart="@drawable/ic_ph_flag"
                     android:drawablePadding="10dp"
                     android:fontFamily="@font/redhat_display_regular"
-                    android:hint="+63   Mobile Number *"
+                    android:hint="Mobile Number *"
                     android:inputType="textVisiblePassword|number"
                     android:padding="20dp"
                     android:textColorHint="@color/grey4"
@@ -396,7 +396,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/etRegisterCarerPassword"
-                    android:text="* Atleast 6 charaters, 1 upper case, and 1  number"
+                    android:text="* Atleast 6 characters, 1 upper case, and 1 number"
                     android:textSize="12sp" />
 
             </com.google.android.material.textfield.TextInputLayout>

@@ -177,12 +177,51 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleButtonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:singleSelection="true"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ALL"
+                android:textSize="12sp"/>
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Taken"
+                android:textSize="12sp"/>
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnNotTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOT TAKEN"
+                android:textSize="12sp"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <!-- recycle view for all carer users -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_medication"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            app:reverseLayout="true"
+            app:stackFromEnd="true"
             android:orientation="horizontal"/>
 
     </LinearLayout>

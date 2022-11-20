@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="650dp"
+    android:layout_height="600dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
@@ -33,14 +34,28 @@
             android:id="@+id/btnClose"
             android:layout_width="0dp"
             android:layout_height="14sp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_close"
-            android:scaleType="fitCenter"
             android:layout_gravity="bottom|end"
+            android:layout_weight="1"
             android:background="@color/white"
-            android:contentDescription="@string/description_close" />
+            android:contentDescription="@string/description_close"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_close"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:fillViewport="true"
+        android:layout_marginBottom="?actionBarSize"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,6 +83,77 @@
             android:elevation="5dp"
             android:textAlignment="center"
             android:inputType="textVisiblePassword|textNoSuggestions"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dosage"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/grey4"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_pick_number"
+            android:layout_margin="20dp"
+            android:elevation="5dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ibMinusDosage"
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                android:layout_width="27dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                app:cornerRadius="28dp"
+                app:icon="@drawable/ic_minus_green"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etDosage"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_background"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/redhat_display_medium"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ibAddDosage"
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+                app:cornerRadius="28dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                app:iconPadding="0dp"
+                app:icon="@drawable/ic_plus_green"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="wrap_content"
@@ -133,6 +219,121 @@
             app:iconTint="@color/white"/>
 
     </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="@color/grey4"
+            android:textSize="16sp"
+            android:text="In-take" />
+
+        <!-- in take !-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:layout_gravity="center">
+
+            <!-- before food -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnBeforeFood"
+                android:layout_width="0dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_before_food" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Before Food"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- after food -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnAfterFood"
+                android:layout_width="0dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_after_food" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="After Food"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- with food -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnWithFood"
+                android:layout_width="0dp"
+                android:layout_height="105dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_with_food" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="With Food"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
 
     <View
         android:layout_width="wrap_content"
@@ -414,5 +615,9 @@
             android:layout_weight="3.3"/>
 
     </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

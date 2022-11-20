@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -89,9 +91,27 @@ public class MedicationFragment extends Fragment {
     DatabaseReference referenceProfile, referenceReminders;
     FirebaseUser mUser;
     RequestQueue requestQueue;
-    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun;
+
+    AppCompatButton btnMon;
+    AppCompatButton btnTue;
+    AppCompatButton btnWed;
+    AppCompatButton btnThu;
+    AppCompatButton btnFri;
+    AppCompatButton btnSat;
+    AppCompatButton btnSun;
+
     RecyclerView recyclerView;
     ImageView profilePic;
+
+    LinearLayoutManager mLayoutManager;
+    Query query;
+    Bundle args;
+    String key;
+
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnTaken;
+    Button btnNotTaken;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -156,6 +176,11 @@ public class MedicationFragment extends Fragment {
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnTaken = view.findViewById(R.id.btnTaken);
+        btnNotTaken = view.findViewById(R.id.btnNotTaken);
+
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ibBack.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
 
@@ -163,14 +188,196 @@ public class MedicationFragment extends Fragment {
         LoadScheduleForMedication();
         displayCurrentDay();
 
+        // we need  to check if user clicked the notification
+        // then retrieve id first
+        // so we can display the right information with the right key
+        args = getArguments();
+        if(args != null){
+            key = args.getString("key");
+            updateSeniorMedicineTaken(key);
+        }
+
         return view;
+    }
+
+    void recycleviewMedicine(Query query){
+        FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
+        FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
+
+                String pill_shape = model.getShape();
+                String pill_color = model.getColor();
+                String dose = model.getDose();
+                String isTaken = model.getIsTaken();
+                String inTake = model.getInTake();
+                String get_dose = dose.split(" ")[0];
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_red_horizontal));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_white));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_blue));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_brown));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_green));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_pink));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_red));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_red_horizontal));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_red_horizontal));
+                }
+
+                holder.time.setText(model.getTime());
+                holder.name.setText(model.getName());
+                holder.inTake.setText(model.getInTake());
+
+                if(Objects.equals(get_dose, "1")){
+                    holder.dose.setText("dose " + get_dose + " pill" + " | " + "dosage " + model.getDosage());
+                }else{
+                    holder.dose.setText("dose " + get_dose + " pills" + " | " + "dosage " + model.getDosage());
+                }
+
+                if(isTaken.equals("Taken")){
+                    holder.tvIsTaken.setText("Taken");
+                    holder.taken.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_is_taken));
+                }else{
+                    holder.tvIsTaken.setText("Taken");
+                }
+
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ViewMedicine.class);
+                        intent.putExtra("userKey", getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+            @NonNull
+            @Override
+            public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
+                return new MedicationViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void updateSeniorMedicineTaken(String key) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("isTaken", "Taken");
+        referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    String carerID = ds.getKey();
+                    referenceReminders
+                            .child(mUser.getUid())
+                            .child(carerID)
+                            .child(key)
+                            .updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+
+                                    if (task.isSuccessful()) {
+                                        referenceReminders
+                                                .child(carerID)
+                                                .child(mUser.getUid())
+                                                .child(key)
+                                                .updateChildren(hashMap).addOnCompleteListener(task0 -> {
+                                                    if (task0.isSuccessful()) {
+                                                        promptMessage.displayMessage(
+                                                                "Success",
+                                                                "You have successfully taken your medicine",
+                                                                R.color.dark_green, getActivity());
+                                                    }
+                                                });
+                                    }
+                                }
+                           });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     // layout for recycle view
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.recyclerview_medication);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
     }
 
     // prevent error when using back pressed inside fragment
@@ -195,58 +402,26 @@ public class MedicationFragment extends Fragment {
                 if (snapshot.exists()) {
                     for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
-                            Query query = ds2.getRef();
-                            FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
-                            FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @SuppressLint("SetTextI18n")
+                            query = ds2.getRef();
+                            recycleviewMedicine(query);
+                            int buttonID = toggleGroup.getCheckedButtonId();
+                            toggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
                                 @Override
-                                protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
-                                    String pill_shape = model.getShape();
-                                    String dose = model.getDose();
-                                    String get_dose = dose.split(" ")[0];
-
-                                    switch (pill_shape) {
-                                        case "Pill1":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_white_recycleview));
-                                            break;
-                                        case "Pill2":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_white_recycleview));
-                                            break;
-                                        case "Pill3":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_white_recycleview));
-                                            break;
-                                        case "Pill4":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_white_recycleview));
-                                            break;
+                                public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                                    if(isChecked){
+                                        if(checkedId == R.id.btnAll){
+                                            query = ds2.getRef();
+                                            recycleviewMedicine(query);
+                                        }else if(checkedId == R.id.btnTaken){
+                                            query = ds2.getRef().orderByChild("isTaken").equalTo("Taken");
+                                            recycleviewMedicine(query);
+                                        }else if(checkedId == R.id.btnNotTaken){
+                                            query = ds2.getRef().orderByChild("isTaken").equalTo("Not Taken");
+                                            recycleviewMedicine(query);
+                                        }
                                     }
-
-                                    holder.time.setText(model.getTime());
-                                    holder.name.setText(model.getName());
-                                    if(Objects.equals(get_dose, "1")){
-                                        holder.dose.setText(get_dose + " time today");
-                                    }else{
-                                        holder.dose.setText(get_dose + " times today");
-                                    }
-
-                                  //  holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                  //      @Override
-                                  //      public void onClick(View v) {
-                                  //          Intent intent = new Intent(getActivity(), ViewMedicine.class);
-                                  //          intent.putExtra("userKey", getRef(position).getKey());
-                                  //          startActivity(intent);
-                                  //      }
-                                  //  });
                                 }
-                                @NonNull
-                                @Override
-                                public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_senior_medication_schedule, parent, false);
-                                    return new MedicationViewHolder(view);
-                                }
-                            };
-                            adapter.startListening();
-                            recyclerView.setAdapter(adapter);
+                            });
                         }
                     }
                 }

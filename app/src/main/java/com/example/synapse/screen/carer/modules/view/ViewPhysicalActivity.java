@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
@@ -52,11 +53,12 @@ import pl.droidsonroids.gif.GifImageView;
 public class ViewPhysicalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
     private PromptMessage promptMessage = new PromptMessage();
+    private AuditTrail auditTrail = new AuditTrail();
+
     private FirebaseUser mUser;
-    private DatabaseReference
-            referenceReminders,
-            referenceProfile,
-            referenceCompanion;
+    private DatabaseReference referenceReminders;
+    private DatabaseReference referenceProfile;
+
     RequestQueue requestQueue;
 
     private final String[] PHYSICAL_ACTIVITY_NAME = {
@@ -103,7 +105,6 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         tvOnceADay = findViewById(R.id.tvOnceADay);
         tvNever = findViewById(R.id.tvRepeatNever);
 
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -198,45 +199,6 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
     }
 
-    //  broadcast to listen if alarm is currently running so we can send notification to senior
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent != null) {
-//
-//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for (DataSnapshot ds : snapshot.getChildren()) {
-//                            seniorID = ds.getKey();
-//
-//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-//                                    token = seniorProfile.getToken();
-//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-//                                            "Physical Activity Reminder",
-//                                            "It's time to do your physical activity",
-//                                            ViewPhysicalActivity.this);
-//                                    notificationsSender.SendNotifications();
-//                                }
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
-//                                }
-//                            });
-//                        }
-//                    }
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        promptMessage.defaultErrorMessage(ViewPhysicalActivity.this);
-//                    }
-//                });
-//            }
-//        }
-//    };
-//
     // decrement and increment for dose input
     public void increment(View v) {
         count++;
@@ -341,6 +303,12 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         hashMap.put("Activity", type_of_activity);
         hashMap.put("Duration", Objects.requireNonNull(etDuration.getText()).toString());
         hashMap.put("Time", tvAlarm.getText().toString());
+
+        auditTrail.auditTrail(
+                "Updated Physical Activity",
+                type_of_activity,
+                "Physical Activity", "Carer", referenceProfile, mUser);
+
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

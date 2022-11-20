@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -37,6 +38,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -58,6 +60,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import org.aviran.cookiebar2.CookieBar;
 import java.text.SimpleDateFormat;
@@ -70,6 +73,10 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
     private FirebaseUser mUser;
     private DatabaseReference referenceReminders;
+    private DatabaseReference referenceCarer;
+    private DatabaseReference referenceAuditTrail;
+    private AuditTrail auditTrail;
+
     private final String[] PILL_SHAPE_NAMES = {"Pill1", "Pill2","Pill3","Pill4"};
     private final String[] PILL_COLOR_NAMES = {"Green","Red","Brown","Pink","Blue","White"};
     private final int [] PILL_SHAPES_ICS = {R.drawable.ic_pill1, R.drawable.ic_pill2, R.drawable.ic_pill3, R.drawable.ic_pill4};
@@ -78,16 +85,25 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     private String pill_color_selected;
     private String pill_shape_selected;
 
-    private AppCompatEditText etPillName, etPillDosage, etPillDescription;
+    private AppCompatEditText etPillName;
+    private AppCompatEditText etPillDosage;
+    private AppCompatEditText etPillDescription;
+
     private int count = 0;
     private Intent intent;
     private final Calendar calendar = Calendar.getInstance();
     private Long request_code;
     int code, requestCode;
 
-    String medicineID, name,
-           dosage, color, shape, dose,
-           time, description, quantity;
+    String medicineID;
+    String name;
+    String dosage;
+    String color;
+    String shape;
+    String dose;
+    String time;
+    String description;
+    String quantity;
 
     RequestQueue requestQueue;
     MaterialCardView btnChangeTime;
@@ -135,13 +151,15 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         pillColorSpinner.setAdapter(adapter2);
 
         promptMessage = new PromptMessage();
+        auditTrail = new AuditTrail();
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Medication Reminders");
+        referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceAuditTrail = FirebaseDatabase.getInstance().getReference("Audit Trail");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         requestQueue = Volley.newRequestQueue(ViewMedicine.this);
 
-        // Show status bar
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // we need  to check if user clicked the notification
@@ -154,16 +172,12 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
         btnUpdate.setOnClickListener(v -> updatePill(medicineID));
 
-
         deleteMedicine();
 
-        // back button
         btnBack.setOnClickListener(v -> finish());
-
         ibMinus.setOnClickListener(this::decrement);
         ibAdd.setOnClickListener(this::increment);
 
-        // change time
         btnChangeTime.setOnClickListener(v -> {
                 DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
                 timePicker.show(getSupportFragmentManager(), "time picker");
@@ -363,7 +377,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    // update pill for both carer and senior nodes
     public void updatePill(String medicineID){
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Name", Objects.requireNonNull(etPillName.getText()).toString());
@@ -373,6 +386,11 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         hashMap.put("Color", pill_color_selected);
         hashMap.put("Time", tvAlarm.getText().toString());
         hashMap.put("Description", Objects.requireNonNull(etPillDescription.getText()).toString());
+
+        auditTrail.auditTrail(
+                "Updated Medicine Reminder",
+                etPillName.getText().toString(),
+                "Medicine", "Carer", referenceCarer, mUser);
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -432,7 +450,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-                                                    promptMessage.defaultErrorMessage(ViewMedicine.this);
                                                 }
                                             });
                                         }
@@ -440,7 +457,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        promptMessage.defaultErrorMessage(ViewMedicine.this);
                                     }
                                 });
                             }
@@ -448,7 +464,6 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            promptMessage.defaultErrorMessage(ViewMedicine.this);
                         }
                     });
                 }
@@ -456,13 +471,11 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                promptMessage.defaultErrorMessage(ViewMedicine.this);
             }
         });
-        promptMessage.defaultErrorMessage(ViewMedicine.this);
+        promptMessage.displayMessage("Sucess","The medicine has been updated successfully", R.color.dark_green, ViewMedicine.this);
     }
 
-    // delete medicine for both carer and senior nodes
     public void deleteMedicine(){
                ibBin.setOnClickListener(v -> {
                    // userID
@@ -470,6 +483,12 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
                        @Override
                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                            for(DataSnapshot ignored: snapshot.getChildren()){
+
+                               auditTrail.auditTrail(
+                                       "Deleted Medicine Reminder",
+                                       etPillName.getText().toString(),
+                                       "Medicine", "Carer", referenceCarer, mUser);
+
                                // userID > seniorID > medicineID (retrieve)
                                referenceReminders.child(mUser.getUid()).child(getDefaults("seniorKey",ViewMedicine.this)).child(medicineID).addListenerForSingleValueEvent(new ValueEventListener() {
                                    @Override
@@ -555,5 +574,4 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key, null);
     }
-
 }

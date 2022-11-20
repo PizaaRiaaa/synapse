@@ -119,6 +119,7 @@ public class Login extends AppCompatActivity {
                                                         .setNegativeButton("Cancel", (dialogInteface, i) -> dialogInteface.cancel())
                                                         .setCancelable(false)
                                                         .show();
+                                                progressDialog.dismiss();
                                             }
                                         }
 
@@ -171,6 +172,7 @@ public class Login extends AppCompatActivity {
                                 "User does not exists. Please try again",
                                 R.color.red_decline_request,
                                 Login.this);
+                        progressDialog.dismiss();
                         changeColor();
                         etEmail.requestFocus();
                     } catch (FirebaseAuthInvalidCredentialsException e) {
@@ -180,12 +182,14 @@ public class Login extends AppCompatActivity {
                                 R.color.red_decline_request,
                                 Login.this);
                         etPassword.requestFocus();
+                        progressDialog.dismiss();
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                         promptMessage.displayMessage(
                                 "Error", e.getMessage(),
                                 R.color.red_decline_request,
                                 Login.this);
+                        progressDialog.dismiss();
                     }
                 }
             }

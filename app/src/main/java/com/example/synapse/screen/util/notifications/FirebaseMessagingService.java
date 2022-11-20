@@ -1,85 +1,74 @@
 package com.example.synapse.screen.util.notifications;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
-import com.example.synapse.screen.carer.modules.fragments.MedicationFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.example.synapse.screen.carer.modules.view.ViewMedicine;
+import com.example.synapse.screen.senior.SeniorMainActivity;
+import com.example.synapse.screen.senior.modules.fragments.AppointmentFragment;
+import com.example.synapse.screen.senior.modules.fragments.GamesFragment;
+import com.example.synapse.screen.senior.modules.fragments.MedicationFragment;
+import com.example.synapse.screen.senior.modules.fragments.PhysicalActivityFragment;
+import com.example.synapse.screen.senior.modules.view.TicTacToeHome;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
-public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService{
+public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     NotificationManager mNotificationManager;
-    Uri defaultSoundUri= RingtoneManager.getDefaultUri(R.raw.alarm);
     NotificationCompat.Builder builder;
+    Uri defaultSoundUri;
+
+    Intent takeIntent;
     String channelId = "hello";
+    String tag;
+    String key;
+    String title;
+    String temp;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        builder = new NotificationCompat.Builder(this, "hello");
-        Intent resultIntent = new Intent(this, HomeFragment.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(
-                this, 1,
-                resultIntent, PendingIntent.FLAG_IMMUTABLE);
+        builder = new NotificationCompat.Builder(FirebaseMessagingService.this, "hello");
+        title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
+        tag = remoteMessage.getNotification().getTag().split(" ")[0];
+        temp = remoteMessage.getNotification().getTag();
 
-        String tag = remoteMessage.getNotification().getTag();
-
-        int pill_shape_color = 0;
-        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
-        switch (Objects.requireNonNull(title)) {
-            case "Medicine Reminder":
-                playVoiceReminder(R.raw.medicine_reminder);
-                break;
-            case "Physical Activity Reminder":
-                playVoiceReminder(R.raw.physical_activity_reminder);
-                break;
-            case "Game Reminder":
-                playVoiceReminder(R.raw.game_reminder);
-                break;
-            case "Appointment Reminder":
-                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
-                break;
-            default:
-                break;
+        if(temp != null){
+            key = remoteMessage.getNotification().getTag().split(" ")[1];
         }
 
-       // displayMedicine(tag);
+
+        int pill_shape_color = 0;
 
         switch (tag) {
             case "Pill1White":
                 pill_shape_color = R.drawable.pill1_white_horizontal;
                 break;
-            case "Pill2Blue":
+            case "Pill1Blue":
                 pill_shape_color = R.drawable.pill1_blue_horizontal;
                 break;
             case "Pill1Brown":
@@ -139,6 +128,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
 
         switch (tag) {
+            case "Tic-tac-toe":
+                pill_shape_color = R.drawable.tic_tac_toe_logo;
+                break;
+            case "Trivia Quiz":
+                pill_shape_color = R.drawable.ic_trivia_quiz;
+                break;
+            case "Math Game":
+                pill_shape_color = R.drawable.ic_math_game;
+                break;
+            case "appointment":
+                pill_shape_color = R.drawable.ic_appointment;
+                break;
+            case "physical":
+                pill_shape_color = R.drawable.ic_bigpicture_workout;
+                break;
+        }
+
+        switch (tag) {
             case "Pill4White":
                 pill_shape_color = R.drawable.pill4_white_horizontal;
                 break;
@@ -159,14 +166,26 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 break;
         }
 
-        builder.setSmallIcon(R.drawable.ic_splash_logo);
+        builder.setSmallIcon(R.drawable.ic_clock_notif);
+        builder.setColor(ContextCompat.getColor(this, R.color.dark_green));
         builder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_splash_logo));
         builder.setContentTitle(remoteMessage.getNotification().getTitle());
         builder.setContentText(remoteMessage.getNotification().getBody());
-        builder.setContentIntent(pendingIntent);
+
+        if(remoteMessage.getNotification().getTitle().equals("Medicine Reminder")){
+            takeIntent = new Intent(getApplicationContext(), SeniorMainActivity.class);
+            takeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            takeIntent.putExtra("key", key);
+            PendingIntent takePIntent = PendingIntent.getActivity(
+                    this, 0, takeIntent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+            builder.addAction(R.drawable.ic_clock_notif, "TAKE", takePIntent);
+            builder.addAction(R.drawable.ic_clock_notif, "OPEN", null);
+        }
+
         builder.setColorized(true);
-        builder.setColor(getResources().getColor(R.color.white));
         builder.setVibrate(new long[]{0, 1000, 500, 3000});
+        builder.setColor(getResources().getColor(R.color.dark_green));
         builder.setLights(Color.RED, 3000, 3000);
         builder.setPriority(Notification.PRIORITY_MAX);
         builder.setOnlyAlertOnce(true);
@@ -178,8 +197,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        switch (Objects.requireNonNull(title)) {
+            case "Medicine Reminder":
+                playVoiceReminder(R.raw.medicine_reminder);
+                break;
+            case "Physical Activity Reminder":
+                playVoiceReminder(R.raw.physical_activity_reminder);
+                break;
+            case "Game Reminder":
+                playVoiceReminder(R.raw.game_reminder);
+                break;
+            case "Appointment Reminder":
+                playVoiceReminder(R.raw.appointment_tomorrow_reminder);
+                break;
+            default:
+                break;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     channelId,
                     "Channel human readable title",
@@ -192,14 +227,27 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
 
         mNotificationManager.notify(100, builder.build());
+
     }
 
-    void playVoiceReminder(int mp3Voice){
+    void playVoiceReminder(int mp3Voice) {
         MediaPlayer mp = MediaPlayer.create(this, mp3Voice);
         mp.setLooping(false);
         mp.start();
     }
 
-}
+    // redirect carer user to their respective screen when notification is click
+    void setContentIntent(Context context, Class className, String putExtraKey, String module_id) {
+        Intent appActivityIntent = new Intent(context, className);
+        appActivityIntent.putExtra(putExtraKey, module_id);
+        PendingIntent contentAppActivityIntent =
+                PendingIntent.getActivity(
+                        context,
+                        0,
+                        appActivityIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        builder.setContentIntent(contentAppActivityIntent);
 
+    }
+}
 

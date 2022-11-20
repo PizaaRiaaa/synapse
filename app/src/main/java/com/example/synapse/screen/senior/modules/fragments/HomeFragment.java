@@ -103,11 +103,11 @@ public class HomeFragment extends Fragment {
 
     PromptMessage promptMessage;
 
-
     TextView tvSeniorName;
     AppCompatImageView ivProfilePic;
     FusedLocationProviderClient client;
 
+    MaterialCardView btnEmergency;
     TextView swap;
     TextView tvHeartRate;
     TextView tvStatus;
@@ -181,7 +181,7 @@ public class HomeFragment extends Fragment {
         MaterialCardView btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
         MaterialCardView btnAppointment = view.findViewById(R.id.btnAppointment);
         MaterialCardView btnMyLocation = view.findViewById(R.id.btnMyLocation);
-        MaterialCardView btnEmergency = view.findViewById(R.id.btnEmergency);
+        btnEmergency = view.findViewById(R.id.btnEmergency);
         ivProfilePic = view.findViewById(R.id.ivSeniorProfilePic);
         tvSeniorName = view.findViewById(R.id.tvSeniorFullName);
         tvHeartRate = view.findViewById(R.id.tvHeartRate);
@@ -239,6 +239,8 @@ public class HomeFragment extends Fragment {
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageReceiver, messageFilter);
+
+        btnEmergency.setOnClickListener(v -> callEmergencyCarer());
 
         return view;
     }
@@ -317,7 +319,7 @@ public class HomeFragment extends Fragment {
                     .setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.cancel())
                     .setCancelable(false)
                     .show();
-        }
+       }
     }
 
     public void alertLowHR(String newinfo){
@@ -494,6 +496,77 @@ public class HomeFragment extends Fragment {
                 promptMessage.defaultErrorMessageContext(getActivity());
             }
         });
+    }
+
+    void callEmergencyCarer(){
+            referenceAssignedCarer.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot key : snapshot.getChildren()) {
+                        String carerKey = key.getKey();
+
+                        referenceAssignedCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot key : snapshot.getChildren()) {
+                                    String key1 = key.getKey();
+
+                                    referenceAssignedCarer.child(carerKey).child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.hasChild("seniorID")){
+                                                ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
+                                                String seniorID = senior.getSeniorID();
+
+                                                FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                if(seniorID.equals(mUser.getUid())){
+                                                    referenceCarer.child(carerKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if(snapshot.exists()){
+                                                                ReadWriteUserDetails carer = snapshot.getValue(ReadWriteUserDetails.class);
+                                                                String carerMobileNumber = carer.getMobileNumber();
+
+                                                                Intent intent = new Intent(Intent.ACTION_CALL);
+                                                                intent.setData(Uri.parse("tel:" + carerMobileNumber));
+                                                                if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                                                                    return;
+                                                                }
+                                                                startActivity(intent);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            promptMessage.defaultErrorMessageContext(getActivity());
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            promptMessage.defaultErrorMessageContext(getActivity());
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                promptMessage.defaultErrorMessageContext(getActivity());
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    promptMessage.defaultErrorMessageContext(getActivity());
+                }
+            });
     }
 
     @Override

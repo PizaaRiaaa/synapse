@@ -107,7 +107,7 @@ public class SeniorLocation extends AppCompatActivity{
                                 Geocoder geocoder = new Geocoder(SeniorLocation.this, Locale.getDefault());
                                 List<Address> current_address = null;
                                 try {
-                                    current_address = geocoder.getFromLocation(14.512033599999999,121.1672907 , 1);
+                                    current_address = geocoder.getFromLocation(latitude, longtitude, 1);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

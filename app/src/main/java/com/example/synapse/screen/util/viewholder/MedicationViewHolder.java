@@ -16,9 +16,12 @@ public class MedicationViewHolder extends RecyclerView.ViewHolder {
 
     public TextView name;
     public TextView dose;
+    public TextView tvIsTaken;
     public String time_of_medication;
     public TextView time;
+    public TextView inTake;
     public ImageView pill_shape;
+    public ImageView taken;
     public LinearLayout medicineBackground;
 
     public MedicationViewHolder(@NonNull View itemView) {
@@ -29,5 +32,8 @@ public class MedicationViewHolder extends RecyclerView.ViewHolder {
         time = itemView.findViewById(R.id.tvTimeOfMedicine);
         pill_shape = itemView.findViewById(R.id.ivShapeOfPill);
         medicineBackground = itemView.findViewById(R.id.medicineBackground);
+        tvIsTaken = itemView.findViewById(R.id.tvIsTaken);
+        taken = itemView.findViewById(R.id.ivIsTaken);
+        inTake = itemView.findViewById(R.id.tvInTake);
     }
 }

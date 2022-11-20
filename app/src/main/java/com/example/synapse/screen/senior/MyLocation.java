@@ -287,8 +287,9 @@ public class MyLocation extends AppCompatActivity{
                                                                                    carerToken,
                                                                                    senior.getFirstName() + " " + senior.getLastName() + " current location",
                                                                                    message + " " + location,
-                                                                                   "",
-                                                                                   MyLocation.this);
+                                                                                   "location " + " sdfsfd",
+                                                                                   MyLocation.this
+                                                                                   );
                                                                            notificationsSender.SendNotifications();
 
                                                       }

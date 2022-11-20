@@ -48,6 +48,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewPhysicalActivity;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -92,21 +93,37 @@ import pl.droidsonroids.gif.GifImageView;
  */
 public class PhysicalActivityFragment extends Fragment implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
+    FirebaseUser mUser;
+    DatabaseReference referenceReminders;
+    DatabaseReference referenceCarer;
+
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
+    AuditTrail auditTrail = new AuditTrail();
 
     FloatingActionButton fabAddPhysicalActivity;
     AppCompatEditText etDuration;
-    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
-    DatabaseReference referenceReminders, referenceCarer;
-    FirebaseUser mUser;
+    AppCompatButton btnMon;
+    AppCompatButton btnTue;
+    AppCompatButton btnWed;
+    AppCompatButton btnThu;
+    AppCompatButton btnFri;
+    AppCompatButton btnSat;
+    AppCompatButton btnSun;
+    AppCompatButton btnAddSchedule;
+
+    String token;
+    String time;
+    String type_of_activity;
+    String seniorID;
+    String clickedRepeatBtn;
 
     RequestQueue requestQueue;
-    int requestCode;
     RecyclerView recyclerView;
+    int requestCode;
     int count = 0;
     Dialog dialog;
-    String token, time, type_of_activity, seniorID, clickedRepeatBtn;
+
     boolean isClicked = false;
     ImageView profilePic;
     final Calendar calendar = Calendar.getInstance();
@@ -114,6 +131,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     GifImageView gifImageView;
     MaterialCardView btn2hoursRepeat, btn4hoursRepeat, btnOnceADay, btnNever;
     TextView tvTime, tv2hours,tv4hours,tvOnceADay, tvNever;
+    LinearLayoutManager mLayoutManager;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -266,7 +284,10 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // layout for recycle view
         recyclerView = view.findViewById(R.id.recyclerview_physical_activity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
 
         // display dialog after floating action button was clicked
         fabAddPhysicalActivity = view.findViewById(R.id.btnAddPhysicalActivity);
@@ -495,6 +516,11 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
                              .child(getDefaults("seniorKey",getActivity()))
                              .child(key)
                              .setValue(hashMap).addOnCompleteListener(task1 -> {
+
+                     auditTrail.auditTrail(
+                             "Added Physical Activity",
+                             type_of_activity,
+                             "Physical Activity", "Carer", referenceCarer, mUser);
 
                          if (task1.isSuccessful()) {
                              dialog.dismiss();

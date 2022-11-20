@@ -39,7 +39,7 @@ tools:context=".screen.senior.modules.fragments.MedicationFragment">
             android:layout_margin="15dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:text="Your Medicines"
+            android:text="Medication"
             android:textColor="@color/grey5"
             android:fontFamily="@font/redhat_display_semibold"
             android:textSize="22sp"/>
@@ -174,6 +174,43 @@ tools:context=".screen.senior.modules.fragments.MedicationFragment">
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleButtonGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:singleSelection="true"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ALL"
+            android:textSize="12sp"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnTaken"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Taken"
+            android:textSize="12sp"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnNotTaken"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOT TAKEN"
+            android:textSize="12sp"/>
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <!-- recycle view for all carer users -->
     <androidx.recyclerview.widget.RecyclerView

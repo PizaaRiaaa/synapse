@@ -90,11 +90,13 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
     DatabaseReference referenceReminders, referenceCarer;
+
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
+    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
+
     AppCompatEditText etDuration;
 
     FirebaseUser mUser;
-    RequestQueue requestQueue;
     int requestCode;
     FloatingActionButton fabAddGame;
     Dialog dialog;

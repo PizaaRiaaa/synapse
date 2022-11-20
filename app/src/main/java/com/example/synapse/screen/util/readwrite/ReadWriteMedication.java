@@ -9,13 +9,17 @@ public class ReadWriteMedication {
     private String Description;
     private String Quantity;
     private Long RequestCode;
+    private String isTaken;
+    private String InTake;
     private String Time;
+    private Long Timestamp;
 
     public ReadWriteMedication() { }
 
     public ReadWriteMedication(String textName, String textDose, String textShape, String textColor,
                                     String textDosage, String textDescription, String textQuantity,
-                                    Long textRequestCode, String textTime) {
+                                    Long textRequestCode, String textTime, String textIsTaken,
+                                    Long textTimestamp, String textInTake) {
 
         this.Name = textName;
         this.Dose = textDose;
@@ -26,6 +30,10 @@ public class ReadWriteMedication {
         this.Quantity = textQuantity;
         this.RequestCode = textRequestCode;
         this.Time = textTime;
+        this.isTaken = textIsTaken;
+        this.Timestamp = textTimestamp;
+        this.InTake = textInTake;
+
     }
 
     public String getName(){ return Name; }
@@ -55,4 +63,12 @@ public class ReadWriteMedication {
     public String getTime(){ return Time; }
     public void setTime(String Time){ this.Time = Time; }
 
+    public String getIsTaken(){ return isTaken; }
+    public void setIsTaken(String isTaken){ this.isTaken = isTaken; }
+
+    public Long getTimestamp(){ return Timestamp; }
+    public void setTimestamp(Long Timestamp){ this.Timestamp = Timestamp; }
+
+    public String getInTake(){ return InTake; }
+    public void setInTake(String inTake){ this.InTake = inTake; }
 }

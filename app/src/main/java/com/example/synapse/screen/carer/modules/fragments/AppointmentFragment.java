@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewAppointment;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -84,7 +85,10 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    DatabaseReference referenceReminders, referenceCarer;
+    AuditTrail auditTrail = new AuditTrail();
+
+    DatabaseReference referenceReminders;
+    DatabaseReference referenceCarer;
 
     final String[] APPOINTMENT_SPECIALIST =
             {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
@@ -153,6 +157,7 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carer_appointment, container, false);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.custom_dialog_box_add_appointment);
@@ -170,20 +175,11 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
-        // references for firebase
         referenceReminders = FirebaseDatabase.getInstance().getReference("Appointment Reminders");
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
-        // listen for broadcast
-       // getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
-
-        // get current user
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // generate volley for sending notification to senior
-        //requestQueue = Volley.newRequestQueue(getActivity());
-
-        // set recyclerview
         recyclerView = view.findViewById(R.id.recyclerview_appointment);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -192,15 +188,13 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         AppCompatImageButton ibTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
         FloatingActionButton btnAddAppointment = view.findViewById(R.id.btnAddAppointment);
-        //BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
+
         Spinner spinner_appointment_specialist, spinner_appointment_type;
         etDrName = dialog.findViewById(R.id.etDrName);
         etConcern = dialog.findViewById(R.id.etConcern);
         tvTime = dialog.findViewById(R.id.tvTime);
         profilePic = view.findViewById(R.id.ivCarerProfilePic);
 
-        // show status bar
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         showUserProfile();
         loadScheduleForAppointments();
@@ -278,50 +272,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         return calendar;
     }
 
-    // listen if alarm is currently running so we can send notification to senior
-  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-  //      @Override
-  //      public void onReceive(Context context, Intent intent) {
-  //          if (intent != null) {
-  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-  //                  @Override
-  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                      for (DataSnapshot ds : snapshot.getChildren()) {
-  //                          seniorID = ds.getKey();
-
-  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-  //                              @Override
-  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-  //                                  token = seniorProfile.getToken();
-  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-  //                                          "Appointment Reminder",
-  //                                          "This is a reminder that you have an appointment scheduled for tomorrow ",
-  //                                          getActivity());
-  //                                  notificationsSender.SendNotifications();
-  //                              }
-  //                              @Override
-  //                              public void onCancelled(@NonNull DatabaseError error) {
-  //                                  promptMessage.defaultErrorMessage(getActivity());
-  //                              }
-  //                          });
-  //                      }
-  //                  }
-  //                  @Override
-  //                  public void onCancelled(@NonNull DatabaseError error) {
-  //                      promptMessage.defaultErrorMessage(getActivity());
-  //                  }
-  //              });
-  //          }
-  //      }
-  //  };
-
-  //  @Override
-  //  public void onDestroy() {
-  //      super.onDestroy();
-  //      getActivity().unregisterReceiver(broadcastReceiver);
-  //  }
-
     // set the alarm manager and listen for broadcast
     private void startAlarm(Calendar c, String key) {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -384,6 +334,11 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
                             .child(getDefaults("seniorKey",getActivity()))
                             .child(key)
                             .setValue(hashMap).addOnCompleteListener(task1 -> {
+
+                   auditTrail.auditTrail(
+                           "Added Appointment Reminder",
+                           etDrName.getText().toString() + " - " + selected_specialist,
+                           "Appointment", "Carer", referenceCarer, mUser);
 
                         if (task1.isSuccessful()) {
                             dialog.dismiss();

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -25,11 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +42,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -51,6 +55,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,10 +66,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -79,28 +91,73 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     // Global variables
     ReplaceFragment replaceFragment = new ReplaceFragment(); // replacing fragment
     PromptMessage promptMessage = new PromptMessage(); // custom prompt message
+    AuditTrail auditTrail = new AuditTrail(); // audit trail
     Calendar calendar;
 
-    DatabaseReference referenceCarer, referenceReminders;
+    DatabaseReference referenceCarer;
+    DatabaseReference referenceReminders;
+    DatabaseReference referenceAuditTrail;
     FirebaseUser mUser;
-    String seniorID;
 
-    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun;
-    TextView tv1, tv2, tv3, tv4, tv5, tv6, etDose, etName, tvTime;
-    ShapeableImageView color1, color2, color3, color4, color5, color6;
+    AppCompatButton btnMon;
+    AppCompatButton btnTue;
+    AppCompatButton btnWed;
+    AppCompatButton btnThu;
+    AppCompatButton btnFri;
+    AppCompatButton btnSat;
+    AppCompatButton btnSun;
+
+    MaterialCardView btnBeforeFood;
+    MaterialCardView btnAfterFood;
+    MaterialCardView btnWithFood;
+
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnTaken;
+    Button btnNotTaken;
+
+    TextView tv1;
+    TextView tv2;
+    TextView tv3;
+    TextView tv4;
+    TextView tv5;
+    TextView tv6;
+    TextView etDose;
+    TextView etDosage;
+    TextView etName;
+    TextView tvTime;
+
+    ShapeableImageView color1;
+    ShapeableImageView color2;
+    ShapeableImageView color3;
+    ShapeableImageView color4;
+    ShapeableImageView color5;
+    ShapeableImageView color6;
+
+    ImageView pill1;
+    ImageView pill2;
+    ImageView pill3;
+    ImageView pill4;
 
     Intent intent;
     RequestQueue requestQueue;
     AppCompatButton btnAddSchedule;
     RecyclerView recyclerView;
-    ImageView pill1, pill2, pill3, pill4;
-    String pillShape = "", color = "", time = "", key;
+    Query query;
+
+    String pillShape = "";
+    String color = "";
+    String inTake = "";
+    String time = "";
+
     Dialog dialog;
     ImageView profilePic;
     FloatingActionButton fabAddMedicine;
+    LinearLayoutManager mLayoutManager;
 
     boolean isClicked = false;
     int count = 0;
+    int countDosage = 0;
     int requestCode;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -149,9 +206,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_carer_medication, container, false);
 
-        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_MEDICINE"));
-        //requestQueue = Volley.newRequestQueue(getActivity());
-
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -160,7 +214,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         requestQueue = Volley.newRequestQueue(getActivity());
         calendar = Calendar.getInstance();
         ImageButton ibBack, btnClose;
-        MaterialButton ibMinus, ibAdd;
+        MaterialButton ibMinus, ibAdd, ibMinusDosage, ibAddDosage;
         AppCompatImageButton buttonTimePicker;
 
         // initialized dialog
@@ -172,15 +226,18 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         dialog.getWindow().getAttributes().gravity = Gravity.BOTTOM;
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
 
-        // ids for dialog
         tvTime = dialog.findViewById(R.id.tvTime);
         ibMinus = dialog.findViewById(R.id.ibMinus);
         ibAdd = dialog.findViewById(R.id.ibAdd);
         etDose = dialog.findViewById(R.id.etDose);
+        etDosage = dialog.findViewById(R.id.etDosage);
+        ibAddDosage = dialog.findViewById(R.id.ibAddDosage);
+        ibMinusDosage = dialog.findViewById(R.id.ibMinusDosage);
         btnClose = dialog.findViewById(R.id.btnClose);
         etName = dialog.findViewById(R.id.etName);
         buttonTimePicker = dialog.findViewById(R.id.ibTimePicker);
         btnAddSchedule = dialog.findViewById(R.id.btnAddSchedule);
+
         pill1 = dialog.findViewById(R.id.ivPill1);
         pill2 = dialog.findViewById(R.id.ivPill2);
         pill3 = dialog.findViewById(R.id.ivPill3);
@@ -191,6 +248,11 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         color4 = dialog.findViewById(R.id.color4);
         color5 = dialog.findViewById(R.id.color5);
         color6 = dialog.findViewById(R.id.color6);
+
+        btnWithFood = dialog.findViewById(R.id.btnWithFood);
+        btnBeforeFood = dialog.findViewById(R.id.btnBeforeFood);
+        btnAfterFood = dialog.findViewById(R.id.btnAfterFood);
+
         tv1 = dialog.findViewById(R.id.tvGreen);
         tv2 = dialog.findViewById(R.id.tvRed);
         tv3 = dialog.findViewById(R.id.tvBrown);
@@ -198,7 +260,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         tv5 = dialog.findViewById(R.id.tvBlue);
         tv6 = dialog.findViewById(R.id.tvWhite);
 
-        // view ids for this fragment
         ibBack = view.findViewById(R.id.ibBack);
         profilePic = view.findViewById(R.id.ivProfilePic);
         btnMon = view.findViewById(R.id.btnMON);
@@ -218,14 +279,22 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         ibBack.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
         btnClose.setOnClickListener(v -> dialog.dismiss());
         etDose.setShowSoftInputOnFocus(false);
+        etDosage.setShowSoftInputOnFocus(false);
         ibMinus.setOnClickListener(this::decrement);
         ibAdd.setOnClickListener(this::increment);
+        ibMinusDosage.setOnClickListener(this::decrementDoasge);
+        ibAddDosage.setOnClickListener(this::incrementDosage);
 
         buttonTimePicker.setOnClickListener(v -> {
             DialogFragment timePicker = new TimePickerFragment(this);
             timePicker.show(getChildFragmentManager(), "time picker");
             isClicked = true;
         });
+
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnTaken = view.findViewById(R.id.btnTaken);
+        btnNotTaken = view.findViewById(R.id.btnNotTaken);
 
         return view;
     }
@@ -234,7 +303,10 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // layout for recycle view
         recyclerView = view.findViewById(R.id.recyclerview_medication);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
 
         // display dialog after floating action button was clicked
         fabAddMedicine = (FloatingActionButton) view.findViewById(R.id.btnAddMedicine);
@@ -270,6 +342,21 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         etDose.setText("" + count + " pill");
     }
 
+    // increment for dosage input
+    void incrementDosage(View v) {
+        countDosage += 20;
+        etDosage.setText("");
+        etDosage.setText("" + countDosage + "mg");
+    }
+
+    // decrement for dosage input
+    void decrementDoasge(View v) {
+        if (countDosage <= 0) countDosage = 0;
+        else countDosage -= 20;
+        etDosage.setText("");
+        etDosage.setText("" + countDosage + "mg");
+    }
+
     // set hour and minute for time picker
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -279,7 +366,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         updateTimeText(calendar);
     }
 
-    // update time textview after time was selected
     void updateTimeText(Calendar c) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
@@ -288,7 +374,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         time = simpleDateFormat.format(calendar.getTime());
     }
 
-    // get the selected time
    Calendar getCalendar(){
         return calendar;
     }
@@ -298,6 +383,131 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         return preferences.getString(key, null);
     }
 
+    void recycleviewMedicine(Query query){
+        FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
+        FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
+
+                String pill_shape = model.getShape();
+                String pill_color = model.getColor();
+                String dose = model.getDose();
+                String isTaken = model.getIsTaken();
+                String get_dose = dose.split(" ")[0];
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill1")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_red_horizontal));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_white));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_blue));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_brown));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_green));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_pink));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill2")) {
+                    holder.pill_shape.getLayoutParams().height = 160;
+                    holder.pill_shape.getLayoutParams().width = 160;
+                    holder.pill_shape.requestLayout();
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_red));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill3")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_red_horizontal));
+                }
+
+                if (pill_color.equals("White") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_white_horizontal));
+                } else if (pill_color.equals("Blue") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_blue_horizontal));
+                } else if (pill_color.equals("Brown") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_brown_horizontal));
+                } else if (pill_color.equals("Green") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_green_horizontal));
+                } else if (pill_color.equals("Pink") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_pink_horizontal));
+                } else if (pill_color.equals("Red") && pill_shape.equals("Pill4")) {
+                    holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_red_horizontal));
+                }
+
+                holder.time.setText(model.getTime());
+                holder.name.setText(model.getName());
+                holder.inTake.setText(model.getInTake());
+
+                if(Objects.equals(get_dose, "1")){
+                    holder.dose.setText("dose " + get_dose + " pill" + " | " + "dosage " + model.getDosage());
+                }else{
+                    holder.dose.setText("dose " + get_dose + " pills" + " | " + "dosage " + model.getDosage());
+                }
+
+                if(isTaken.equals("Taken")){
+                    holder.tvIsTaken.setText("Taken");
+                    holder.taken.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_is_taken));
+                }else{
+                    holder.tvIsTaken.setText("Taken");
+                }
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ViewMedicine.class);
+                        intent.putExtra("userKey", getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+            @NonNull
+            @Override
+            public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
+                return new MedicationViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+   }
+
     // display all schedules for medication
     void LoadScheduleForMedication() {
         referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
@@ -306,60 +516,27 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                 if (snapshot.exists()) {
                     for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
-                            Query query = ds2.getRef();
 
-                            FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
-                            FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @SuppressLint("SetTextI18n")
+                            query = ds2.getRef();
+                            recycleviewMedicine(query);
+                            int buttonID = toggleGroup.getCheckedButtonId();
+                            toggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
                                 @Override
-                                protected void onBindViewHolder(@NonNull MedicationViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteMedication model) {
-
-                                    String pill_shape = model.getShape();
-                                    String dose = model.getDose();
-                                    String get_dose = dose.split(" ")[0];
-
-                                    switch (pill_shape) {
-                                        case "Pill1":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill1_white_recycleview));
-                                            break;
-                                        case "Pill2":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill2_white_recycleview));
-                                            break;
-                                        case "Pill3":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill3_white_recycleview));
-                                            break;
-                                        case "Pill4":
-                                            holder.pill_shape.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.pill4_white_recycleview));
-                                            break;
-                                    }
-
-                                    holder.time.setText(model.getTime());
-                                    holder.name.setText(model.getName());
-                                    if(Objects.equals(get_dose, "1")){
-                                        holder.dose.setText(get_dose + " time today");
-                                    }else{
-                                        holder.dose.setText(get_dose + " times today");
-                                    }
-
-                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), ViewMedicine.class);
-                                            intent.putExtra("userKey", getRef(position).getKey());
-                                            startActivity(intent);
+                                public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                                    if(isChecked){
+                                        if(checkedId == R.id.btnAll){
+                                            query = ds2.getRef();
+                                            recycleviewMedicine(query);
+                                        }else if(checkedId == R.id.btnTaken){
+                                            query = ds2.getRef().orderByChild("isTaken").equalTo("Taken");
+                                            recycleviewMedicine(query);
+                                        }else if(checkedId == R.id.btnNotTaken){
+                                            query = ds2.getRef().orderByChild("isTaken").equalTo("Not Taken");
+                                            recycleviewMedicine(query);
                                         }
-                                    });
+                                    }
                                 }
-                                @NonNull
-                                @Override
-                                public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_medication_schedule, parent, false);
-                                    return new MedicationViewHolder(view);
-                                }
-                            };
-                            adapter.startListening();
-                            recyclerView.setAdapter(adapter);
+                            });
                         }
                     }
                 }
@@ -406,15 +583,18 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         //         pendingIntent);
     }
 
-    // store schedule for medicine
     void addSchedule() {
         requestCode = (int) getCalendar().getTimeInMillis()/1000;
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Name", etName.getText().toString());
         hashMap.put("Dose", etDose.getText().toString());
+        hashMap.put("InTake", inTake);
+        hashMap.put("isTaken", "Not Taken");
         hashMap.put("Time", time);
         hashMap.put("Shape", pillShape);
         hashMap.put("Color", color);
+        hashMap.put("Dosage", etDosage.getText().toString());
+        hashMap.put("Timestamp", ServerValue.TIMESTAMP);
         hashMap.put("RequestCode", requestCode);
 
         String key = referenceReminders.push().getKey();
@@ -433,6 +613,11 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                             .child(key)
                             .setValue(hashMap).addOnCompleteListener(task0 -> {
 
+                            auditTrail.auditTrail(
+                                    "Added Medicine Reminder",
+                                    etName.getText().toString() + " " + etDosage.getText().toString(),
+                                    "Medicine", "Carer", referenceCarer, mUser);
+
                         if (task0.isSuccessful()) {
                             dialog.dismiss();
                             tvTime.setVisibility(View.INVISIBLE);
@@ -441,6 +626,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                                     "Success",
                                     "Alarm has been set successfully",
                                     R.color.dark_green, getActivity());
+
                             // start alarm and retrieve the unique id of newly created medicine
                             // so we can send it to alert receiver.
                             startAlarm(getCalendar(), key);
@@ -456,6 +642,7 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         btnAddSchedule.setOnClickListener(v -> {
             String pillName = etName.getText().toString();
             String pillDose = etDose.getText().toString();
+            String pillDosage = etDosage.getText().toString();
             if (TextUtils.isEmpty(pillName)) {
                 Toast.makeText(getActivity(), "Please enter the name of the medicine", Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(pillDose)) {
@@ -466,7 +653,12 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
                 Toast.makeText(getActivity(), "Please pick the color the medicine", Toast.LENGTH_SHORT).show();
             } else if (!isClicked) {
                 Toast.makeText(getActivity(), "Please pick a schedule for the medicine", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if(TextUtils.isEmpty(pillDosage)){
+                Toast.makeText(getActivity(), "Please enter the dosage of the medicine", Toast.LENGTH_SHORT).show();
+            } else if(Objects.equals(inTake, "")){
+                Toast.makeText(getActivity(), "Please pic the in-take for the medicine", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 addSchedule();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 if (Build.VERSION.SDK_INT >= 26) {
@@ -477,7 +669,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         });
     }
 
-    // display carer's profile pic
     void showUserProfile(){
         referenceCarer.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -498,7 +689,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         });
     }
 
-    // change the background the current day to white
     void displayCurrentDay(){
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
         Calendar calendar = Calendar.getInstance();
@@ -528,7 +718,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
         }
     }
 
-    // check what color and shape of medicine was clicked
     void clickedColorAndShape(){
         // check what shape was clicked
         pill1.setOnClickListener(v -> {
@@ -589,9 +778,27 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
             tv4.setTextColor(getActivity().getColor(R.color.et_stroke)); tv5.setTextColor(getActivity().getColor(R.color.et_stroke));
             color = "White";
         });
+
+        btnWithFood.setOnClickListener(v -> {
+            btnWithFood.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.rounded_button_pick_role));
+            btnAfterFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            btnBeforeFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            inTake = "With Food";
+        });
+        btnAfterFood.setOnClickListener(v -> {
+            btnAfterFood.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.rounded_button_pick_role));
+            btnWithFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            btnBeforeFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            inTake = "After Food";
+        });
+        btnBeforeFood.setOnClickListener(v -> {
+            btnBeforeFood.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.rounded_button_pick_role));
+            btnAfterFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            btnWithFood.setBackground(null); pill2.setBackground(null); pill3.setBackground(null);
+            inTake = "Before Food";
+        });
     }
 
-    // clear text in dialog box
     void clearDialogText(){
         tv1.setTextColor(getActivity().getColor(R.color.et_stroke));
         tv2.setTextColor(getActivity().getColor(R.color.et_stroke));

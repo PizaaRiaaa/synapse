@@ -94,6 +94,8 @@ dependencies {
     // prerequisite for OTP
     implementation 'androidx.browser:browser:1.4.0'
     implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+
+    //implementation  'com.github.hss01248:NotifyUtil:1.0.1'
     //implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
     // for admin data visualization

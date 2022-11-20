@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
@@ -46,6 +47,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.aviran.cookiebar2.CookieBar;
+import org.checkerframework.checker.units.qual.A;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,10 +58,11 @@ import java.util.Objects;
 public class ViewAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
     private FirebaseUser mUser;
-    private DatabaseReference
-            referenceReminders, referenceProfile;
+    private DatabaseReference referenceReminders;
+    private DatabaseReference referenceProfile;
 
     PromptMessage promptMessage = new PromptMessage();
+    AuditTrail auditTrail = new AuditTrail();
 
     private final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
             "Ophthalmologist","Dentist","Psychologist","Audiologist"};
@@ -108,9 +111,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         spinner_appointment_specialist.setAdapter(adapter1);
         spinner_appointment_specialist.setOnItemSelectedListener(ViewAppointment.this);
 
-        // listen for broadcast
-        //registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_APPOINTMENT"));
-
         ibBack.setOnClickListener(v -> finish());
 
         // we need  to check if user clicked the notification
@@ -125,7 +125,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
         btnUpdate.setOnClickListener(v -> updateAppointment(appointmentID));
 
-        // change time
         btnChangeSchedule.setOnClickListener(v -> {
             DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -133,9 +132,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                     calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.MONTH, month);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                    //DialogFragment timePicker = new TimePickerFragment();
-                    //timePicker.show(getSupportFragmentManager(), "time picker");
                 }
             };
             new DatePickerDialog(ViewAppointment.this, dateSetListener,
@@ -155,45 +151,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-    //  broadcast to listen if alarm is currently running so we can send notification to senior
- //   BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
- //       @Override
- //       public void onReceive(Context context, Intent intent) {
- //           if (intent != null) {
-
- //               referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
- //                   @Override
- //                   public void onDataChange(@NonNull DataSnapshot snapshot) {
- //                       for (DataSnapshot ds : snapshot.getChildren()) {
- //                           seniorID = ds.getKey();
-
- //                           referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
- //                               @Override
- //                               public void onDataChange(@NonNull DataSnapshot snapshot) {
- //                                   ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
- //                                   token = seniorProfile.getToken();
- //                                   FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
- //                                           "Appointment Reminder",
- //                                           "This is a reminder that you have an appointment scheduled for tomorrow. ",
- //                                           ViewAppointment.this);
- //                                   notificationsSender.SendNotifications();
- //                               }
- //                               @Override
- //                               public void onCancelled(@NonNull DatabaseError error) {
- //                                   promptMessage.defaultErrorMessage(ViewAppointment.this);
- //                               }
- //                           });
- //                       }
- //                   }
- //                   @Override
- //                   public void onCancelled(@NonNull DatabaseError error) {
- //                       promptMessage.defaultErrorMessage(ViewAppointment.this);
- //                   }
- //               });
- //           }
- //       }
- //   };
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -348,6 +305,11 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                                 // cancel the alarm
                                 cancelAlarm(code);
 
+                                auditTrail.auditTrail(
+                                        "Deleted Appointment Reminder",
+                                        etDrName.getText().toString() + " - " + selected_specialist,
+                                        "Appointment", "Carer", referenceProfile, mUser);
+
                                 referenceReminders.child(mUser.getUid()).child(key).child(appointmentID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -419,6 +381,11 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         hashMap.put("DrName", Objects.requireNonNull(etDrName.getText()).toString());
         hashMap.put("Concern", Objects.requireNonNull(etConcern.getText()).toString());
         hashMap.put("RequestCode", requestCode);
+
+        auditTrail.auditTrail(
+                "Updated Appointment Reminder",
+                etDrName.getText().toString() + " - " + selected_specialist,
+                "Appointment", "Carer", referenceProfile, mUser);
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

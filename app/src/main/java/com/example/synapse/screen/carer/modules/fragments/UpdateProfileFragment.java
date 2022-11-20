@@ -329,7 +329,6 @@ public class UpdateProfileFragment extends Fragment {
         updatePicture = view.findViewById(R.id.carer_update_profile_pic);
         btnUpdate = view.findViewById(R.id.btnUpdate);
 
-
         ivBack = view.findViewById(R.id.ibBack);
         etFirstName = view.findViewById(R.id.etCarerFirstName);
         etMiddle = view.findViewById(R.id.etCarerMiddle);

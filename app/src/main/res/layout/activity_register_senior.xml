@@ -86,7 +86,6 @@
         android:fillViewport="true"
         android:layout_height="match_parent">
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -348,7 +347,7 @@
                     android:fontFamily="@font/redhat_display_regular"
                     android:drawableStart="@drawable/ic_ph_flag"
                     android:drawablePadding="10dp"
-                    android:hint="+63  Mobile Number *"
+                    android:hint="Mobile Number *"
                     android:inputType="number"
                     android:padding="20dp"
                     android:textColorHint="@color/grey5"
