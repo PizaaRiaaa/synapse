@@ -41,6 +41,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.modules.view.ViewMedicine;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -69,6 +70,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.aviran.cookiebar2.CookieBar;
+import org.checkerframework.checker.units.qual.A;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -88,6 +90,8 @@ public class MedicationFragment extends Fragment {
     // Global variables
     ReplaceFragment replaceFragment = new ReplaceFragment(); // replacing fragment
     PromptMessage promptMessage = new PromptMessage(); // custom prompt message
+    AuditTrail auditTrail = new AuditTrail();
+
     DatabaseReference referenceProfile, referenceReminders;
     FirebaseUser mUser;
     RequestQueue requestQueue;
@@ -200,6 +204,87 @@ public class MedicationFragment extends Fragment {
         return view;
     }
 
+    private void updateSeniorMedicineTaken(String key) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("isTaken", "Taken");
+        referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    String carerID = ds.getKey();
+                    referenceReminders
+                            .child(mUser.getUid())
+                            .child(carerID)
+                            .child(key)
+                            .updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+
+                                    if (task.isSuccessful()) {
+                                        referenceReminders
+                                                .child(carerID)
+                                                .child(mUser.getUid())
+                                                .child(key)
+                                                .updateChildren(hashMap).addOnCompleteListener(task0 -> {
+                                                    if (task0.isSuccessful()) {
+                                                        promptMessage.displayMessage(
+                                                                "Success",
+                                                                "You have successfully taken your medicine",
+                                                                R.color.dark_green, getActivity());
+
+                                                        referenceReminders
+                                                                .child(mUser.getUid())
+                                                                .child(carerID)
+                                                                .child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for(DataSnapshot ds : snapshot.getChildren()){
+                                                                            ReadWriteMedication medicine = snapshot.getValue(ReadWriteMedication.class);
+                                                                            String name = medicine.getName();
+                                                                            String dosage = medicine.getDosage();
+
+                                                                            auditTrail.auditTrail(
+                                                                                    "Took Medicine",
+                                                                                    name + " " + dosage,
+                                                                                    "Medicine", "Carer", referenceProfile, mUser);
+
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+                                                    }
+                                                });
+                                    }
+                                }
+                           });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
+    // layout for recycle view
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.recyclerview_medication);
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+    }
+
     void recycleviewMedicine(Query query){
         FirebaseRecyclerOptions<ReadWriteMedication> options = new FirebaseRecyclerOptions.Builder<ReadWriteMedication>().setQuery(query, ReadWriteMedication.class).build();
         FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteMedication, MedicationViewHolder>(options) {
@@ -212,7 +297,6 @@ public class MedicationFragment extends Fragment {
                 String pill_color = model.getColor();
                 String dose = model.getDose();
                 String isTaken = model.getIsTaken();
-                String inTake = model.getInTake();
                 String get_dose = dose.split(" ")[0];
 
                 if (pill_color.equals("White") && pill_shape.equals("Pill1")) {
@@ -305,16 +389,6 @@ public class MedicationFragment extends Fragment {
                 }else{
                     holder.tvIsTaken.setText("Taken");
                 }
-
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ViewMedicine.class);
-                        intent.putExtra("userKey", getRef(position).getKey());
-                        startActivity(intent);
-                    }
-                });
             }
             @NonNull
             @Override
@@ -327,72 +401,6 @@ public class MedicationFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void updateSeniorMedicineTaken(String key) {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("isTaken", "Taken");
-        referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    String carerID = ds.getKey();
-                    referenceReminders
-                            .child(mUser.getUid())
-                            .child(carerID)
-                            .child(key)
-                            .updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-
-                                    if (task.isSuccessful()) {
-                                        referenceReminders
-                                                .child(carerID)
-                                                .child(mUser.getUid())
-                                                .child(key)
-                                                .updateChildren(hashMap).addOnCompleteListener(task0 -> {
-                                                    if (task0.isSuccessful()) {
-                                                        promptMessage.displayMessage(
-                                                                "Success",
-                                                                "You have successfully taken your medicine",
-                                                                R.color.dark_green, getActivity());
-                                                    }
-                                                });
-                                    }
-                                }
-                           });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    // layout for recycle view
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        recyclerView = view.findViewById(R.id.recyclerview_medication);
-        mLayoutManager = new LinearLayoutManager(requireActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
-
-    }
-
-    // prevent error when using back pressed inside fragment
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                this.setEnabled(false);
-                replaceFragment.replaceFragment(new HomeFragment(), getActivity());
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
 
     // display all schedules for medication
     private void LoadScheduleForMedication() {
@@ -432,6 +440,22 @@ public class MedicationFragment extends Fragment {
             }
         });
     }
+
+
+    // prevent error when using back pressed inside fragment
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                this.setEnabled(false);
+                replaceFragment.replaceFragment(new HomeFragment(), getActivity());
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
 
     // display senior's profile pic
     void showUserProfile(){

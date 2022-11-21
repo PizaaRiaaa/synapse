@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.TimePickerFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteAppointment;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.aviran.cookiebar2.CookieBar;
+import org.checkerframework.checker.units.qual.A;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,12 +61,11 @@ import java.util.Objects;
 public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
     private FirebaseUser mUser;
-    private DatabaseReference
-            referenceReminders,
-            referenceProfile,
-            referenceCompanion;
+    private DatabaseReference referenceReminders;
+    private DatabaseReference referenceProfile;
 
     PromptMessage promptMessage = new PromptMessage();
+    AuditTrail auditTrail = new AuditTrail();
 
     private final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
     private final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe,
@@ -98,7 +99,6 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         tvAlarm = findViewById(R.id.tvAlarmSub);
         tvDelete = findViewById(R.id.tvDelete);
 
-        referenceCompanion = FirebaseDatabase.getInstance().getReference("Companion");
         referenceReminders = FirebaseDatabase.getInstance().getReference("Games Reminders");
         referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -200,47 +200,6 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         pendingIntent.cancel();
     }
 
-    //  listen if alarm is currently running so we can send notification to senior
-//    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent != null) {
-//                referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                        for (DataSnapshot ds : snapshot.getChildren()) {
-//                            seniorID = ds.getKey();
-//                            referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-//                                    token = seniorProfile.getToken();
-//                                    FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-//                                            "Game Reminder",
-//                                            "Hello! It's time for you to play a game",
-//                                            ViewGame.this);
-//                                    notificationsSender.SendNotifications();
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//                                    promptMessage.defaultErrorMessage(ViewGame.this);
-//                                }
-//                            });
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        promptMessage.defaultErrorMessage(ViewGame.this);
-//                    }
-//                });
-//            }
-//        }
-//    };
-//
-
     public void showGameInfo(String gameID){
         // userID >
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
@@ -322,9 +281,13 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
     public void updateGame(String gameID){
 
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
-
         hashMap.put("Game", Objects.requireNonNull(selected_game));
         hashMap.put("Time", tvAlarm.getText().toString());
+
+        auditTrail.auditTrail(
+                "Updated Game Reminder",
+                selected_game,
+                "Games", "Carer", referenceProfile, mUser);
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -435,6 +398,11 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                                 // cancel the alarm
                                 cancelAlarm(code);
+
+                                auditTrail.auditTrail(
+                                        "Deleted Game Reminder",
+                                        selected_game,
+                                        "Games", "Carer", referenceProfile, mUser);
 
                                 referenceReminders.child(mUser.getUid()).child(key).child(gameID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override

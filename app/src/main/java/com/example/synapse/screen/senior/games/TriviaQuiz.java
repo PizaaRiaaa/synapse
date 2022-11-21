@@ -2,13 +2,16 @@ package com.example.synapse.screen.senior.games;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.synapse.R;
+import com.google.android.material.button.MaterialButton;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,8 +20,14 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
 
     TextView totalQuestionsTextView;
     TextView questionTextView;
-    Button ansA, ansB, ansC, ansD;
-    Button submitBtn;
+    ImageView btnExit;
+
+    MaterialButton ansA, ansB, ansC, ansD;
+    MaterialButton submitBtn;
+    MediaPlayer bgMusic;
+    MediaPlayer bgCorrect;
+
+
 
     int score = 0; // total score
     int currentQuestionIndex = ThreadLocalRandom.current().nextInt(0,76);
@@ -39,7 +48,14 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         ansB = findViewById(R.id.ans_B);
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
+        btnExit = findViewById(R.id.btnExit);
         submitBtn = findViewById(R.id.submit_btn);
+
+        bgCorrect = MediaPlayer.create(this, R.raw.correct);
+        bgCorrect.setLooping(false);
+        bgMusic = MediaPlayer.create(this, R.raw.trivia);
+        bgMusic.start();
+        bgMusic.setLooping(true);
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
@@ -47,8 +63,21 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         ansD.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
+        btnExit.setOnClickListener(v -> {
+            bgMusic.stop();
+            finish();
+        });
+
         loadNewQuestion();
     }
+
+    // check if back button was pressed
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        bgMusic.stop();
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -58,13 +87,13 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         ansC.setBackgroundColor(Color.WHITE);
         ansD.setBackgroundColor(Color.WHITE);
 
-
         Button clickedButton = (Button) view;
         if(clickedButton.getId() == R.id.submit_btn){
             ++ctr; // increase question counter
             Log.d("currentQuestionIndex inside onClick()", String.valueOf(currentQuestionIndex));
 
             if(selectedAnswer.equals(QuestionAnswer.correctAnswers[currentQuestionIndex])){
+                bgCorrect.start();
                 score++;
             }
 //            currentQuestionIndex++;
@@ -74,7 +103,7 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         }else{
             //choices button clicked
             selectedAnswer = clickedButton.getText().toString();
-            clickedButton.setBackgroundColor(Color.MAGENTA);
+            clickedButton.setBackgroundColor(getResources().getColor(R.color.light_yellow));
         }
 
     }
@@ -96,7 +125,6 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         ansC.setText(QuestionAnswer.choices[currentQuestionIndex][2]);
         ansD.setText(QuestionAnswer.choices[currentQuestionIndex][3]);
 
-
     }
     void finishQuiz(){
         String passStatus = "";
@@ -110,6 +138,7 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
                 .setTitle(passStatus)
                 .setMessage("Score is " + score+" out of " + totalQuestion)
                 .setPositiveButton("Restart",(dialogInterface, i) -> restartQuiz())
+                .setNegativeButton("Quit",(dialogInterface, i) -> quitGame())
                 .setCancelable(false)
                 .show();
     }
@@ -118,5 +147,10 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         score = 0;
         currentQuestionIndex = ThreadLocalRandom.current().nextInt(0,76);
         loadNewQuestion();
+    }
+
+    void quitGame(){
+        bgMusic.stop();
+        finish();
     }
 }

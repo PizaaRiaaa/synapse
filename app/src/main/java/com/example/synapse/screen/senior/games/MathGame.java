@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.synapse.R;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -28,8 +33,15 @@ public class MathGame extends AppCompatActivity {
     int scoreCtr = 0; // property that will count the score
     int numberOfQuestions = 0; // property that will hold the total number of questions
     TextView scoreTextView; // property that will hold the score textview
-    TextView tvMathGame;
+    ImageView tvMathGame;
     Button playAgainBtn; // property that will hold the playAgain button
+    ImageButton btnExit;
+    LinearLayout mathBg;
+
+    MediaPlayer bgMusic;
+    MediaPlayer bgCorrect;
+    MediaPlayer bgWrong;
+
     ConstraintLayout gameTransitionLayout; // property that will hold the constraint that will give the illusion that no one is beneath the constraint; pantakip sa loob
     androidx.gridlayout.widget.GridLayout gridLayout; // property that will hold the grid layout
     ArrayList<View> layoutButtons;
@@ -53,7 +65,9 @@ public class MathGame extends AppCompatActivity {
     public void start(View view){
         startBtn.setVisibility(View.INVISIBLE);
         gameTransitionLayout.setVisibility(View.VISIBLE);
+        mathBg.setVisibility(View.VISIBLE);
         tvMathGame.setVisibility(View.INVISIBLE);
+        btnExit.setVisibility(View.VISIBLE);
 
         // call the playAgain function to avoid redundancy
         playAgain(findViewById(R.id.scoreTextViewId)); // we can pass any view; it doesn't matter because we will not use it
@@ -64,10 +78,12 @@ public class MathGame extends AppCompatActivity {
 
         // compare the location of correct answer to the tag of the clicked button
         if(Integer.toString(locationOfCorrectAnswer).equals(view.getTag())){
+            bgCorrect.start();
             remark.setText("Correct!");
             scoreCtr++;
 
         } else {
+            bgWrong.start();
             remark.setText("Incorrect!");
         }
 
@@ -98,7 +114,7 @@ public class MathGame extends AppCompatActivity {
 
     /* FUNCTION FOR TIMER */
     public void timer(){
-        timer = new CountDownTimer(20100, 1000) {
+        timer = new CountDownTimer(120100, 1000) {
             @Override
             public void onTick(long l) {
 
@@ -205,10 +221,10 @@ public class MathGame extends AppCompatActivity {
     public void changeButtonAnswers(){
         /* Change the answers button text */
         // references for the answer button
-        Button button0 = (Button) findViewById(R.id.btn1);
-        Button button1 = (Button) findViewById(R.id.btn2);
-        Button button2 = (Button) findViewById(R.id.btn3);
-        Button button3 = (Button) findViewById(R.id.btn4);
+        MaterialButton button0 = (MaterialButton) findViewById(R.id.btn1);
+        MaterialButton button1 = (MaterialButton) findViewById(R.id.btn2);
+        MaterialButton button2 = (MaterialButton) findViewById(R.id.btn3);
+        MaterialButton button3 = (MaterialButton) findViewById(R.id.btn4);
 
         button0.setText(Integer.toString(answers.get(0)));
         button1.setText(Integer.toString(answers.get(1)));
@@ -216,12 +232,21 @@ public class MathGame extends AppCompatActivity {
         button3.setText(Integer.toString(answers.get(3)));
     }
 
+    // check if back button was pressed
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        bgMusic.stop();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_math_game);
 
+        mathBg = findViewById(R.id.mathBg);
         tvMathGame = findViewById(R.id.tvMathGame);
+        btnExit = findViewById(R.id.btnExit);
         startBtn = (Button) findViewById(R.id.startBtnId); // reference of the start button
         remark = (TextView) findViewById(R.id.remarkTextViewId); // reference for the remark textview
         scoreTextView = (TextView) findViewById(R.id.scoreTextViewId); // reference of the score textview
@@ -229,6 +254,21 @@ public class MathGame extends AppCompatActivity {
         gameTransitionLayout = (ConstraintLayout) findViewById(R.id.gameTransitionLayoutId); // reference of the constraint that will be use as pantakip
         gridLayout = findViewById(R.id.gridLayoutId); // reference to the grid layout that holds the buttons
         layoutButtons = gridLayout.getTouchables(); // reference to the arrayList of button views
+
+        bgCorrect = MediaPlayer.create(this, R.raw.correct);
+        bgCorrect.setLooping(false);
+
+        bgWrong = MediaPlayer.create(this, R.raw.wrong);
+        bgWrong.setLooping(false);
+
+        bgMusic = MediaPlayer.create(this, R.raw.math);
+        bgMusic.start();
+        bgMusic.setLooping(true);
+
+        btnExit.setOnClickListener(v -> {
+            finish();
+            bgMusic.stop();
+        });
 
         startBtn.setVisibility(View.VISIBLE); // make the start button visible at the starting process of the app
         gameTransitionLayout.setVisibility(View.INVISIBLE); // make the constraint that contains all the buttons, text views, and stuff invisible at the start of the app

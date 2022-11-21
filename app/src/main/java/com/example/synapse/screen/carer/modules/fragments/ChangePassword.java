@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.synapse.ForgotPassword;
 import com.example.synapse.R;
 import com.example.synapse.screen.Login;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +26,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.checkerframework.checker.units.qual.A;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +44,10 @@ public class ChangePassword extends Fragment {
     ProgressDialog dialog;
     PromptMessage promptMessage;
     FirebaseAuth auth;
+    FirebaseUser mUser;
+    DatabaseReference referenceProfile;
+
+    AuditTrail auditTrail = new AuditTrail();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,6 +97,7 @@ public class ChangePassword extends Fragment {
 
         MaterialButton btnSubmit = view.findViewById(R.id.btnSubmit);
         promptMessage = new PromptMessage();
+        referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         etEmail = view.findViewById(R.id.etEmail);
         tilEmail = view.findViewById(R.id.tilEmail);
@@ -130,6 +141,10 @@ public class ChangePassword extends Fragment {
             public void onComplete(@NonNull Task<Void> task) {
                 dialog.dismiss();
                 if(task.isSuccessful()){
+                    auditTrail.auditTrail(
+                            "Change password",auth.getUid(),
+                            "Carer", "Carer", referenceProfile, mUser);
+
                     promptMessage.displayMessage(
                             "Success",
                             "Please Check your Email Address!",

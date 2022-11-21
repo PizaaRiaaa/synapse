@@ -41,18 +41,36 @@ public class SeniorMainActivity extends AppCompatActivity {
         bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         floatingActionButton = findViewById(R.id.fabLocateSenior);
 
-        // medicine
-        String key = getIntent().getStringExtra("key");
+
+        // ==================================================
+        // key for notification button content intent
+        String med_key = getIntent().getStringExtra("med_key");
+        String phy_key = getIntent().getStringExtra("phy_key");
+
         MedicationFragment medicationFragment = new MedicationFragment();
-        Bundle args = new Bundle();
-        args.putString("key",key);
-        medicationFragment.setArguments(args);
-        if(key != null){
+        Bundle args1 = new Bundle();
+        args1.putString("key",med_key);
+        medicationFragment.setArguments(args1);
+
+        PhysicalActivityFragment physicalActivityFragment = new PhysicalActivityFragment();
+        Bundle args2 = new Bundle();
+        args2.putString("key", phy_key);
+        physicalActivityFragment.setArguments(args2);
+
+        if(med_key != null){
             FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_layout, medicationFragment);
             fragmentTransaction.commit();
+
+        }else if(phy_key != null ){
+            FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_layout, physicalActivityFragment);
+            fragmentTransaction.commit();
         }
+
+        // ==================================================
 
         FirebaseMessaging.getInstance().subscribeToTopic("hello");
 

@@ -39,7 +39,7 @@
                 android:layout_margin="18dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/redhat_display_semibold"
-                android:text="View your appointment"
+                android:text="Appointments"
                 android:textColor="@color/grey5"
                 android:textSize="17sp" />
 
@@ -77,7 +77,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -91,7 +90,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -105,7 +103,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -119,7 +116,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -133,7 +129,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -147,7 +142,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -161,7 +155,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey2"
@@ -173,6 +166,43 @@
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleButtonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:singleSelection="true"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ALL"
+                android:textSize="12sp"/>
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnUpcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upcoming"
+                android:textSize="12sp"/>
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:fontFamily="@font/redhat_display_semibold"
+                android:id="@+id/btnPrevious"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous"
+                android:textSize="12sp"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <!-- recycle view for all carer users -->
         <androidx.recyclerview.widget.RecyclerView

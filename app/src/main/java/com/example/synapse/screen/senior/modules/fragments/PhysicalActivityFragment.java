@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
+import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWritePhysicalActivity;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.viewholder.PhysicalActivityViewHolder;
@@ -43,6 +45,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,9 +80,18 @@ public class PhysicalActivityFragment extends Fragment {
     DatabaseReference referenceReminders, referenceSenior;
     FirebaseUser mUser;
 
+    LinearLayoutManager mLayoutManager;
     RequestQueue requestQueue;
     RecyclerView recyclerView;
+    Query query;
     ImageView profilePic;
+    Bundle args;
+    String key;
+
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnDone;
+    Button btnNotDone;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -126,19 +138,15 @@ public class PhysicalActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_senior_physical_activity, container, false);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-
         requestQueue = Volley.newRequestQueue(getActivity());
 
-        // listen for broadcast
-        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_PHYSICAL_ACTIVITY"));
-
-        // variables for view
-        profilePic = view.findViewById(R.id.ivSeniorProfilePic);
         ImageButton ibBack = view.findViewById(R.id.ibBack);
+        profilePic = view.findViewById(R.id.ivSeniorProfilePic);
         btnMon = view.findViewById(R.id.btnMON);
         btnTue = view.findViewById(R.id.btnTUE);
         btnWed = view.findViewById(R.id.btnWED);
@@ -147,14 +155,22 @@ public class PhysicalActivityFragment extends Fragment {
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
-        // show status bar
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), SeniorMainActivity.class)));
 
         showUserProfile();
         loadScheduleForPhysicalActivity();
         displayCurrentDay();
+
+        args = getArguments();
+        if(args != null){
+            key = args.getString("key");
+            updateSeniorPhysicalDone(key);
+        }
+
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnDone = view.findViewById(R.id.btnDone);
+        btnNotDone = view.findViewById(R.id.btnNotDone);
 
         return view;
     }
@@ -163,7 +179,10 @@ public class PhysicalActivityFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // layout for recycle view
         recyclerView = view.findViewById(R.id.recyclerview_physical_activity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        mLayoutManager = new LinearLayoutManager(requireActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
 
     }
 
@@ -181,8 +200,52 @@ public class PhysicalActivityFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    void recycleviewPhysicalActivity(Query query){
+        FirebaseRecyclerOptions<ReadWritePhysicalActivity> options = new FirebaseRecyclerOptions.Builder<ReadWritePhysicalActivity>().setQuery(query, ReadWritePhysicalActivity.class).build();
+        FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            protected void onBindViewHolder(@NonNull PhysicalActivityViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWritePhysicalActivity model) {
 
-    // display all schedules for medication
+                String activity = model.getActivity();
+                String isDone = model.getIsDone();
+
+                switch (activity) {
+                    case "Stretching":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(),R.drawable.ic_bg_stretching));
+                        break;
+                    case "Walking":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_walking));
+                        break;
+                    case "Yoga":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_yoga));
+                        break;
+                    case "Aerobics":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_aerobics));
+                        break;
+                }
+
+                holder.name.setText(model.getActivity());
+                holder.duration.setText("Duration: " + model.getDuration());
+                holder.time.setText(model.getTime());
+
+                if(isDone.equals("Done")){
+                    holder.ivIsDone.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_is_taken));
+                }
+
+            }
+            @NonNull
+            @Override
+            public PhysicalActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_senior_physical_activity_schedule, parent, false);
+                return new PhysicalActivityViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
     private void loadScheduleForPhysicalActivity() {
         referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -190,44 +253,26 @@ public class PhysicalActivityFragment extends Fragment {
                 if (snapshot.exists()) {
                     for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
-                            Query query = ds2.getRef();
-
-                            FirebaseRecyclerOptions<ReadWritePhysicalActivity> options = new FirebaseRecyclerOptions.Builder<ReadWritePhysicalActivity>().setQuery(query, ReadWritePhysicalActivity.class).build();
-                            FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder>(options) {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @SuppressLint("SetTextI18n")
+                            query = ds2.getRef();
+                            recycleviewPhysicalActivity(query);
+                            int buttonID = toggleGroup.getCheckedButtonId();
+                            toggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
                                 @Override
-                                protected void onBindViewHolder(@NonNull PhysicalActivityViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWritePhysicalActivity model) {
-
-                                    String activity = model.getActivity();
-                                    switch (activity) {
-                                        case "Stretching":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(),R.drawable.ic_stretching));
-                                            break;
-                                        case "Walking":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_walking));
-                                            break;
-                                        case "Yoga":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_yoga));
-                                            break;
-                                        case "Aerobics":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_aerobics));
-                                            break;
+                                public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                                    if(isChecked){
+                                        if(checkedId == R.id.btnAll){
+                                            query = ds2.getRef();
+                                            recycleviewPhysicalActivity(query);
+                                        }else if(checkedId == R.id.btnDone){
+                                            query = ds2.getRef().orderByChild("IsDone").equalTo("Done");
+                                            recycleviewPhysicalActivity(query);
+                                        }else if(checkedId == R.id.btnNotDone){
+                                            query = ds2.getRef().orderByChild("IsDone").equalTo("Not Done");
+                                            recycleviewPhysicalActivity(query);
+                                        }
                                     }
-                                    holder.name.setText(model.getActivity());
-                                    holder.duration.setText("Duration: " + model.getDuration());
-                                    holder.time.setText(model.getTime());
-
                                 }
-                                @NonNull
-                                @Override
-                                public PhysicalActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_senior_physical_activity_schedule, parent, false);
-                                    return new PhysicalActivityViewHolder(view);
-                                }
-                            };
-                            adapter.startListening();
-                            recyclerView.setAdapter(adapter);
+                            });
                         }
                     }
                 }
@@ -239,6 +284,74 @@ public class PhysicalActivityFragment extends Fragment {
         });
     }
 
+
+    private void updateSeniorPhysicalDone(String key) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("IsDone", "Done");
+        referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    String carerID = ds.getKey();
+                    referenceReminders
+                            .child(mUser.getUid())
+                            .child(carerID)
+                            .child(key)
+                            .updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+
+                                    if (task.isSuccessful()) {
+                                        referenceReminders
+                                                .child(carerID)
+                                                .child(mUser.getUid())
+                                                .child(key)
+                                                .updateChildren(hashMap).addOnCompleteListener(task0 -> {
+                                                    if (task0.isSuccessful()) {
+                                                        promptMessage.displayMessage(
+                                                                "Success",
+                                                                "You have successfully finished your physical activity",
+                                                                R.color.dark_green, getActivity());
+
+                                                        referenceReminders
+                                                                .child(mUser.getUid())
+                                                                .child(carerID)
+                                                                .child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for(DataSnapshot ds : snapshot.getChildren()){
+                                                                            ReadWriteMedication medicine = snapshot.getValue(ReadWriteMedication.class);
+                                                                            String name = medicine.getName();
+                                                                            String dosage = medicine.getDosage();
+
+                                                                           // auditTrail.auditTrail(
+                                                                           //         "Took Medicine",
+                                                                           //         name + " " + dosage,
+                                                                           //         "Medicine", "Carer", referenceProfile, mUser);
+
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     // change the background the current day to white
     public void displayCurrentDay(){

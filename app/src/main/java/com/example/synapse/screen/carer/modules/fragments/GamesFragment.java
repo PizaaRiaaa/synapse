@@ -46,6 +46,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.view.ViewGame;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.TimePickerFragment;
@@ -89,23 +90,29 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
     // global variables
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
-    DatabaseReference referenceReminders, referenceCarer;
-
-    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
-    AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule ;
-
-    AppCompatEditText etDuration;
+    AuditTrail auditTrail = new AuditTrail();
 
     FirebaseUser mUser;
-    int requestCode;
-    FloatingActionButton fabAddGame;
-    Dialog dialog;
-    final Calendar calendar = Calendar.getInstance();
-    RecyclerView recyclerView;
+    DatabaseReference referenceReminders;
+    DatabaseReference referenceCarer;
 
+    AppCompatButton btnMon;
+    AppCompatButton btnTue;
+    AppCompatButton btnWed;
+    AppCompatButton btnThu;
+    AppCompatButton btnFri;
+    AppCompatButton btnSat;
+    AppCompatButton btnSun;
+    AppCompatButton btnAddSchedule ;
+
+    FloatingActionButton fabAddGame;
+    RecyclerView recyclerView;
+    Dialog dialog;
+
+    int requestCode;
+    final Calendar calendar = Calendar.getInstance();
     final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
     final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe, R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
-
     private TextView tvTime;
     private String selected_game, time, seniorID;
     private ImageView profilePic;
@@ -172,15 +179,11 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         btnSat = view.findViewById(R.id.btnSAT);
         btnSun = view.findViewById(R.id.btnSUN);
 
-        // references for firebase
         referenceReminders = FirebaseDatabase.getInstance().getReference("Games Reminders");
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
-
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        //requestQueue = Volley.newRequestQueue(getActivity());
 
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //getActivity().registerReceiver(broadcastReceiver, new IntentFilter("NOTIFY_GAMES"));
 
         Spinner spinner_games;
         tvTime = dialog.findViewById(R.id.tvTime);
@@ -262,50 +265,6 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
         tvTime.setText("Alarm set for " + simpleDateFormat.format(calendar.getTime()));
         time = simpleDateFormat.format(calendar.getTime());
     }
-
-    // listen if alarm is currently running so we can send notification to senior
-  //  BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-  //      @Override
-  //      public void onReceive(Context context, Intent intent) {
-  //          if (intent != null) {
-  //              referenceCompanion.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-  //                  @Override
-  //                  public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                      for (DataSnapshot ds : snapshot.getChildren()) {
-  //                          seniorID = ds.getKey();
-
-  //                          referenceProfile.child(seniorID).addValueEventListener(new ValueEventListener() {
-  //                              @Override
-  //                              public void onDataChange(@NonNull DataSnapshot snapshot) {
-  //                                  ReadWriteUserDetails seniorProfile = snapshot.getValue(ReadWriteUserDetails.class);
-  //                                  token = seniorProfile.getToken();
-  //                                  FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token,
-  //                                          "Game Reminder",
-  //                                          "Hello! It's time for you to play a game",
-  //                                          getActivity());
-  //                                  notificationsSender.SendNotifications();
-  //                              }
-  //                              @Override
-  //                              public void onCancelled(@NonNull DatabaseError error) {
-  //                                  promptMessage.defaultErrorMessage(getActivity());
-  //                              }
-  //                          });
-  //                      }
-  //                  }
-  //                  @Override
-  //                  public void onCancelled(@NonNull DatabaseError error) {
-  //                      promptMessage.defaultErrorMessage(getActivity());
-  //                  }
-  //              });
-  //          }
-  //      }
-  //  };
-
-  //  @Override
-  //  public void onDestroy() {
-  //      super.onDestroy();
-  //      getActivity().unregisterReceiver(broadcastReceiver);
-  //  }
 
     // display all schedules for games
     private void loadScheduleForGames() {
@@ -426,6 +385,11 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                              .child(mUser.getUid())
                              .child(getDefaults("seniorKey",getActivity()))
                              .child(key).setValue(hashMap).addOnCompleteListener(task0 -> {
+
+                      auditTrail.auditTrail(
+                              "Added Game Reminder",
+                              selected_game,
+                              "Games", "Carer", referenceCarer, mUser);
 
                          if (task0.isSuccessful()) {
                              dialog.dismiss();

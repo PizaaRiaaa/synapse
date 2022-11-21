@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -63,6 +64,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -118,8 +120,14 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
     String seniorID;
     String clickedRepeatBtn;
 
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnDone;
+    Button btnNotDone;
+
     RequestQueue requestQueue;
     RecyclerView recyclerView;
+    Query query;
     int requestCode;
     int count = 0;
     Dialog dialog;
@@ -249,6 +257,11 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
             isClicked = true;
         });
 
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnDone = view.findViewById(R.id.btnDone);
+        btnNotDone = view.findViewById(R.id.btnNotDone);
+
         return view;
     }
 
@@ -371,61 +384,89 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
    //     getActivity().unregisterReceiver(broadcastReceiver);
    // }
 
-    // display all schedules for medication
+    void recycleviewPhysicalActivity(Query query){
+        FirebaseRecyclerOptions<ReadWritePhysicalActivity> options = new FirebaseRecyclerOptions.Builder<ReadWritePhysicalActivity>().setQuery(query, ReadWritePhysicalActivity.class).build();
+        FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            protected void onBindViewHolder(@NonNull PhysicalActivityViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWritePhysicalActivity model) {
+
+                String activity = model.getActivity();
+                String isDone = model.getIsDone();
+
+                switch (activity) {
+                    case "Stretching":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(),R.drawable.ic_bg_stretching));
+                        break;
+                    case "Walking":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_walking));
+                        break;
+                    case "Yoga":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_yoga));
+                        break;
+                    case "Aerobics":
+                        holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_bg_aerobics));
+                        break;
+                }
+
+                holder.name.setText(model.getActivity());
+                holder.duration.setText("Duration: " + model.getDuration());
+                holder.time.setText(model.getTime());
+
+                if(isDone.equals("Done")){
+                    holder.ivIsDone.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_is_taken));
+                }
+
+                // send the key to another activity
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ViewPhysicalActivity.class);
+                        intent.putExtra("userKey", getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+            @NonNull
+            @Override
+            public PhysicalActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_physical_activity_schedule, parent, false);
+                return new PhysicalActivityViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
+
     private void loadScheduleForPhysicalActivity() {
-        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
-                            Query query = ds2.getRef();
-
-                            FirebaseRecyclerOptions<ReadWritePhysicalActivity> options = new FirebaseRecyclerOptions.Builder<ReadWritePhysicalActivity>().setQuery(query, ReadWritePhysicalActivity.class).build();
-                            FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWritePhysicalActivity, PhysicalActivityViewHolder>(options) {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @SuppressLint("SetTextI18n")
+                            query = ds2.getRef();
+                            recycleviewPhysicalActivity(query);
+                            int buttonID = toggleGroup.getCheckedButtonId();
+                            toggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
                                 @Override
-                                protected void onBindViewHolder(@NonNull PhysicalActivityViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWritePhysicalActivity model) {
-
-                                    String activity = model.getActivity();
-                                    switch (activity) {
-                                        case "Stretching":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(),R.drawable.ic_stretching));
-                                            break;
-                                        case "Walking":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_walking));
-                                            break;
-                                        case "Yoga":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_yoga));
-                                            break;
-                                        case "Aerobics":
-                                            holder.ic_activity.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_aerobics));
-                                            break;
-                                    }
-                                    holder.name.setText(model.getActivity());
-                                    holder.duration.setText("Duration: " + model.getDuration());
-                                    holder.time.setText(model.getTime());
-
-                                    // send the key to another activity
-                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), ViewPhysicalActivity.class);
-                                            intent.putExtra("userKey", getRef(position).getKey());
-                                            startActivity(intent);
+                                public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                                    if(isChecked){
+                                        if(checkedId == R.id.btnAll){
+                                            query = ds2.getRef();
+                                            recycleviewPhysicalActivity(query);
+                                        }else if(checkedId == R.id.btnDone){
+                                            query = ds2.getRef().orderByChild("IsDone").equalTo("Done");
+                                            recycleviewPhysicalActivity(query);
+                                        }else if(checkedId == R.id.btnNotDone){
+                                            query = ds2.getRef().orderByChild("IsDone").equalTo("Not Done");
+                                            recycleviewPhysicalActivity(query);
                                         }
-                                    });
+                                    }
                                 }
-                                @NonNull
-                                @Override
-                                public PhysicalActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_physical_activity_schedule, parent, false);
-                                    return new PhysicalActivityViewHolder(view);
-                                }
-                            };
-                            adapter.startListening();
-                            recyclerView.setAdapter(adapter);
+                            });
                         }
                     }
                 }
@@ -497,6 +538,7 @@ public class PhysicalActivityFragment extends Fragment implements AdapterView.On
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Activity", type_of_activity);
         hashMap.put("Duration", Objects.requireNonNull(etDuration.getText()).toString());
+        hashMap.put("IsDone", "Not Done");
         hashMap.put("Time", time);
         hashMap.put("RepeatMode", clickedRepeatBtn);
         hashMap.put("RequestCode", requestCode);

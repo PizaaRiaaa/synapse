@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.synapse.R;
 import com.example.synapse.screen.PickRole;
 import com.example.synapse.screen.carer.verification.OTP;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,6 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.checkerframework.checker.units.qual.A;
 import org.joda.time.DateTime;
 
 import java.util.Calendar;
@@ -64,6 +66,7 @@ public class RegisterCarer extends AppCompatActivity {
 
     // Global variables
     PromptMessage promptMessage = new PromptMessage();
+    AuditTrail auditTrail = new AuditTrail();
     String userType, token;
     private StorageReference storageReference;
     private static final String TAG = "RegisterActivity";
@@ -342,6 +345,7 @@ public class RegisterCarer extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
+
                             progressBar.setVisibility(View.VISIBLE);
 
                             FirebaseUser firebaseUser = auth.getCurrentUser();
@@ -352,6 +356,11 @@ public class RegisterCarer extends AppCompatActivity {
 
                             // extracting user reference from database for "Registered Users"
                             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+
+                            auditTrail.auditTrail(
+                                    "Register an account",
+                                    textFirstName + " " + textLastName + " " + userType,
+                                    "Carer", "Carer", referenceProfile, firebaseUser);
 
                             // store profile picture of carer
                             storageReference = FirebaseStorage.getInstance().getReference("ProfilePics");

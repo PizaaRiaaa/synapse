@@ -106,7 +106,6 @@ public class Login extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if(snapshot.exists()){
                                                 progressDialog.dismiss();
-
                                                 startActivity(new Intent(Login.this, SelectSenior.class));
                                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                                 finish();

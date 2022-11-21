@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -55,6 +56,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,6 +96,11 @@ public class AppointmentFragment extends Fragment {
 
     RecyclerView recyclerView;
     ImageView profilePic;
+
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnUpcoming;
+    Button btnPrevious;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -177,6 +184,11 @@ public class AppointmentFragment extends Fragment {
         displayCurrentDay();
 
         ibBack.setOnClickListener(v -> startActivity(new Intent(getActivity(), SeniorMainActivity.class)));
+
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnUpcoming = view.findViewById(R.id.btnUpcoming);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
 
         return view;
     }

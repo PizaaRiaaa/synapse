@@ -6,12 +6,13 @@ public class ReadWriteAppointment {
     private String DrName;
     private String Concern;
     private String Time;
+    private Long Timestamp;
     private Long RequestCode;
 
     public ReadWriteAppointment() { }
 
     public ReadWriteAppointment(String textSpecialist, String textAppointmentType, String textDrName,
-                                String textConcern, String textTime, Long textRequestCode) {
+                                String textConcern, String textTime, Long textRequestCode, Long textTimestamp) {
 
         this.Specialist = textSpecialist;
         this.AppointmentType = textAppointmentType;
@@ -19,6 +20,7 @@ public class ReadWriteAppointment {
         this.Concern = textConcern;
         this.Time = textTime;
         this.RequestCode = textRequestCode;
+        this.Timestamp = textTimestamp;
     }
 
     public String getSpecialist(){ return Specialist; }
@@ -38,4 +40,7 @@ public class ReadWriteAppointment {
 
     public Long getRequestCode(){ return RequestCode; }
     public void setRequestCode(Long requestCode){ this.RequestCode = requestCode; }
+
+    public Long getTimestamp(){ return Timestamp; }
+    public void setTimestamp(Long Timestamp){ this.Timestamp = Timestamp; }
 }

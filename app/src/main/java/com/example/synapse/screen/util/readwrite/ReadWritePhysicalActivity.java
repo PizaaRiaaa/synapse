@@ -9,12 +9,13 @@ public class ReadWritePhysicalActivity {
     private String Description;
     private String RepeatMode;
     private Long RequestCode;
+    private String IsDone;
 
     public ReadWritePhysicalActivity() { }
 
     public ReadWritePhysicalActivity(String textActivity, String textDuration,
                                      String textTime, String textDescription,
-                                     String textRepeatMode, Long textRequestCode) {
+                                     String textRepeatMode, Long textRequestCode, String textIsDone) {
 
         this.Activity = textActivity;
         this.Duration = textDuration;
@@ -22,6 +23,7 @@ public class ReadWritePhysicalActivity {
         this.Description = textDescription;
         this.RepeatMode = textRepeatMode;
         this.RequestCode = textRequestCode;
+        this.IsDone = textIsDone;
     }
 
     public String getActivity(){ return Activity; }
@@ -41,4 +43,7 @@ public class ReadWritePhysicalActivity {
 
     public Long getRequestCode(){ return RequestCode; }
     public void setRequestCode(Long RequestCode){ this.RequestCode = RequestCode; }
+
+    public String getIsDone(){ return IsDone; }
+    public void setIsDone(String isDone){ this.IsDone = IsDone; }
 }

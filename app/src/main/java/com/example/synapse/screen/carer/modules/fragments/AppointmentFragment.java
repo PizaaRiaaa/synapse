@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -55,6 +56,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,11 +66,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -89,6 +96,14 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
 
     DatabaseReference referenceReminders;
     DatabaseReference referenceCarer;
+
+    Query query;
+    String isUpcomingOrPrevious;
+
+    MaterialButtonToggleGroup toggleGroup;
+    Button btnAll;
+    Button btnUpcoming;
+    Button btnPrevious;
 
     final String[] APPOINTMENT_SPECIALIST =
             {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
@@ -195,7 +210,6 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         tvTime = dialog.findViewById(R.id.tvTime);
         profilePic = view.findViewById(R.id.ivCarerProfilePic);
 
-
         showUserProfile();
         loadScheduleForAppointments();
         displayCurrentDay();
@@ -222,6 +236,11 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
             };
             new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
+
+        toggleGroup = view.findViewById(R.id.toggleButtonGroup);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnUpcoming = view.findViewById(R.id.btnUpcoming);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
 
         return view;
     }
@@ -253,10 +272,17 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar datetime = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         updateTimeText(calendar);
+
+        if(calendar.getTimeInMillis() < datetime.getTimeInMillis()){
+            isUpcomingOrPrevious = "Previous";
+        }else{
+            isUpcomingOrPrevious = "Upcoming";
+        }
     }
 
     private void updateTimeText(Calendar calendar) {
@@ -314,6 +340,8 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("Specialist", selected_specialist);
         hashMap.put("Time", time);
+        hashMap.put("Status", isUpcomingOrPrevious);
+        hashMap.put("Timestamp", ServerValue.TIMESTAMP);
         hashMap.put("DrName", Objects.requireNonNull(etDrName.getText()).toString());
         hashMap.put("Concern", Objects.requireNonNull(etConcern.getText()).toString());
         hashMap.put("RequestCode", requestCode);
@@ -400,82 +428,104 @@ public class AppointmentFragment extends Fragment  implements AdapterView.OnItem
         }
     }
 
+    void recycleViewAppointment(Query query){
+        FirebaseRecyclerOptions<ReadWriteAppointment> options = new FirebaseRecyclerOptions.Builder<ReadWriteAppointment>().setQuery(query, ReadWriteAppointment.class).build();
+        FirebaseRecyclerAdapter<ReadWriteAppointment, AppointmentViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteAppointment, AppointmentViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
+            @Override
+            protected void onBindViewHolder(@NonNull AppointmentViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteAppointment model) {
+
+                String specialist = model.getSpecialist();
+                switch (specialist) {
+                    case "General Doctor":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_doctor));
+                        break;
+                    case "Geriatrician":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_geriatrician));
+                        break;
+                    case "Cardiologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_cardiologist));
+                        break;
+                    case "Rheumatologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_rheumatologist));
+                        break;
+                    case "Urologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_urologist));
+                        break;
+                    case "Ophthalmologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_ophthalmologist));
+                        break;
+                    case "Dentist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_dentist));
+                        break;
+                    case "Psychologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_psychologist));
+                        break;
+                    case "Audiologist":
+                        holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_audiologist));
+                        break;
+                }
+
+                holder.dateAndTime.setText(model.getTime());
+
+                if(!model.getDrName().split(" ")[0].equals("Dr.")){
+                    holder.doctorName.setText("Dr. " + model.getDrName());
+                }else{
+                    holder.doctorName.setText(model.getDrName());
+                }
+
+                holder.doctorSpecialist.setText(model.getSpecialist());
+                // open medicine's information and send medicine's Key to another activity
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ViewAppointment.class);
+                        intent.putExtra("userKey", getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+            @NonNull
+            @Override
+            public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_appointment, parent, false);
+                return new AppointmentViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
     // display all schedules for appointments
     private void loadScheduleForAppointments() {
-        referenceReminders.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
+        referenceReminders.child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot ignored : snapshot.getChildren()) {
                         for (DataSnapshot ds2 : snapshot.getChildren()) {
-                            Query query = ds2.getRef();
-
-                            FirebaseRecyclerOptions<ReadWriteAppointment> options = new FirebaseRecyclerOptions.Builder<ReadWriteAppointment>().setQuery(query, ReadWriteAppointment.class).build();
-                            FirebaseRecyclerAdapter<ReadWriteAppointment, AppointmentViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteAppointment, AppointmentViewHolder>(options) {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @SuppressLint("SetTextI18n")
+                            query = ds2.getRef();
+                            recycleViewAppointment(query);
+                            int buttonID = toggleGroup.getCheckedButtonId();
+                            toggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
                                 @Override
-                                protected void onBindViewHolder(@NonNull AppointmentViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteAppointment model) {
-
-                                    String specialist = model.getSpecialist();
-                                    switch (specialist) {
-                                        case "General Doctor":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_doctor));
-                                            break;
-                                        case "Geriatrician":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_geriatrician));
-                                            break;
-                                        case "Cardiologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_cardiologist));
-                                            break;
-                                        case "Rheumatologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_rheumatologist));
-                                            break;
-                                        case "Urologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_urologist));
-                                            break;
-                                        case "Ophthalmologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_ophthalmologist));
-                                            break;
-                                        case "Dentist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_dentist));
-                                            break;
-                                        case "Psychologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_psychologist));
-                                            break;
-                                        case "Audiologist":
-                                            holder.ivSpecialist.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_audiologist));
-                                            break;
-                                    }
-
-                                    holder.dateAndTime.setText(model.getTime());
-
-                                    if(!model.getDrName().split(" ")[0].equals("Dr.")){
-                                        holder.doctorName.setText("Dr. " + model.getDrName());
-                                    }else{
-                                        holder.doctorName.setText(model.getDrName());
-                                    }
-
-                                    holder.doctorSpecialist.setText(model.getSpecialist());
-                                    // open medicine's information and send medicine's Key to another activity
-                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), ViewAppointment.class);
-                                            intent.putExtra("userKey", getRef(position).getKey());
-                                            startActivity(intent);
+                                public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                                    if(isChecked){
+                                        if(checkedId == R.id.btnAll){
+                                            query = ds2.getRef();
+                                            recycleViewAppointment(query);
+                                        }else if(checkedId == R.id.btnUpcoming){
+                                            query = ds2.getRef().orderByChild("Status").equalTo("Upcoming");
+                                            recycleViewAppointment(query);
+                                        }else if(checkedId == R.id.btnPrevious){
+                                            query = ds2.getRef().orderByChild("Status").equalTo("Previous");
+                                            recycleViewAppointment(query);
                                         }
-                                    });
+                                    }
                                 }
-                                @NonNull
-                                @Override
-                                public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_view_carer_appointment, parent, false);
-                                    return new AppointmentViewHolder(view);
-                                }
-                            };
-                            adapter.startListening();
-                            recyclerView.setAdapter(adapter);
+                            });
+
                         }
                     }
                 }

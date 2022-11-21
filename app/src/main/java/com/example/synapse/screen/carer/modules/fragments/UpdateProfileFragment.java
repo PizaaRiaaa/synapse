@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.carer.register.RegisterCarer;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
@@ -50,6 +51,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -68,6 +71,8 @@ public class UpdateProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private final String imageURL = "";
     private Uri uriImage;
+
+    AuditTrail auditTrail = new AuditTrail();
 
     FirebaseUser mUser;
     DatabaseReference referenceUser;
@@ -267,6 +272,12 @@ public class UpdateProfileFragment extends Fragment {
         hashMap.put("dob", etDOB.getText().toString());
         hashMap.put("address", etAddress.getText().toString());
         hashMap.put("imageURL", imageURL);
+
+        auditTrail.auditTrail(
+                "Updated Profile Info",
+                etFirstName.getText().toString() + " " + etlastName.getText().toString(),
+                "Profile", "Carer", referenceUser, mUser);
+
 
         referenceUser.child(mUser.getUid()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

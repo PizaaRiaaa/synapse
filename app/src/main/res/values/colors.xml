@@ -10,6 +10,8 @@
     <color name="white">#FFFFFFFF</color>
     <color  name="mtrl_textinput_default_box_stroke_color">@color/et_stroke</color>
 
+    <color name="light_yellow">#cfd465</color>
+
     <!-- violet -->
     <color name="light_violet">#9673F7</color>
     <color name="mid_violet">#9673F7</color>
