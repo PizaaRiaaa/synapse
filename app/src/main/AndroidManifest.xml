@@ -11,8 +11,10 @@ package="com.example.synapse">
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.CALL_PHONE" />
 
-<!-- Check whether Health Connect is installed or not -->
-
+<uses-permission android:name="androidx.health.permission.HeartRate.READ" />
+<uses-permission android:name="androidx.health.permission.HeartRate.WRITE" />
+<uses-permission android:name="androidx.health.permission.Steps.READ" />
+<uses-permission android:name="androidx.health.permission.Steps.WRITE" />
 
 <application
     android:allowBackup="true"
@@ -297,7 +299,7 @@ package="com.example.synapse">
 
 </application>
 
-
+    <!-- Check whether Health Connect is installed or not -->
 <queries>
     <package android:name="com.google.android.apps.healthdata" />
 </queries>

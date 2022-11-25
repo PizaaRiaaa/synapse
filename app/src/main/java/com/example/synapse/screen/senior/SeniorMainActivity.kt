@@ -26,12 +26,16 @@ import com.example.synapse.screen.senior.modules.fragments.HomeFragment
 import com.example.synapse.screen.senior.modules.fragments.MedicationFragment
 import com.example.synapse.screen.senior.modules.fragments.PhysicalActivityFragment
 import com.example.synapse.screen.senior.modules.fragments.SettingsFragment
+import com.example.synapse.screen.util.PromptMessage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SeniorMainActivity : AppCompatActivity() {
-    var binding: ActivityCarerBottomNavigationBinding? = null
+
+    private var binding: ActivityCarerBottomNavigationBinding? = null
+
     var replaceFragment = ReplaceFragment()
+    var promptMessage = PromptMessage()
 
     // build a set of permissions for required data types
     val PERMISSIONS =
@@ -48,14 +52,20 @@ class SeniorMainActivity : AppCompatActivity() {
     val requestPermissions =
         registerForActivityResult(requestPermissionActivityContract) { granted ->
             if (granted.containsAll(PERMISSIONS)) {
-                // Permissions successfully granted
+                promptMessage.displayMessage(
+                    "Success",
+                    "Permissions successfully granted",
+                    R.color.dark_green,this)
+
             } else {
-                // Lack of required permissions
+                promptMessage.displayMessage(
+                    "Reminder",
+                    "Lack of required permissions",
+                    R.color.red1,this)
             }
         }
 
-
-            override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCarerBottomNavigationBinding.inflate(
             layoutInflater
@@ -64,6 +74,7 @@ class SeniorMainActivity : AppCompatActivity() {
         setContentView(binding!!.root)
         val bottomNavigationView: BottomNavigationView
         val floatingActionButton: FloatingActionButton
+
         replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setBackgroundColor(
@@ -72,6 +83,7 @@ class SeniorMainActivity : AppCompatActivity() {
                 android.R.color.transparent
             )
         )
+
         floatingActionButton = findViewById(R.id.fabLocateSenior)
 
         // key for notification button content intent
@@ -119,15 +131,18 @@ class SeniorMainActivity : AppCompatActivity() {
             )
         }
 
-
         // build a set of permissions for required data types
         if (HealthConnectClient.isAvailable(applicationContext)) {
-            Toast.makeText(this, "health connect is available", Toast.LENGTH_SHORT).show()
+            // health connect is available
             val healthConnectClient = HealthConnectClient.getOrCreate(applicationContext)
             GlobalScope.launch { checkPermissionsAndRun(healthConnectClient) }
 
+        }else{
+            promptMessage.displayMessage(
+                "Reminder",
+                "Please install Health Connect in Play Store to access health status",
+                R.color.red1, this)
         }
-
 
             FirebaseMessaging.getInstance().subscribeToTopic("hello")
             floatingActionButton.setOnClickListener { v: View? ->
