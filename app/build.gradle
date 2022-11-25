@@ -104,6 +104,10 @@ dependencies {
     // Use to implement health connects
     implementation "androidx.health.connect:connect-client:1.0.0-alpha07"
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+
     implementation 'com.karumi:dexter:6.2.3'
 
 }
+
+apply plugin: 'kotlin-android'

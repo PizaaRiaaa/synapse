@@ -1,6 +1,7 @@
 package com.example.synapse.screen.senior;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.synapse.R;
 import android.os.Bundle;
 
 public class PermissionRationaleActivity extends AppCompatActivity {

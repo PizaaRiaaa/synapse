@@ -1,0 +1,167 @@
+package com.example.synapse.screen.senior
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.synapse.screen.util.ReplaceFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import com.example.synapse.screen.senior.modules.view.TicTacToeHome
+import com.example.synapse.screen.senior.games.TriviaQuiz
+import com.example.synapse.screen.senior.games.MathGame
+import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.HeartRateRecord
+import androidx.health.connect.client.records.StepsRecord
+import com.example.synapse.R
+import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding
+import com.google.firebase.messaging.FirebaseMessaging
+import com.example.synapse.screen.senior.modules.fragments.HomeFragment
+import com.example.synapse.screen.senior.modules.fragments.MedicationFragment
+import com.example.synapse.screen.senior.modules.fragments.PhysicalActivityFragment
+import com.example.synapse.screen.senior.modules.fragments.SettingsFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
+class SeniorMainActivity : AppCompatActivity() {
+    var binding: ActivityCarerBottomNavigationBinding? = null
+    var replaceFragment = ReplaceFragment()
+
+    // build a set of permissions for required data types
+    val PERMISSIONS =
+        setOf(
+            HealthPermission.createReadPermission(HeartRateRecord::class),
+            HealthPermission.createWritePermission(HeartRateRecord::class),
+            HealthPermission.createReadPermission(StepsRecord::class),
+            HealthPermission.createWritePermission(StepsRecord::class)
+        )
+
+    // Create the permissions launcher.
+    val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
+
+    val requestPermissions =
+        registerForActivityResult(requestPermissionActivityContract) { granted ->
+            if (granted.containsAll(PERMISSIONS)) {
+                // Permissions successfully granted
+            } else {
+                // Lack of required permissions
+            }
+        }
+
+
+            override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityCarerBottomNavigationBinding.inflate(
+            layoutInflater
+        )
+
+        setContentView(binding!!.root)
+        val bottomNavigationView: BottomNavigationView
+        val floatingActionButton: FloatingActionButton
+        replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                android.R.color.transparent
+            )
+        )
+        floatingActionButton = findViewById(R.id.fabLocateSenior)
+
+        // key for notification button content intent
+        val med_key = intent.getStringExtra("med_key")
+        val phy_key = intent.getStringExtra("phy_key")
+        val game_tag = intent.getStringExtra("game_tag")
+        val medicationFragment = MedicationFragment()
+
+        val args1 = Bundle()
+        args1.putString("key", med_key)
+        medicationFragment.arguments = args1
+
+        val physicalActivityFragment = PhysicalActivityFragment()
+        val args2 = Bundle()
+        args2.putString("key", phy_key)
+        physicalActivityFragment.arguments = args2
+
+        if (med_key != null) {
+            val fragmentManager = (this as FragmentActivity).supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.frame_layout, medicationFragment)
+            fragmentTransaction.commit()
+        }
+
+        if (phy_key != null) {
+            val fragmentManager = (this as FragmentActivity).supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.frame_layout, physicalActivityFragment)
+            fragmentTransaction.commit()
+        }
+
+        if (game_tag != null) {
+            if (game_tag == "Tic-tac-toe") startActivity(
+                Intent(
+                    this@SeniorMainActivity,
+                    TicTacToeHome::class.java
+                )
+            ) else if (game_tag == "TriviaQuiz") startActivity(
+                Intent(this@SeniorMainActivity, TriviaQuiz::class.java)
+            ) else if (game_tag == "MathGame") startActivity(
+                Intent(
+                    this@SeniorMainActivity,
+                    MathGame::class.java
+                )
+            )
+        }
+
+
+        // build a set of permissions for required data types
+        if (HealthConnectClient.isAvailable(applicationContext)) {
+            Toast.makeText(this, "health connect is available", Toast.LENGTH_SHORT).show()
+            val healthConnectClient = HealthConnectClient.getOrCreate(applicationContext)
+            GlobalScope.launch { checkPermissionsAndRun(healthConnectClient) }
+
+        }
+
+
+            FirebaseMessaging.getInstance().subscribeToTopic("hello")
+            floatingActionButton.setOnClickListener { v: View? ->
+                startActivity(
+                    Intent(
+                        this,
+                        MyLocation::class.java
+                    )
+                )
+            }
+
+            binding!!.bottomNavigationView.setOnItemSelectedListener { item: MenuItem ->
+                when (item.itemId) {
+                    R.id.miHome -> replaceFragment.replaceFragment(
+                        HomeFragment(),
+                        this@SeniorMainActivity
+                    )
+                    R.id.miChat -> {}
+                    R.id.miProfile -> {}
+                    R.id.miSettings -> replaceFragment.replaceFragment(
+                        SettingsFragment(),
+                        this@SeniorMainActivity
+                    )
+                }
+                true
+            }
+       }
+
+    suspend fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
+        val granted = healthConnectClient.permissionController.getGrantedPermissions(PERMISSIONS)
+        if (granted.containsAll(PERMISSIONS)) {
+            // Permissions already granted, proceed with inserting or reading data.
+        } else {
+            requestPermissions.launch(PERMISSIONS)
+        }
+    }
+ }
