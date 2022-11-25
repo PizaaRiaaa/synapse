@@ -111,7 +111,7 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
 
     int requestCode;
     final Calendar calendar = Calendar.getInstance();
-    final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
+    final String[]  GAMES = {"Tic-tac-toe","TriviaQuiz","MathGame"};
     final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe, R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
     private TextView tvTime;
     private String selected_game, time, seniorID;
@@ -287,10 +287,10 @@ public class GamesFragment extends Fragment implements AdapterView.OnItemSelecte
                                         case "Tic-tac-toe":
                                             holder.ivGame.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_tic_tac_toe));
                                             break;
-                                        case "Math Game":
+                                        case "MathGame":
                                             holder.ivGame.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_math_game));
                                             break;
-                                        case "Trivia Quiz":
+                                        case "TriviaQuiz":
                                             holder.ivGame.setBackground(AppCompatResources.getDrawable(getActivity(), R.drawable.ic_trivia_quiz));
                                     }
                                     holder.gameName.setText(model.getGame());

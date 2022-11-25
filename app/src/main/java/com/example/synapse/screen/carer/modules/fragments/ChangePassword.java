@@ -142,7 +142,7 @@ public class ChangePassword extends Fragment {
                 dialog.dismiss();
                 if(task.isSuccessful()){
                     auditTrail.auditTrail(
-                            "Change password",auth.getUid(),
+                            "Changed password",auth.getUid(),
                             "Carer", "Carer", referenceProfile, mUser);
 
                     promptMessage.displayMessage(

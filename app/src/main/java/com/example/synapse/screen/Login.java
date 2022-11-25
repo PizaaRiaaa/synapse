@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
                                                 startActivity(new Intent(Login.this, SelectSenior.class));
                                                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                                 finish();
-                                            }else if(!snapshot.exists()){
+                                            }else {
                                                 new android.app.AlertDialog.Builder(Login.this)
                                                         .setTitle("Register your senior's account")
                                                         .setMessage("Currently you don't have senior assigned to your account.")
@@ -127,7 +127,6 @@ public class Login extends AppCompatActivity {
 
                                         }
                                     });
-
                                 }
                             }
 
@@ -138,7 +137,7 @@ public class Login extends AppCompatActivity {
                         });
 
                         // senior
-                        referenceSenior.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        referenceSenior.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
@@ -270,7 +269,6 @@ public class Login extends AppCompatActivity {
 
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
-        referenceAdmin = FirebaseDatabase.getInstance().getReference("Users").child("Admins");
         referenceAssignedSeniors = FirebaseDatabase.getInstance().getReference("AssignedSeniors");
 
         changeColor();

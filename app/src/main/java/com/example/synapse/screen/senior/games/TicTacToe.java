@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +30,11 @@ public class TicTacToe extends AppCompatActivity {
     int activePlayer = 0; // this integer will serve as a flag (boolean); 0 - Yellow, 1 - Red
     Dialog dialog;
     String winner;
+
     TextView tvCongrats;
     ImageView ivPlayer;
+    ImageButton btnExit;
+
     MediaPlayer bgMusic;
 
     // initially, the state of the game is none. Empty represents by 2, so in our array, let's put nine 2s
@@ -172,6 +176,8 @@ public class TicTacToe extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.getWindow().getAttributes().windowAnimations = R.style.animation1;
 
+        btnExit = findViewById(R.id.btnExit);
+
         bgMusic = MediaPlayer.create(this, R.raw.tic_tac_toe);
         bgMusic.start();
         bgMusic.setLooping(true);
@@ -180,6 +186,11 @@ public class TicTacToe extends AppCompatActivity {
         btnRetry.setOnClickListener(v -> {
             dialog.dismiss();
             playAgain();
+        });
+
+        btnExit.setOnClickListener(v -> {
+            bgMusic.stop();
+            finish();
         });
 
         MaterialButton btnQuit = dialog.findViewById(R.id.btnQuit);

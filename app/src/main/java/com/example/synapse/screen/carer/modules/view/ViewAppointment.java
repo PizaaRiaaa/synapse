@@ -57,29 +57,28 @@ import java.util.Objects;
 
 public class ViewAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
+    PromptMessage promptMessage = new PromptMessage();
+    AuditTrail auditTrail = new AuditTrail();
+
     private FirebaseUser mUser;
     private DatabaseReference referenceReminders;
     private DatabaseReference referenceProfile;
 
-    PromptMessage promptMessage = new PromptMessage();
-    AuditTrail auditTrail = new AuditTrail();
-
-    private final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist","Rheumatologist","Urologist",
-            "Ophthalmologist","Dentist","Psychologist","Audiologist"};
+    final String[] APPOINTMENT_SPECIALIST = {"Geriatrician","General Doctor","Cardiologist",
+            "Rheumatologist","Urologist", "Ophthalmologist","Dentist","Psychologist","Audiologist"};
     Spinner spinner_appointment_specialist;
 
     private String time;
     private String selected_specialist;
-    private String selected_appointment_type;
     private String concern;
     private String drName;
     private String specialist;
     private String appointmentID;
+    private String selected_appointment_type;
 
     TextView tvDateAndTime, tvDelete;
     TextInputEditText etConcern, etDrName;
     ItemViewAppointmentSpecialist adapter1;
-    ItemAppointmentType adapter2;
 
     private Intent intent;
     private final Calendar calendar = Calendar.getInstance();
@@ -101,17 +100,14 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         tvDelete = findViewById(R.id.tvDelete);
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Appointment Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // spinner for specialist
         adapter1 = new ItemViewAppointmentSpecialist(ViewAppointment.this,
                 APPOINTMENT_SPECIALIST);
         adapter1.notifyDataSetChanged();
         spinner_appointment_specialist.setAdapter(adapter1);
         spinner_appointment_specialist.setOnItemSelectedListener(ViewAppointment.this);
-
-        ibBack.setOnClickListener(v -> finish());
 
         // we need  to check if user clicked the notification
         // then retrieve id first
@@ -121,10 +117,10 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
         if(key != null) showAppointmentInfo(key);
         else showAppointmentInfo(appointmentID);
 
-        deleteAppointment();
+        tvDelete.setOnClickListener(v -> deleteAppointment());
+        ibBack.setOnClickListener(v -> finish());
 
         btnUpdate.setOnClickListener(v -> updateAppointment(appointmentID));
-
         btnChangeSchedule.setOnClickListener(v -> {
             DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -137,7 +133,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
             new DatePickerDialog(ViewAppointment.this, dateSetListener,
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
-
     }
 
     @Override
@@ -287,7 +282,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
 
     // delete appointment for both carer and senior nodes
     public void deleteAppointment(){
-        tvDelete.setOnClickListener(v -> {
             referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -370,7 +364,6 @@ public class ViewAppointment extends AppCompatActivity implements AdapterView.On
                     promptMessage.defaultErrorMessage(ViewAppointment.this);
                 }
             });
-        });
     }
 
     public void updateAppointment(String appointmentID){

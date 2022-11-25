@@ -272,8 +272,6 @@ public class MedicationFragment extends Fragment {
         });
     }
 
-
-
     // layout for recycle view
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

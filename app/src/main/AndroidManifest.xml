@@ -1,284 +1,308 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.synapse">
+<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+package="com.example.synapse">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+<uses-permission android:name="android.permission.VIBRATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.CALL_PHONE" />
 
-    <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Synapse"
-        tools:replace="android:label"
-        tools:targetApi="31">
-        <activity
-            android:name=".ForgotPassword"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.carer.modules.view.SeniorLocation"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.carer.register.TermsAndDataPolicy"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.carer.register.PromptToRegisterSenior"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.senior.test.CheckCarerEmail"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.carer.SelectSenior"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".screen.carer.verification.Email"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.verification.OTP"
-            android:exported="false" />
-        <activity
-            android:name=".screen.Landing"
-            android:exported="false" />
-        <activity
-            android:name=".screen.admin.AdminMainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.modules.view.TicTacToeHome"
-            android:exported="false" />
-        <activity
-            android:name=".screen.admin.LoadingScreen"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.test.MCItest"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.test.MCIpromptMessage"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.games.TriviaQuiz"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.games.TicTacToe"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.MyLocation"
-            android:exported="false" />
+<!-- Check whether Health Connect is installed or not -->
 
+
+<application
+    android:allowBackup="true"
+    android:dataExtractionRules="@xml/data_extraction_rules"
+    android:fullBackupContent="@xml/backup_rules"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:requestLegacyExternalStorage="true"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.Synapse"
+    tools:replace="android:label"
+    tools:targetApi="31">
+    <activity
+        android:name=".ForgotPassword"
+        android:exported="false">
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGjBerlY_7x2ut3CZp-owyker3ANY_jqs" />
-
-        <activity
-            android:name=".screen.carer.modules.view.ViewGame"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.view.ViewAppointment"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".screen.carer.modules.view.ViewPhysicalActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.modules.view.ViewMedicine"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.dashboard.MedicationDashboard"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.SendRequest"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.SearchPeople"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.ViewPeople"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.ViewPeople"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.SearchPeople"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.games.MathGame"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.SeniorVerifyEmail"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.CarerMainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.SeniorMainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screen.senior.RegisterSenior"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.register.RegisterCarer"
-            android:exported="false" />
-        <activity
-            android:name=".screen.PickRole"
-            android:exported="false" />
-        <activity
-            android:name=".screen.carer.CarerVerifyEmail"
-            android:exported="false" />
-        <activity
-            android:name=".screen.Login"
-            android:exported="false" />
-        <activity
-            android:name=".screen.Onboarding"
-            android:exported="false" />
-        <activity
-            android:name=".Splashscreen"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <receiver android:name=".screen.util.notifications.AlertReceiver" />
-
-        <service
-            android:name=".screen.util.notifications.FirebaseMessagingService"
-            android:directBootAware="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.carer.modules.view.SeniorLocation"
+        android:exported="false">
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.carer.register.TermsAndDataPolicy"
+        android:exported="false">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.carer.register.PromptToRegisterSenior"
+        android:exported="false">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.senior.test.CheckCarerEmail"
+        android:exported="false">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.carer.SelectSenior"
+        android:exported="false">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+    </activity>
+    <activity
+        android:name=".screen.carer.verification.Email"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.verification.OTP"
+        android:exported="false" />
+    <activity
+        android:name=".screen.Landing"
+        android:exported="false" />
+    <activity
+        android:name=".screen.admin.AdminMainActivity"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.modules.view.TicTacToeHome"
+        android:exported="false" />
+    <activity
+        android:name=".screen.admin.LoadingScreen"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.test.MCItest"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.test.MCIpromptMessage"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.games.TriviaQuiz"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.games.TicTacToe"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.MyLocation"
+        android:exported="false" />
 
-        <service
-            android:name=".screen.util.notifications.wearmessage.MessageServiceHeartRate"
-            android:enabled="true"
-            android:exported="true">
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAGjBerlY_7x2ut3CZp-owyker3ANY_jqs" />
 
-            <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+    <activity
+        android:name=".screen.carer.modules.view.ViewGame"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.modules.view.ViewAppointment"
+        android:exported="false"
+        android:windowSoftInputMode="adjustPan" />
+    <activity
+        android:name=".screen.carer.modules.view.ViewPhysicalActivity"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.modules.view.ViewMedicine"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.dashboard.MedicationDashboard"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.SendRequest"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.SearchPeople"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.ViewPeople"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.ViewPeople"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.SearchPeople"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.games.MathGame"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.SeniorVerifyEmail"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.CarerMainActivity"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.SeniorMainActivity"
+        android:exported="false" />
+    <activity
+        android:name=".screen.senior.RegisterSenior"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.register.RegisterCarer"
+        android:exported="false" />
+    <activity
+        android:name=".screen.PickRole"
+        android:exported="false" />
+    <activity
+        android:name=".screen.carer.CarerVerifyEmail"
+        android:exported="false" />
+    <activity
+        android:name=".screen.Login"
+        android:exported="false" />
+    <activity
+        android:name=".screen.Onboarding"
+        android:exported="false" />
 
-                <data
-                    android:host="*"
-                    android:pathPrefix="/myapp/synapse/heartrate"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".screen.util.notifications.wearmessage.MessageServiceStatus"
-            android:enabled="true"
-            android:exported="true">
+    <activity
+        android:name=".Splashscreen"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-            <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-                <data
-                    android:host="*"
-                    android:pathPrefix="/myapp/synapse/status"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".screen.util.notifications.wearmessage.MessageServiceStepCounts"
-            android:enabled="true"
-            android:exported="true">
+    <receiver android:name=".screen.util.notifications.AlertReceiver" />
 
-            <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+    <service
+        android:name=".screen.util.notifications.FirebaseMessagingService"
+        android:directBootAware="true"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+    </service>
 
-                <data
-                    android:host="*"
-                    android:pathPrefix="/myapp/synapse/stepcounts"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".screen.util.notifications.wearmessage.MessageServiceHighHR"
-            android:enabled="true"
-            android:exported="true">
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
 
-            <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+    <service
+        android:name=".screen.util.notifications.wearmessage.MessageServiceHeartRate"
+        android:enabled="true"
+        android:exported="true">
 
-                <data
-                    android:host="*"
-                    android:pathPrefix="/myapp/synapse/hhr"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".screen.util.notifications.wearmessage.MessageServiceLowHR"
-            android:enabled="true"
-            android:exported="true">
+        <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
 
-            <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+            <data
+                android:host="*"
+                android:pathPrefix="/myapp/synapse/heartrate"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
+    <service
+        android:name=".screen.util.notifications.wearmessage.MessageServiceStatus"
+        android:enabled="true"
+        android:exported="true">
 
-                <data
-                    android:host="*"
-                    android:pathPrefix="/myapp/synapse/lhr"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <!--
+        <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+            <data
+                android:host="*"
+                android:pathPrefix="/myapp/synapse/status"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
+    <service
+        android:name=".screen.util.notifications.wearmessage.MessageServiceStepCounts"
+        android:enabled="true"
+        android:exported="true">
+
+        <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+            <data
+                android:host="*"
+                android:pathPrefix="/myapp/synapse/stepcounts"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
+    <service
+        android:name=".screen.util.notifications.wearmessage.MessageServiceHighHR"
+        android:enabled="true"
+        android:exported="true">
+
+        <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+            <data
+                android:host="*"
+                android:pathPrefix="/myapp/synapse/hhr"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
+    <service
+        android:name=".screen.util.notifications.wearmessage.MessageServiceLowHR"
+        android:enabled="true"
+        android:exported="true">
+
+        <!-- add the gms.wearable.MESSAGE_RECEIVED intent filter -->
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+            <data
+                android:host="*"
+                android:pathPrefix="/myapp/synapse/lhr"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
+    <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more.
         -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_splash_logo" />
-        <!--
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_splash_logo" />
+    <!--
  Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more.
         -->
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/dark_green" />
+
+    <!-- Activity to show rationale of Health Connect permissions -->
+    <activity
+        android:name=".screen.senior.PermissionRationaleActivity"
+        android:exported="true"
+        android:enabled="true">
+        <!-- (a) reference permissions resource -->
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/dark_green" />
-    </application>
+            android:name="health_permissions"
+            android:resource="@array/health_permissions" />
+        <!-- (b) handle intent -->
+        <intent-filter>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent-filter>
+    </activity>
+
+</application>
+
+
+<queries>
+    <package android:name="com.google.android.apps.healthdata" />
+</queries>
 
 </manifest>

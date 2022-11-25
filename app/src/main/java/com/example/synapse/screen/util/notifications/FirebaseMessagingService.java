@@ -28,7 +28,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     Intent takeIntent1;
     Intent takeIntent2;
     Intent takeIntent3;
-    Intent takeIntent4;
 
     String channelId = "hello";
     String tag;
@@ -77,6 +76,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
             builder.addAction(R.drawable.ic_clock_notif, "DONE", takePIntent);
             builder.addAction(R.drawable.ic_clock_notif, "OPEN", null);
+        } else if (remoteMessage.getNotification().getTitle().equals("Game Reminder")) {
+            takeIntent3 = new Intent(getApplicationContext(), SeniorMainActivity.class);
+            takeIntent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            takeIntent3.putExtra("game_tag", tag);
+            PendingIntent takePIntent = PendingIntent.getActivity(
+                    this, 0, takeIntent3,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+            builder.addAction(R.drawable.ic_clock_notif, "OPEN", takePIntent);
         }
 
         builder.setColorized(true);
@@ -213,10 +220,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             case "Tic-tac-toe":
                 pill_shape_color = R.drawable.tic_tac_toe_logo;
                 break;
-            case "Trivia Quiz":
+            case "TriviaQuiz":
                 pill_shape_color = R.drawable.ic_trivia_quiz;
                 break;
-            case "Math Game":
+            case "MathGame":
                 pill_shape_color = R.drawable.ic_math_game;
                 break;
             case "appointment":

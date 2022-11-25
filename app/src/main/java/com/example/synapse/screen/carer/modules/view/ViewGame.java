@@ -60,31 +60,32 @@ import java.util.Objects;
 
 public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
+    final Calendar calendar = Calendar.getInstance();
     private FirebaseUser mUser;
     private DatabaseReference referenceReminders;
     private DatabaseReference referenceProfile;
 
     PromptMessage promptMessage = new PromptMessage();
     AuditTrail auditTrail = new AuditTrail();
-
-    private final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
-    private final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe,
-            R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
+    final String[]  GAMES = {"Tic-tac-toe","Trivia Quiz","Math Game"};
+    final int [] GAMES_ICS = {R.drawable.ic_tic_tac_toe, R.drawable.ic_trivia_quiz, R.drawable.ic_math_game};
 
     RequestQueue requestQueue;
     ItemGames adapter;
     Spinner spinner_games;
 
-    private Intent intent;
-    private final Calendar calendar = Calendar.getInstance();
-    private Long request_code;
-    int code, requestCode;
+    Intent intent;
+    Long request_code;
+    int code;
+    int requestCode;
 
     private TextView tvAlarm, tvDelete;
     private ImageView ivGameIC;
-    private Dialog dialog;
-    private String gameID, selected_game, time,
-            seniorID, token, game;
+
+    private String gameID;
+    private String selected_game;
+    private String time;
+    private String game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         tvDelete = findViewById(R.id.tvDelete);
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Games Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -113,23 +114,14 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         if(key != null) showGameInfo(key);
         else showGameInfo(gameID);
 
-        // deleteGame
-        deleteGame();
-
-        // spinner for games
-        adapter = new ItemGames(ViewGame.this,
-                GAMES, GAMES_ICS);
+        adapter = new ItemGames(ViewGame.this, GAMES, GAMES_ICS);
         adapter.notifyDataSetChanged();
         spinner_games.setAdapter(adapter);
         spinner_games.setOnItemSelectedListener(ViewGame.this);
 
-        // perform update game
         btnUpdate.setOnClickListener(v -> updateGame(gameID));
-
-        // redirect user to games screen
         ibBack.setOnClickListener(v -> finish());
-
-        // change time
+        tvDelete.setOnClickListener(v -> deleteGame());
         btnChangeTime.setOnClickListener(v -> {
                     DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
                     timePicker.show(getSupportFragmentManager(), "time picker");
@@ -155,7 +147,6 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         updateTimeText(calendar);
     }
 
-    // set the alarm manager and listen for broadcast
     private void startAlarm(Calendar c) {
         requestCode = (int)calendar.getTimeInMillis()/1000;
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -277,7 +268,6 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         }
     }
 
-    // update game for both carer and senior nodes
     public void updateGame(String gameID){
 
         HashMap<String,Object> hashMap = new HashMap<String, Object>();
@@ -379,9 +369,7 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
         promptMessage.displayMessage("Game Info","Successfully updated the game information", R.color.dark_green, this);
     }
 
-    // delete appointment for both carer and senior nodes
     public void deleteGame(){
-        tvDelete.setOnClickListener(v -> {
             referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -465,6 +453,5 @@ public class ViewGame extends AppCompatActivity implements AdapterView.OnItemSel
 
                 }
             });
-        });
     }
 }

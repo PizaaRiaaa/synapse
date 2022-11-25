@@ -443,9 +443,9 @@ public class AlertReceiver extends BroadcastReceiver {
                                   e.printStackTrace();}
                               nb.setLargeIcon(GetBitmapClippedCircle(bmp));
 
-                              if(game.equals("Trivia Quiz")){
+                              if(game.equals("TriviaQuiz")){
                                   bigpic = R.drawable.ic_trivia_quiz;
-                              }else if(game.equals("Math Game")){
+                              }else if(game.equals("MathGame")){
                                   bigpic = R.drawable.ic_math_game;
 
                               }else{

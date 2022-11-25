@@ -9,18 +9,31 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.health.connect.client.HealthConnectClient;
+import androidx.health.connect.client.permission.HealthPermission;
+import androidx.health.connect.client.records.HeartRateRecord;
 
 import com.example.synapse.R;
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding;
 import com.example.synapse.screen.carer.SelectSenior;
+import com.example.synapse.screen.senior.games.MathGame;
+import com.example.synapse.screen.senior.games.TriviaQuiz;
+import com.example.synapse.screen.senior.modules.fragments.GamesFragment;
 import com.example.synapse.screen.senior.modules.fragments.HomeFragment;
 import com.example.synapse.screen.senior.modules.fragments.MedicationFragment;
 import com.example.synapse.screen.senior.modules.fragments.PhysicalActivityFragment;
 import com.example.synapse.screen.senior.modules.fragments.SettingsFragment;
+import com.example.synapse.screen.senior.modules.view.TicTacToeHome;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.security.Permission;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SeniorMainActivity extends AppCompatActivity {
 
@@ -46,10 +59,11 @@ public class SeniorMainActivity extends AppCompatActivity {
         // key for notification button content intent
         String med_key = getIntent().getStringExtra("med_key");
         String phy_key = getIntent().getStringExtra("phy_key");
+        String game_tag = getIntent().getStringExtra("game_tag");
 
         MedicationFragment medicationFragment = new MedicationFragment();
         Bundle args1 = new Bundle();
-        args1.putString("key",med_key);
+        args1.putString("key", med_key);
         medicationFragment.setArguments(args1);
 
         PhysicalActivityFragment physicalActivityFragment = new PhysicalActivityFragment();
@@ -57,17 +71,36 @@ public class SeniorMainActivity extends AppCompatActivity {
         args2.putString("key", phy_key);
         physicalActivityFragment.setArguments(args2);
 
-        if(med_key != null){
+
+        if (med_key != null) {
             FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_layout, medicationFragment);
             fragmentTransaction.commit();
+        }
 
-        }else if(phy_key != null ){
+        if (phy_key != null) {
             FragmentManager fragmentManager = ((FragmentActivity) this).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_layout, physicalActivityFragment);
             fragmentTransaction.commit();
+
+        }
+
+        if (game_tag != null) {
+            if(game_tag.equals("Tic-tac-toe"))
+            startActivity(new Intent(SeniorMainActivity.this, TicTacToeHome.class));
+         else if (game_tag.equals("TriviaQuiz"))
+            startActivity(new Intent(SeniorMainActivity.this, TriviaQuiz.class));
+         else if(game_tag.equals("MathGame"))
+            startActivity(new Intent(SeniorMainActivity.this, MathGame.class));
+        }
+
+        // build a set of permissions for required data types
+
+        if(HealthConnectClient.isAvailable(getApplicationContext())){
+            Toast.makeText(this, "health connect is available", Toast.LENGTH_SHORT).show();
+            HealthConnectClient healthConnectClient = HealthConnectClient.getOrCreate(getApplicationContext());
         }
 
         // ==================================================

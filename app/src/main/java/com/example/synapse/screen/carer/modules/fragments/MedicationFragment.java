@@ -96,7 +96,6 @@ public class MedicationFragment extends Fragment implements TimePickerDialog.OnT
 
     DatabaseReference referenceCarer;
     DatabaseReference referenceReminders;
-    DatabaseReference referenceAuditTrail;
     FirebaseUser mUser;
 
     AppCompatButton btnMon;

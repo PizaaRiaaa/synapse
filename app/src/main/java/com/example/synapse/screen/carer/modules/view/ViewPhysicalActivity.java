@@ -106,7 +106,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         tvNever = findViewById(R.id.tvRepeatNever);
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Physical Activity Reminders");
-        referenceProfile = FirebaseDatabase.getInstance().getReference("Users");
+        referenceProfile = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         requestQueue = Volley.newRequestQueue(ViewPhysicalActivity.this);
 
@@ -170,7 +170,7 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
 
     // =============================================================================================
 
-    // change gif based on selected item on spinner
+    // change gif based on selected item
     public void displayPhysicalActivity(int gif1){
         new Handler().postDelayed(() -> {
             gifImageView.setImageResource(gif1);
@@ -305,10 +305,9 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
         hashMap.put("Time", tvAlarm.getText().toString());
 
         auditTrail.auditTrail(
-                "Updated Physical Activity",
+                "Updated Physical Activity Reminder",
                 type_of_activity,
                 "Physical Activity", "Carer", referenceProfile, mUser);
-
 
         referenceReminders.child(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -419,6 +418,11 @@ public class ViewPhysicalActivity extends AppCompatActivity implements AdapterVi
                                 request_code = readWritePhysicalActivity.getRequestCode();
                                 code = request_code.intValue();
                                 cancelAlarm(code);
+
+                                auditTrail.auditTrail(
+                                        "Deleted Physical Activity Reminder",
+                                        type_of_activity,
+                                        "Physical Activity", "Carer", referenceProfile, mUser);
 
                                 referenceReminders.child(mUser.getUid()).child(key).child(physicalActivityID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
