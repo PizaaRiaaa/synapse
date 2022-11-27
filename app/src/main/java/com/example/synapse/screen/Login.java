@@ -17,7 +17,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -27,13 +26,10 @@ import androidx.core.content.ContextCompat;
 
 import com.example.synapse.ForgotPassword;
 import com.example.synapse.R;
-import com.example.synapse.screen.admin.LoadingScreen;
-import com.example.synapse.screen.carer.CarerVerifyEmail;
 import com.example.synapse.screen.carer.SelectSenior;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.senior.test.MCIpromptMessage;
 import com.example.synapse.screen.util.PromptMessage;
-import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

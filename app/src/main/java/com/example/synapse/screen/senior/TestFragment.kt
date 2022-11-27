@@ -21,13 +21,21 @@ import androidx.health.connect.client.request.ChangesTokenRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.platform.client.impl.permission.token.PermissionTokenManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.synapse.R
+import com.example.synapse.screen.util.adapter.StepCountsForTheDayAdapter
+import com.example.synapse.screen.util.adapter.Steps
+import com.example.synapse.screen.util.viewholder.StepsForTheWeekViewholder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.*
 import java.time.temporal.ChronoUnit
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.jar.Manifest
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,9 +50,18 @@ private const val ARG_PARAM2 = "param2"
  */
 class TestFragment : Fragment() {
 
-    lateinit var tvStepsForToday : TextView
-    lateinit var tvHeartRateMinMax : TextView
-    var steps_for_today: Long = 0
+    private lateinit var tvHeartRateMinMax : TextView
+
+    private lateinit var date1 : Date
+    private lateinit var date2 : Date
+
+    private lateinit var tvStepsForToday : TextView
+    private var steps_for_today: Long = 0
+    private lateinit var end_time_step : Instant
+    private lateinit var start_time_step : Instant
+
+    private lateinit var newRecycleView : RecyclerView
+    private lateinit var newStepsList : ArrayList<Steps>
 
     suspend fun aggregateStepsIntoMonths(
         healthConnectClient: HealthConnectClient,
@@ -87,7 +104,7 @@ class TestFragment : Fragment() {
         tvStepsForToday.post {tvStepsForToday.text = steps_for_today.toString()}
     }
 
-    /** Shows a list of all steps based on time range */
+    /** Shows a list of all steps based on time range (STEPS FOR THE DAY) */
     suspend fun readStepByTimeRange(
         healthConnectClient: HealthConnectClient,
         startTime: Instant,
@@ -100,10 +117,22 @@ class TestFragment : Fragment() {
                    timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
                )
            )
-        for(stepRecord in response.records){
+            for(stepRecord in response.records){
+
             val steps = stepRecord.count
-            Log.e("steps", steps.toString())
+            start_time_step = stepRecord.startTime
+            end_time_step = stepRecord.endTime
+
+            date1 = Date.from(start_time_step)
+            date2 = Date.from(end_time_step)
+
+            val formatter = SimpleDateFormat("h:mm a", Locale.ENGLISH)
+            val formattedDate1 = formatter.format(date1)
+            val formattedDate2 = formatter.format(date2)
+
+            newStepsList.add(Steps("$formattedDate1 - $formattedDate2", steps.toString()))
         }
+       newRecycleView.post {newRecycleView.adapter = StepCountsForTheDayAdapter(newStepsList)}
     }
 
     /** shows MIN and MAX HeartRate for the week */
@@ -167,11 +196,15 @@ class TestFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_test, container, false)
 
         val healthConnectClient = HealthConnectClient.getOrCreate(requireContext())
-        //var nextChangesToken = changesToken
 
         tvStepsForToday = view.findViewById(R.id.tvStepCounts)
         tvHeartRateMinMax = view.findViewById(R.id.tvHR_MAX_MIN)
 
+        newRecycleView = view.findViewById(R.id.recycleViewStepsForTheDay)
+        newRecycleView.layoutManager = LinearLayoutManager(requireContext())
+        newRecycleView.setHasFixedSize(true)
+
+        newStepsList = arrayListOf<Steps>()
 
         GlobalScope.launch {aggregateHeartRate(healthConnectClient,Instant.now().minus(7, ChronoUnit.DAYS), Instant.now())}
 
@@ -180,8 +213,6 @@ class TestFragment : Fragment() {
         GlobalScope.launch {aggregateStepsIntoDays(healthConnectClient, LocalDateTime.now().minusMinutes(900), LocalDateTime.now())}
 
         GlobalScope.launch {readStepByTimeRange(healthConnectClient, Instant.now().minus(1, ChronoUnit.DAYS), Instant.now()) }
-
-      //  GlobalScope.launch { retrieveToken(healthConnectClient) }
 
         GlobalScope.launch { getToken(healthConnectClient, retrieveToken(healthConnectClient)) }
 

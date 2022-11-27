@@ -1,22 +1,17 @@
 package com.example.synapse.screen.carer;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +21,12 @@ import android.widget.Toast;
 
 import com.example.synapse.R;
 import com.example.synapse.screen.Login;
-import com.example.synapse.screen.PickRole;
-import com.example.synapse.screen.carer.modules.view.ViewMedicine;
 import com.example.synapse.screen.senior.test.MCIpromptMessage;
-import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.example.synapse.screen.util.readwrite.ReadWriteUserSenior;
-import com.example.synapse.screen.util.viewholder.MedicationViewHolder;
 import com.example.synapse.screen.util.viewholder.SeniorViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
