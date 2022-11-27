@@ -11,12 +11,20 @@ package="com.example.synapse">
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.CALL_PHONE" />
 
+<!--Health Connect-->
 <uses-permission android:name="androidx.health.permission.HeartRate.READ" />
 <uses-permission android:name="androidx.health.permission.HeartRate.WRITE" />
 <uses-permission android:name="androidx.health.permission.Steps.READ" />
 <uses-permission android:name="androidx.health.permission.Steps.WRITE" />
 
-<application
+<!-- Google Fit -->
+<uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission-sdk-23 android:name="android.permission.ACTIVITY_RECOGNITION"/>
+
+
+
+    <application
     android:allowBackup="true"
     android:dataExtractionRules="@xml/data_extraction_rules"
     android:fullBackupContent="@xml/backup_rules"

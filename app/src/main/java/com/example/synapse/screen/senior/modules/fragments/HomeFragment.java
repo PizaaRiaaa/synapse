@@ -689,15 +689,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    
-   // public class Receiver extends BroadcastReceiver{
-   //     @Override
-   //     public void onReceive(Context context, Intent intent){
-   //         // upon receiving message from wearable , display the following text
-   //         String message = intent.getExtras().getString("message");
-   //         Toast.makeText(getActivity(), "I just received a message from the wearable" + message, Toast.LENGTH_SHORT).show();
-   //     }
-   // }
-
-
 }

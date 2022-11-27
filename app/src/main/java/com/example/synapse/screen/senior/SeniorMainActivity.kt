@@ -1,6 +1,7 @@
 package com.example.synapse.screen.senior
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -19,6 +20,8 @@ import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.request.ReadRecordsRequest
+import androidx.health.connect.client.time.TimeRangeFilter
 import com.example.synapse.R
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding
 import com.google.firebase.messaging.FirebaseMessaging
@@ -29,6 +32,9 @@ import com.example.synapse.screen.senior.modules.fragments.SettingsFragment
 import com.example.synapse.screen.util.PromptMessage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import kotlin.random.Random
 
 class SeniorMainActivity : AppCompatActivity() {
 
@@ -36,6 +42,9 @@ class SeniorMainActivity : AppCompatActivity() {
 
     var replaceFragment = ReplaceFragment()
     var promptMessage = PromptMessage()
+    val sessionStartTime =
+        Instant.now().minus((1 + Random.nextInt(168)).toLong(), ChronoUnit.HOURS)
+    val sessionEndTime = sessionStartTime.plus(15, ChronoUnit.MINUTES)
 
     // build a set of permissions for required data types
     val PERMISSIONS =
@@ -70,12 +79,14 @@ class SeniorMainActivity : AppCompatActivity() {
         binding = ActivityCarerBottomNavigationBinding.inflate(
             layoutInflater
         )
-
         setContentView(binding!!.root)
         val bottomNavigationView: BottomNavigationView
         val floatingActionButton: FloatingActionButton
 
-        replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
+        //replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
+        //replaceFragment.replaceFragment(SampleFragment(), this@SeniorMainActivity)
+        replaceFragment.replaceFragment(TestFragment(), this@SeniorMainActivity)
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setBackgroundColor(
             ContextCompat.getColor(
@@ -135,14 +146,17 @@ class SeniorMainActivity : AppCompatActivity() {
         if (HealthConnectClient.isAvailable(applicationContext)) {
             // health connect is available
             val healthConnectClient = HealthConnectClient.getOrCreate(applicationContext)
+
             GlobalScope.launch { checkPermissionsAndRun(healthConnectClient) }
 
         }else{
             promptMessage.displayMessage(
                 "Reminder",
-                "Please install Health Connect in Play Store to access health status",
+                "Please install Health Connect in Play Store to access your health status",
                 R.color.red1, this)
+            installHealthConnect()
         }
+
 
             FirebaseMessaging.getInstance().subscribeToTopic("hello")
             floatingActionButton.setOnClickListener { v: View? ->
@@ -175,8 +189,21 @@ class SeniorMainActivity : AppCompatActivity() {
         val granted = healthConnectClient.permissionController.getGrantedPermissions(PERMISSIONS)
         if (granted.containsAll(PERMISSIONS)) {
             // Permissions already granted, proceed with inserting or reading data.
+            replaceFragment.replaceFragment(TestFragment(), this@SeniorMainActivity)
         } else {
             requestPermissions.launch(PERMISSIONS)
         }
+    }
+
+    // redirect user to install health connect
+    fun installHealthConnect(){
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setPackage("com.android.vending")
+        intent.data = Uri.parse("market://details")
+            .buildUpon()
+            .appendQueryParameter("id","com.google.android.apps.healthdata")
+            .appendQueryParameter("url", "healthconnect://onboarding")
+            .build()
+        this.startActivity(intent)
     }
  }
