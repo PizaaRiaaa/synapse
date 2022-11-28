@@ -83,9 +83,7 @@ class SeniorMainActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView
         val floatingActionButton: FloatingActionButton
 
-        //replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
-        //replaceFragment.replaceFragment(SampleFragment(), this@SeniorMainActivity)
-        replaceFragment.replaceFragment(TestFragment(), this@SeniorMainActivity)
+        replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setBackgroundColor(
@@ -157,7 +155,6 @@ class SeniorMainActivity : AppCompatActivity() {
             installHealthConnect()
         }
 
-
             FirebaseMessaging.getInstance().subscribeToTopic("hello")
             floatingActionButton.setOnClickListener { v: View? ->
                 startActivity(
@@ -189,7 +186,7 @@ class SeniorMainActivity : AppCompatActivity() {
         val granted = healthConnectClient.permissionController.getGrantedPermissions(PERMISSIONS)
         if (granted.containsAll(PERMISSIONS)) {
             // Permissions already granted, proceed with inserting or reading data.
-            replaceFragment.replaceFragment(TestFragment(), this@SeniorMainActivity)
+            replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
         } else {
             requestPermissions.launch(PERMISSIONS)
         }

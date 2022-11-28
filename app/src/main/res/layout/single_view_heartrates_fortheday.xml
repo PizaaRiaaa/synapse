@@ -13,7 +13,7 @@
         android:layout_margin="10dp">
 
         <TextView
-            android:id="@+id/tvTimeSteps"
+            android:id="@+id/tvTimehearts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/redhat_display_semibold"
@@ -22,13 +22,13 @@
             android:text="2:02 AM"/>
 
         <TextView
-            android:id="@+id/tvSteps"
+            android:id="@+id/tvHearts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/redhat_display_semibold"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:text="41 Steps"/>
+            android:text="41 bpm"/>
 
     </LinearLayout>
 

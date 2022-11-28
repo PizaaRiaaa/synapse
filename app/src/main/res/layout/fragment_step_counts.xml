@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginBottom="?actionBarSize"
+    tools:context=".screen.senior.modules.fragments.fitness.StepCountsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/redhat_display_regular"
+            android:text="Steps"
+            android:textColor="@color/grey5"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/ivSeniorProfilePic"
+            android:layout_width="45dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="45dp"
+            android:background="@drawable/carer_profile_pic"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/pick_carer"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleButtonGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:singleSelection="true"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DAY"
+            android:textSize="12sp"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WEEK"
+            android:textSize="12sp"/>
+
+        <Button
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:id="@+id/btnMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MONTH"
+            android:textSize="12sp"/>
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:fontFamily="@font/redhat_display_regular"
+        android:textAlignment="center"
+        android:text="Monday, November 28"
+        android:textColor="@color/grey5"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvStepCounts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:text="1,312"
+            android:textColor="#7E7E7E"
+            android:textSize="28sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginStart="5dp"
+            android:text="steps"
+            android:textColor="#7E7E7E"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_stepcounts_dash"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvFitness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:textColor="#7E7E7E"
+            android:text="Steps •"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvCountEntries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/redhat_display_semibold"
+            android:text="55 entries"
+            android:textColor="#7E7E7E"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleViewStepsForTheDay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_light_grey"
+            android:scrollbars="vertical"
+            android:padding="4dp" />
+
+</LinearLayout>
