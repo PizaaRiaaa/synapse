@@ -17,7 +17,7 @@
         android:fontFamily="@font/inter_bold"
         android:textColor="@color/grey5"
         android:textSize="20sp"
-        android:text="1 of 15"
+        android:text="1 of 7"
         android:layout_gravity="center"/>
 
     <ProgressBar
@@ -45,7 +45,7 @@
             android:text="This will be the question"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -82,14 +82,6 @@
                 android:text="Ans C"
                 android:textColor="@color/black" />
 
-            <Button
-                android:id="@+id/ans_D"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Ans D"
-                android:textColor="@color/black" />
 
         </LinearLayout>
 

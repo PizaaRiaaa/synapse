@@ -30,7 +30,7 @@
             <!-- synapse title -->
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_height="wrap_content">
@@ -66,7 +66,7 @@
                 android:textAlignment="center"
                 android:text="88"
                 android:textColor="#B6EDFF"
-                android:textSize="36sp"
+                android:textSize="60sp"
                 android:fontFamily="@font/redhat_display_regular"
                 android:textStyle="bold"/>
 
@@ -82,306 +82,33 @@
 
         </LinearLayout>
 
-        <!-- status -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/hr"
-            android:layout_marginTop="10dp"
-            android:id="@+id/Stat">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:id="@+id/ivPosition"
-                android:src="@drawable/ic_standing" />
-
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:textSize="11sp"
-                android:text="Standing"
-                android:textStyle="italic"/>
-
-            <TextView
-                android:text="Status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="11sp"
-                android:textColor="#B3F6B9"
-                android:textStyle="bold" />
-
-            <!-- dot -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
+                android:layout_below="@+id/hr"
                 android:layout_marginTop="30dp"
-                android:layout_height="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_osca"/>
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="15dp"
-                    android:text="........"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="9sp"
+                    android:layout_marginTop="9dp"
+                    android:text="© 2021 • OSCA"/>
 
             </LinearLayout>
 
-        </LinearLayout>
 
         </LinearLayout>
 
-        <!-- activity -->
-
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/har"
-            android:layout_below="@+id/firstTile"
-            android:layout_marginTop="60dp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            tools:context=".MainActivity">
-
-            <!-- height divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/Stat" />
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_weight="@integer/complicationDrawable_borderStyle"
-                android:fontFamily="sans-serif-thin"
-                android:text="Summary"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="70dp"
-                android:textAlignment="center"
-                android:textColor="#B6EDFF"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:textAlignment="center">
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="132dp"
-                    android:layout_weight="@integer/complicationDrawable_borderStyle"
-                    android:fontFamily="sans-serif-thin"
-                    android:text="Activity"
-                    android:textAlignment="0"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <!-- standing -->
-            <TableRow
-                android:id="@+id/standing_row"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="0dp">
-
-                <TextView
-                    android:layout_weight="1"
-                    android:text="Jumping"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textColor="@color/lightGray"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/standing_prob"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:text="0.0"
-                    android:textSize="18sp" />
-            </TableRow>
-
-            <!-- walking -->
-            <TableRow
-                android:id="@+id/walking_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="0dp">
-
-                <TextView
-                    android:layout_weight="1"
-                    android:text="Standing"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textColor="@color/lightGray"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/walking_prob"
-                    android:layout_width="119dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:text="0.0"
-                    android:textSize="18sp" />
-
-            </TableRow>
-
-            <!-- jumping -->
-            <TableRow
-                android:id="@+id/jumping_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="0dp">
-
-                <TextView
-                    android:layout_weight="1"
-                    android:text="Walking"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textColor="@color/lightGray"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/jumping_prob"
-                    android:layout_width="119dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:text="0.0"
-                    android:textSize="18sp" />
-            </TableRow>
-
-            <!-- falling -->
-            <TableRow
-                android:id="@+id/falling_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:padding="0dp">
-
-                <TextView
-                    android:layout_weight="1"
-                    android:text="Falling"
-                    android:textSize="12sp"
-                    android:textAlignment="center"
-                    android:textColor="@color/lightGray"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/falling_prob"
-                    android:layout_width="119dp"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/redhat_display_regular"
-                    android:text="0.0"
-                    android:textSize="18sp" />
-
-            </TableRow>
-
-        </TableLayout>
-
-        <!-- dot -->
-        <LinearLayout
-            android:id="@+id/dot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/har"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:text="......." />
-
-        </LinearLayout>
-
-        <!-- bottom stat -->
-        <LinearLayout
-            android:id="@+id/bellowStat"
-            android:layout_below="@+id/dot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_footprints"/>
-
-            <TextView
-                android:id="@+id/steps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/redhat_display_bold"
-                android:text=""
-                android:textAlignment="center"
-                android:textColor="#F1C8FF"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Steps"
-                android:textSize="12sp"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:textColor="@color/lightGray"
-                android:textStyle="normal" />
-
-        </LinearLayout>
-
-        <!-- height divider -->
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@+id/bellowStat" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/view"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="100dp"
-                android:src="@drawable/ic_osca"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="11sp"
-                android:layout_marginTop="10dp"
-                android:text="© 2022 • OSCA"/>
-
-        </LinearLayout>
 
 
     </RelativeLayout>

@@ -26,11 +26,19 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
     Button ansA, ansB, ansC, ansD;
     Button submitBtn;
 
+    String msg = "The Senior’s AD8 range fall to 2 or Higher.\n" +
+            "\n" +
+            "We regret that we are unable to process your registration. The application is designed for older adults with mild cognitive impairment. It is recommended to consult a primary care physician if scoring results indicates potential dementia. \n" +
+            "\n" +
+            "PLEASE NOTE: \n" +
+            "The AD8 diagnostic test cannot diagnose dementing disorders. Nevertheless, the test effectively detects the onset of many common dementias at an early stage of the disease.\n" +
+            "(Validation of AD8-Philippines (AD8-P): A Brief Informant-Based Questionnaire for Dementia Screening in the Philippines)";
+
     int score = 0; // total score
     int currentQuestionIndex = 0;
     int ctr = 0;
 
-    int totalQuestion = 15; // number of questions to be generated in front end (4 questions only)
+    int totalQuestion = 7; // number of questions to be generated in front end (4 questions only)
     String selectedAnswer = ""; // user selected answer
 
     @Override
@@ -73,8 +81,8 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
 
             currentProgress += 1;
             progressBar.setProgress(currentProgress);
-            progressBar.setMax(15);
-            countQuestion.setText(currentProgress + " of 15");
+            progressBar.setMax(7);
+            countQuestion.setText(currentProgress + " of 7");
 
             if(selectedAnswer.equals(QuestionAnswer.correctAnswers[currentQuestionIndex])){
                 score++;
@@ -103,11 +111,10 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
         ansA.setText(QuestionAnswer.choices[currentQuestionIndex][0]);
         ansB.setText(QuestionAnswer.choices[currentQuestionIndex][1]);
         ansC.setText(QuestionAnswer.choices[currentQuestionIndex][2]);
-        ansD.setText(QuestionAnswer.choices[currentQuestionIndex][3]);
     }
 
     void finishQuiz(){
-        if(score > totalQuestion * 0.60){
+        if(score <= 1){
             new AlertDialog.Builder(this)
                     .setTitle("Congratulations!")
                     .setMessage("You have passed the assessment. Carer can now register your account.\"")
@@ -116,8 +123,9 @@ public class MCItest extends AppCompatActivity implements View.OnClickListener {
                     .show();
         }else{
             new AlertDialog.Builder(this)
-                    .setTitle("Sorry...")
-                    .setMessage("Carer are not allowed to register your account.")
+                    .setTitle("The AD8 score equates to the following: " +
+                            "\n 0 - 1:\tNormal/Mild Cognition Impairment \n2 or Higher: Potential Dementia")
+                    .setMessage(msg)
                     .setPositiveButton("I understand", (dialogInterface, i) -> exit())
                     .setCancelable(true)
                     .show();

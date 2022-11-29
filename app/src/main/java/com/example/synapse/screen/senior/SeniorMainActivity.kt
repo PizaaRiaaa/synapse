@@ -24,6 +24,7 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import com.example.synapse.R
 import com.example.synapse.databinding.ActivityCarerBottomNavigationBinding
+import com.example.synapse.databinding.ActivitySeniorBottomNavigationBinding
 import com.google.firebase.messaging.FirebaseMessaging
 import com.example.synapse.screen.senior.modules.fragments.HomeFragment
 import com.example.synapse.screen.senior.modules.fragments.MedicationFragment
@@ -38,12 +39,11 @@ import kotlin.random.Random
 
 class SeniorMainActivity : AppCompatActivity() {
 
-    private var binding: ActivityCarerBottomNavigationBinding? = null
+    private var binding: ActivitySeniorBottomNavigationBinding? = null
 
     var replaceFragment = ReplaceFragment()
     var promptMessage = PromptMessage()
-    val sessionStartTime =
-        Instant.now().minus((1 + Random.nextInt(168)).toLong(), ChronoUnit.HOURS)
+    val sessionStartTime = Instant.now().minus((1 + Random.nextInt(168)).toLong(), ChronoUnit.HOURS)
     val sessionEndTime = sessionStartTime.plus(15, ChronoUnit.MINUTES)
 
     // build a set of permissions for required data types
@@ -76,7 +76,7 @@ class SeniorMainActivity : AppCompatActivity() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCarerBottomNavigationBinding.inflate(
+        binding = ActivitySeniorBottomNavigationBinding.inflate(
             layoutInflater
         )
         setContentView(binding!!.root)
@@ -85,7 +85,7 @@ class SeniorMainActivity : AppCompatActivity() {
 
         replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
 
-        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView = findViewById(R.id.bottomNavigationViewSenior)
         bottomNavigationView.setBackgroundColor(
             ContextCompat.getColor(
                 this,
@@ -165,7 +165,7 @@ class SeniorMainActivity : AppCompatActivity() {
                 )
             }
 
-            binding!!.bottomNavigationView.setOnItemSelectedListener { item: MenuItem ->
+            binding!!.bottomNavigationViewSenior.setOnItemSelectedListener { item: MenuItem ->
                 when (item.itemId) {
                     R.id.miHome -> replaceFragment.replaceFragment(
                         HomeFragment(),

@@ -47,7 +47,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends FragmentActivity implements
-        AmbientModeSupport.AmbientCallbackProvider, SensorEventListener, TextToSpeech.OnInitListener {
+        AmbientModeSupport.AmbientCallbackProvider, SensorEventListener {
 
     private TextView mTextView;
     private ActivityMainBinding binding;
@@ -157,22 +157,22 @@ public class MainActivity extends FragmentActivity implements
 
 
 //        AmbientModeSupport.attach(this);
-        standingTextView = (TextView) findViewById(R.id.standing_prob);
-        walkingTextView = (TextView) findViewById(R.id.walking_prob);
-        jumpingTextView = (TextView) findViewById(R.id.jumping_prob);
-        fallingTextView = (TextView) findViewById(R.id.falling_prob);
+        //standingTextView = (TextView) findViewById(R.id.standing_prob);
+  //      walkingTextView = (TextView) findViewById(R.id.walking_prob);
+  //      jumpingTextView = (TextView) findViewById(R.id.jumping_prob);
+  //      fallingTextView = (TextView) findViewById(R.id.falling_prob);
 
-        standingTableRow = (TableRow) findViewById(R.id.standing_row);
-        walkingTableRow = (TableRow) findViewById(R.id.walking_row);
-        jumpingTableRow = (TableRow) findViewById(R.id.jumping_row);
-        fallingTableRow = (TableRow) findViewById(R.id.falling_row);
+  //      standingTableRow = (TableRow) findViewById(R.id.standing_row);
+  //      walkingTableRow = (TableRow) findViewById(R.id.walking_row);
+  //      jumpingTableRow = (TableRow) findViewById(R.id.jumping_row);
+  //      fallingTableRow = (TableRow) findViewById(R.id.falling_row);
         String[] items1 = new String[]{"ID : 1", "ID : 2", "ID : 3", "ID : 4"};
 
-        ivPosition = findViewById(R.id.ivPosition);
+      //  ivPosition = findViewById(R.id.ivPosition);
 
-        Status = (TextView) findViewById(R.id.status);
+       // Status = (TextView) findViewById(R.id.status);
         Heart = (TextView) findViewById(R.id.heart);
-        stepCounts = (TextView) findViewById(R.id.steps);
+        //stepCounts = (TextView) findViewById(R.id.steps);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -205,8 +205,8 @@ public class MainActivity extends FragmentActivity implements
 
         classifier = new TFClassifier(getApplicationContext());
 
-        textToSpeech = new TextToSpeech(this, this);
-        textToSpeech.setLanguage(Locale.US);
+      //  textToSpeech = new TextToSpeech(this, this);
+      //  textToSpeech.setLanguage(Locale.US);
 
 
         startMeasure();
@@ -239,10 +239,10 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onDestroy() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
-        }
+      //  if (textToSpeech != null) {
+      //      textToSpeech.stop();
+      //      textToSpeech.shutdown();
+      //  }
         super.onDestroy();
     }
 
@@ -303,42 +303,42 @@ public class MainActivity extends FragmentActivity implements
             new SendMessage(datapath, message).start();
 
             // HIGH HEART RATE
-            if(mHeartRate > 120 && statusPosition.equals("standing")){
-                startActivity(new Intent(this, HighBP.class));
-                String hhr = String.valueOf(mHeartRate);
-                String datapath2 = "/myapp/synapse/hhr";
-                new SendMessage(datapath2, hhr).start();
-            }
+           // if(mHeartRate > 120 && statusPosition.equals("standing")){
+           //     startActivity(new Intent(this, HighBP.class));
+           //     String hhr = String.valueOf(mHeartRate);
+           //     String datapath2 = "/myapp/synapse/hhr";
+           //     new SendMessage(datapath2, hhr).start();
+           // }
 
             // LOW HEART RATE
-            if(mHeartRate < 40 && mHeartRate > 0){
-                startActivity(new Intent(this, LowBP.class));
-                String lhr = String.valueOf(mHeartRate);
-                String datapath3 = "/myapp/synapse/lhr";
-                new SendMessage(datapath3, lhr).start();
-            }
+           // if(mHeartRate < 40 && mHeartRate > 0){
+           //     startActivity(new Intent(this, LowBP.class));
+           //     String lhr = String.valueOf(mHeartRate);
+           //     String datapath3 = "/myapp/synapse/lhr";
+           //     new SendMessage(datapath3, lhr).start();
+           // }
         }
 
-        if(sensor.getType() == Sensor.TYPE_STEP_COUNTER){
-            if(event.values.length > 0){
-                String steps = " " + (int)event.values[0];
-                stepCounts.setText(steps);
-            }
-        }
+       // if(sensor.getType() == Sensor.TYPE_STEP_COUNTER){
+       //     if(event.values.length > 0){
+       //         String steps = " " + (int)event.values[0];
+       //         stepCounts.setText(steps);
+       //     }
+       // }
 
         activityPrediction();
 
 
-        if (!dateCurrentTemp.equals(dateCurrent)){
-            dateCurrentTemp = dateCurrent;
-            CounterForSave = 0;
-        }
-        if (CounterForSave<60 & permission_to_record) {
-            DATA = InputID+","+dateCurrent + "," + Stand + "," + Walk + "," +  Jump + "," +  Fall + "," + Stat +"," + heartValue +"\n";
-            modified_DATA = newline + DATA;
-            newline = modified_DATA;
-            CounterForSave = CounterForSave + 4;
-        }
+       // if (!dateCurrentTemp.equals(dateCurrent)){
+       //     dateCurrentTemp = dateCurrent;
+       //     CounterForSave = 0;
+       // }
+       // if (CounterForSave<60 & permission_to_record) {
+       //     DATA = InputID+","+dateCurrent + "," + Stand + "," + Walk + "," +  Jump + "," +  Fall + "," + Stat +"," + heartValue +"\n";
+       //     modified_DATA = newline + DATA;
+       //     newline = modified_DATA;
+       //     CounterForSave = CounterForSave + 4;
+       // }
     }
     private void startMeasure() {
         boolean sensorRegistered = mSensorManager.registerListener(this, heartRate, SensorManager.SENSOR_DELAY_FASTEST);
@@ -405,8 +405,8 @@ public class MainActivity extends FragmentActivity implements
                 }
             }
 
-            setProbabilities();
-            setRowsColor(idx);
+           // setProbabilities();
+           // setRowsColor(idx);
 
             ax.clear();
             ay.clear(); az.clear();
@@ -421,29 +421,29 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    private void setProbabilities() {
-//        sittingTextView.setText(Float.toString(round(results[0], 2)));
-        standingTextView.setText(Float.toString(round(results[0], 2)));
-        walkingTextView.setText(Float.toString(round(results[1], 2)));
-        jumpingTextView.setText(Float.toString(round(results[2], 2)));
-        fallingTextView.setText(Float.toString(round(0, 2)));
-    }
+   // private void setProbabilities() {
+// //       sittingTextView.setText(Float.toString(round(results[0], 2)));
+   //     standingTextView.setText(Float.toString(round(results[0], 2)));
+   //     walkingTextView.setText(Float.toString(round(results[1], 2)));
+   //     jumpingTextView.setText(Float.toString(round(results[2], 2)));
+   //     fallingTextView.setText(Float.toString(round(0, 2)));
+   // }
 
-    private void setRowsColor(int idx) {
-        fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
-        standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
-        walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
-        jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
+  //  private void setRowsColor(int idx) {
+  //      fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
+  //      standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
+  //      walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
+  //      jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorTransparent, null));
 
-        if (idx == 0)
-            standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
-        else if (idx == 1)
-            walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
-        else if (idx == 2)
-            jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
-        else if (idx == 3)
-            fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
-    }
+  //      if (idx == 0)
+  //          standingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
+  //      else if (idx == 1)
+  //          walkingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
+  //      else if (idx == 2)
+  //          jumpingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
+  //      else if (idx == 3)
+  //          fallingTableRow.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorGray, null));
+  //  }
 
     private float[] toFloatArray(List<Float> list) {
         int i = 0;
@@ -465,118 +465,118 @@ public class MainActivity extends FragmentActivity implements
         return (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
-    @Override
-    public void onInit(int status) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (results == null || results.length == 0) {
-                    return;
-                }
-                float max = -1;
-                int idx = -1;
-                for (int i = 0; i < results.length; i++) {
-                    if (results[i] > max) {
-                        idx = i;
-                        max = results[i];
-                    }
-                }
+  //  @Override
+  //  public void onInit(int status) {
+  //      Timer timer = new Timer();
+  //      timer.scheduleAtFixedRate(new TimerTask() {
+  //          @Override
+  //          public void run() {
+  //              if (results == null || results.length == 0) {
+  //                  return;
+  //              }
+  //              float max = -1;
+  //              int idx = -1;
+  //              for (int i = 0; i < results.length; i++) {
+  //                  if (results[i] > max) {
+  //                      idx = i;
+  //                      max = results[i];
+  //                  }
+  //              }
 
-                if (maValue>=12.0 && mgValue>=8){
+  //             // if (maValue>=12.0 && mgValue>=8){
 
-                    try {
-                        Stat = labels[3];
-                        Stand = 0;
-                        Walk = 0;
-                        Jump = 0;
-                        Fall  = 1;
-                        Status.setText(labels[3]);
-                        textToSpeech.speak(labels[3], TextToSpeech.QUEUE_ADD, null,
-                                Integer.toString(new Random().nextInt()));
-                        TimeUnit.SECONDS.sleep(4);
+  //             //  //   try {
+  //             //  //       Stat = labels[3];
+  //             //  //       Stand = 0;
+  //             //  //       Walk = 0;
+  //             //  //       Jump = 0;
+  //             //  //       Fall  = 1;
+  //             //  //       Status.setText(labels[3]);
+  //             //  //       textToSpeech.speak(labels[3], TextToSpeech.QUEUE_ADD, null,
+  //             //  //               Integer.toString(new Random().nextInt()));
+  //             //  //       TimeUnit.SECONDS.sleep(4);
 
-                        Stat = "";
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-//                    try {
-//                        Thread.sleep(2000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+  //             //  //       Stat = "";
+  //             //  //   } catch (InterruptedException e) {
+  //             //  //       e.printStackTrace();
+  //             //  //   }
+////             //       try {
+////             //           Thread.sleep(2000);
+////             //       } catch (InterruptedException e) {
+////             //           e.printStackTrace();
+////             //       }
 
-                    prevIdx = idx;
-                }
-                if(max > 0.90 && idx != prevIdx && Stat!=labels[3]) {
-                   // textToSpeech.speak(labels[idx], TextToSpeech.QUEUE_ADD, null,
-                    //        Integer.toString(new Random().nextInt()));
-                    Status.setText(labels[idx]);
+  //             //     prevIdx = idx;
+  //             // }
+  //              if(max > 0.90 && idx != prevIdx && Stat!=labels[3]) {
+  //                 // textToSpeech.speak(labels[idx], TextToSpeech.QUEUE_ADD, null,
+  //                  //        Integer.toString(new Random().nextInt()));
+  //                  Status.setText(labels[idx]);
 
-                    // status position na binabato sa mobile ni senior
-                    statusPosition = labels[idx];
-                    String datapath = "/myapp/synapse/status";
-                    new SendMessage(datapath, statusPosition).start();
+  //                  // status position na binabato sa mobile ni senior
+  //                  statusPosition = labels[idx];
+  //                  String datapath = "/myapp/synapse/status";
+  //                  new SendMessage(datapath, statusPosition).start();
 
-                    stepCount(statusPosition);
+  //                  stepCount(statusPosition);
 
-//                    if(idx==0){
-//                        Stand = 0;
-//                        Walk = 0;
-//                        Jump = 0;
-//                        Fall = 1;
-//                        Stat = labels[idx];
-//                    }
-                    if (idx ==0){
-                        Stand = 0;
-                        Walk = 0;
-                        Jump = 1;
-                        Fall  = 0;
-                        Stat = labels[idx];
-                    }
-                    else if (idx ==1){
-//                        Sit = 0;
-                        Stand = 1;
-                        Walk = 0;
-                        Jump = 0;
-                        Fall  = 0;
-                        Stat = labels[idx];
-                    }
-                    else if (idx ==2){
-//                        Sit = 0;
-                        Stand = 0;
-                        Walk = 1;
-                        Jump = 0;
-                        Fall  = 0;
-                        Stat = labels[idx];
-                    }
+////                    if(idx==0){
+////                        Stand = 0;
+////                        Walk = 0;
+////                        Jump = 0;
+////                        Fall = 1;
+////                        Stat = labels[idx];
+////                    }
+  //                  if (idx ==0){
+  //                      Stand = 0;
+  //                      Walk = 0;
+  //                      Jump = 1;
+  //                      Fall  = 0;
+  //                      Stat = labels[idx];
+  //                  }
+  //                  else if (idx ==1){
+////                        Sit = 0;
+  //                      Stand = 1;
+  //                      Walk = 0;
+  //                      Jump = 0;
+  //                      Fall  = 0;
+  //                      Stat = labels[idx];
+  //                  }
+  //                  else if (idx ==2){
+////                        Sit = 0;
+  //                      Stand = 0;
+  //                      Walk = 1;
+  //                      Jump = 0;
+  //                      Fall  = 0;
+  //                      Stat = labels[idx];
+  //                  }
 
-                    prevIdx = idx;
-                }
-            }
-        }, 400, 1300);
-//    }, 750, 2000);
-    }
+  //                  prevIdx = idx;
+  //              }
+  //          }
+  //      }, 400, 1300);
+////    }, 750, 2000);
+  //  }
 
-    public void stepCount(String status){
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(status.equals("walking")){
-                    step_count++;
-                    stepCounts.setText(String.valueOf(step_count));
-                    String step = stepCounts.getText().toString();
+   // public void stepCount(String status){
+   //     Handler handler = new Handler(Looper.getMainLooper());
+   //     handler.postDelayed(new Runnable() {
+   //         @Override
+   //         public void run() {
+   //             if(status.equals("walking")){
+   //                 step_count++;
+   //                 stepCounts.setText(String.valueOf(step_count));
+   //                 String step = stepCounts.getText().toString();
 
-                    // step count na binabato sa mobile ni senior
-                    String datapath = "/myapp/synapse/stepcounts";
-                    new SendMessage(datapath, String.valueOf(step)).start();
-                }
+   //                 // step count na binabato sa mobile ni senior
+   //                 String datapath = "/myapp/synapse/stepcounts";
+   //                 new SendMessage(datapath, String.valueOf(step)).start();
+   //             }
 
-            }
-        }, 1000);
+   //         }
+   //     }, 1000);
 
-    }
+   // }
 
     class SendMessage extends Thread {
         String path;
