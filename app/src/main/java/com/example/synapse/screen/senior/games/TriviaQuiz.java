@@ -2,7 +2,12 @@ package com.example.synapse.screen.senior.games;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.synapse.R;
+import com.example.synapse.screen.util.AuditTrail;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
@@ -27,7 +32,9 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
     MediaPlayer bgMusic;
     MediaPlayer bgCorrect;
 
-
+    AuditTrail auditTrail = new AuditTrail();
+    DatabaseReference referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
+    FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     int score = 0; // total score
     int currentQuestionIndex = ThreadLocalRandom.current().nextInt(0,76);
@@ -133,6 +140,11 @@ public class TriviaQuiz extends AppCompatActivity implements View.OnClickListene
         }else{
             passStatus = "Failed";
         }
+
+        auditTrail.auditTrail(
+                "Finished Playing Trivia Quiz",
+                "Trivia Quiz",
+                "Game", "Senior", referenceSenior, mUser);
 
         new AlertDialog.Builder(this)
                 .setTitle(passStatus)

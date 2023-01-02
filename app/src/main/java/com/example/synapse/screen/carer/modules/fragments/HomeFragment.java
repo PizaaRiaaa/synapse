@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
@@ -65,9 +66,9 @@ public class HomeFragment extends Fragment {
     private TextView tvSeniorAge;
     private TextView tvSeniorCity;
     private TextView tvHeartRate;
-    private TextView tvStatus;
     private TextView tvStepCounts;
     private TextView tvHealthStatusTitle;
+    private AppCompatImageButton btnRefresh;
 
     private String imageURL;
     private String TAG, token;
@@ -134,9 +135,9 @@ public class HomeFragment extends Fragment {
         tvBarangay = view.findViewById(R.id.tvSeniorBarangay);
         tvSeniorAge = view.findViewById(R.id.tvSeniorAge);
         tvHeartRate = view.findViewById(R.id.tvHeartRate);
-        tvStatus = view.findViewById(R.id.tvStatus);
         tvStepCounts = view.findViewById(R.id.tvStepCounts);
         tvHealthStatusTitle = view.findViewById(R.id.tvHealthStatusTitle);
+        btnRefresh = view.findViewById(R.id.btnRefresh);
 
         btnMedication = view.findViewById(R.id.btnMedication);
         btnPhysicalActivity = view.findViewById(R.id.btnPhysicalActivity);
@@ -155,6 +156,7 @@ public class HomeFragment extends Fragment {
 
         displayHealthStatus();
 
+        btnRefresh.setOnClickListener(v -> replaceFragment.replaceFragment(new HomeFragment(), getActivity()));
         btnSeniorInfo.setOnClickListener(v -> replaceFragment.replaceFragment(new SeniorInfoFragment(), getActivity()));
         btnMedication.setOnClickListener(v -> replaceFragment.replaceFragment(new MedicationFragment(), getActivity()));
         btnPhysicalActivity.setOnClickListener(v -> replaceFragment.replaceFragment(new PhysicalActivityFragment(), getActivity()));
@@ -170,20 +172,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void displayHealthStatus(){
-        referenceSenior.child(getDefaults("seniorKey",getActivity())).addListenerForSingleValueEvent(new ValueEventListener() {
+        referenceSenior.child(getDefaults("seniorKey",getActivity())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.hasChild("heartrate")){
                     ReadWriteUserSenior rw = snapshot.getValue(ReadWriteUserSenior.class);
                     String heartrate = rw.getHeartrate();
                     tvHeartRate.setText(heartrate);
-                }
-
-                if(snapshot.hasChild("status")){
-                    ReadWriteUserSenior rw = snapshot.getValue(ReadWriteUserSenior.class);
-                    String status = rw.getStatus();
-                    tvStatus.setText(status);
-
                 }
 
                 if(snapshot.hasChild("stepcounts")){

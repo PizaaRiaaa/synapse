@@ -35,6 +35,7 @@ import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.modules.fragments.HomeFragment;
 import com.example.synapse.screen.senior.SeniorMainActivity;
+import com.example.synapse.screen.util.AuditTrail;
 import com.example.synapse.screen.util.PromptMessage;
 import com.example.synapse.screen.util.ReplaceFragment;
 import com.example.synapse.screen.util.readwrite.ReadWriteMedication;
@@ -75,6 +76,7 @@ public class PhysicalActivityFragment extends Fragment {
 
     PromptMessage promptMessage = new PromptMessage();
     ReplaceFragment replaceFragment = new ReplaceFragment();
+    AuditTrail auditTrail = new AuditTrail();
 
     AppCompatButton btnMon, btnTue, btnWed, btnThu, btnFri, btnSat, btnSun, btnAddSchedule;
     DatabaseReference referenceReminders, referenceSenior;
@@ -313,21 +315,20 @@ public class PhysicalActivityFragment extends Fragment {
                                                                 "You have successfully finished your physical activity",
                                                                 R.color.dark_green, getActivity());
 
-                                                        referenceReminders
+                                                         referenceReminders
                                                                 .child(mUser.getUid())
                                                                 .child(carerID)
                                                                 .child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                     @Override
                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                         for(DataSnapshot ds : snapshot.getChildren()){
-                                                                            ReadWriteMedication medicine = snapshot.getValue(ReadWriteMedication.class);
-                                                                            String name = medicine.getName();
-                                                                            String dosage = medicine.getDosage();
+                                                                            ReadWritePhysicalActivity physical = snapshot.getValue(ReadWritePhysicalActivity.class);
+                                                                            String activity = physical.getActivity();
 
-                                                                           // auditTrail.auditTrail(
-                                                                           //         "Took Medicine",
-                                                                           //         name + " " + dosage,
-                                                                           //         "Medicine", "Carer", referenceProfile, mUser);
+                                                                            auditTrail.auditTrail(
+                                                                                    "Finished Physical Activity",
+                                                                                    activity,
+                                                                                    "Physical Activity", "Carer", referenceSenior, mUser);
 
                                                                         }
                                                                     }

@@ -154,28 +154,28 @@ class HomeFragment() : Fragment() {
         referenceAssignedCarer = FirebaseDatabase.getInstance().getReference("AssignedSeniors")
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers")
 
-        btnMedication.setOnClickListener { v: View? ->
+        btnMedication.setOnClickListener {
             replaceFragment.replaceFragment(
                 MedicationFragment(), activity
             )
         }
-        btnGames.setOnClickListener { v: View? ->
+        btnGames.setOnClickListener {
             replaceFragment.replaceFragment(
                 GamesFragment(),
                 getActivity()
             )
         }
-        btnPhysicalActivity.setOnClickListener { v: View? ->
+        btnPhysicalActivity.setOnClickListener {
             replaceFragment.replaceFragment(
                 PhysicalActivityFragment(), activity
             )
         }
-        btnAppointment.setOnClickListener { v: View? ->
+        btnAppointment.setOnClickListener {
             replaceFragment.replaceFragment(
                 AppointmentFragment(), activity
             )
         }
-        btnMyLocation.setOnClickListener { v: View? ->
+        btnMyLocation.setOnClickListener {
             startActivity(
                 Intent(
                     activity,
@@ -183,14 +183,14 @@ class HomeFragment() : Fragment() {
                 )
             )
         }
-        btnEmergency.setOnClickListener{ v: View? ->
-                callEmergencyCarer()
+        btnEmergency.setOnClickListener{
+            callEmergencyCarer()
        }
-        btnStepCountsHistory.setOnClickListener { v: View? ->
+        btnStepCountsHistory.setOnClickListener {
             replaceFragment.replaceFragment(
                 StepCountsFragment(), activity)
         }
-        btnHeartRateHistory.setOnClickListener{ v: View? ->
+        btnHeartRateHistory.setOnClickListener{
             replaceFragment.replaceFragment(
                 HeartRateFragment(), activity
             )
@@ -207,7 +207,7 @@ class HomeFragment() : Fragment() {
         currentTime.format12Hour = "hh:mm a"
         showUserProfile(userID)
 
-        btnLogout.setOnClickListener { v: View? ->
+        btnLogout.setOnClickListener {
             val user: FirebaseAuth = FirebaseAuth.getInstance()
             user.signOut()
             val intent: Intent = Intent(getActivity(), Login::class.java)
@@ -235,6 +235,8 @@ class HomeFragment() : Fragment() {
         LocalBroadcastManager.getInstance((activity)!!)
             .registerReceiver(messageReceiver, messageFilter)
 
+        location
+
         return view
     }
 
@@ -258,6 +260,7 @@ class HomeFragment() : Fragment() {
             steps_for_today += monthlyResult.result[StepsRecord.COUNT_TOTAL]!!
         }
         tvStepsForToday.post {tvStepsForToday.text = steps_for_today.toString()}
+        updateHealthStatus("stepcounts",steps_for_today.toString())
     }
 
     /** shows MIN and MAX HeartRate for the week */
@@ -283,31 +286,11 @@ class HomeFragment() : Fragment() {
     inner class MessageReceiver() : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val heartrate = intent.getStringExtra("heartrate")
-            //val status = intent.getStringExtra("status")
-            //val stepcounts = intent.getStringExtra("stepcounts")
-            //val hhr = intent.getStringExtra("hhr")
-            //val lhr = intent.getStringExtra("lhr")
-            // Display message in UI
+
             if (heartrate != null) {
                 logthisHeartRate(heartrate)
                 updateHealthStatus("heartrate", heartrate)
             }
-           // if (status != null) {
-           //     logthisStatus(status)
-           //     updateHealthStatus("status", status)
-           // }
-           // if (stepcounts != null) {
-           //     logthisStepCounts(stepcounts)
-           //     updateHealthStatus("stepcounts", stepcounts)
-           // }
-           // if (hhr != null) {
-           //     alertHighHR(hhr)
-           //     sendCarerAlertHighHR(hhr)
-           // }
-           // if (lhr != null) {
-           //     alertLowHR(lhr)
-           //     sendCarerAlertLowHR(lhr)
-           // }
         }
     }
 
@@ -320,223 +303,14 @@ class HomeFragment() : Fragment() {
         }
     }
 
-  //  fun logthisStatus(newinfo: String?) {
-  //      if (newinfo!!.compareTo("") != 0) {
-  //          tvStatus!!.text = newinfo
-  //      }
-  //  }
-
-  //  fun logthisStepCounts(newinfo: String?) {
-  //      if (newinfo!!.compareTo("") != 0) {
-  //          tvStepCounts!!.text = newinfo
-  //      }
-  //  }
-
-  //  fun alertHighHR(newinfo: String) {
-  //      if (newinfo.compareTo("") != 0) {
-  //          AlertDialog.Builder(activity)
-  //              .setTitle("High Heart Rate!!")
-  //              .setIcon(R.drawable.heartrate)
-  //              .setMessage("WE DETECTED THAT YOUR HEART RATE ROSE ABOVE ⬆ 120 BPM WHILE YOUR INACTIVE")
-  //              .setPositiveButton(
-  //                  "Close",
-  //                  { dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel() })
-  //              .setCancelable(false)
-  //              .show()
-  //      }
-  //  }
-
-  //  fun alertLowHR(newinfo: String) {
-  //      if (activity != null) {
-  //          if (newinfo.compareTo("") != 0) {
-  //              AlertDialog.Builder(activity)
-  //                  .setTitle("Low Heart Rate!!")
-  //                  .setIcon(R.drawable.heartrate)
-  //                  .setMessage("WE DETECTED THAT YOUR HEART RATE FELL BELOW ⬇ 40 BPM WHILE YOUR INACTIVE")
-  //                  .setPositiveButton(
-  //                      "Close",
-  //                      { dialogInterface: DialogInterface, i: Int -> dialogInterface.cancel() })
-  //                  .setCancelable(false)
-  //                  .show()
-  //          }
-  //      }
-  //  }
-
     fun updateHealthStatus(title: String, newinfo: String) {
         val hashMap = HashMap<String, Any>()
         hashMap[title] = newinfo
         referenceSenior!!.child(mUser!!.uid).updateChildren(hashMap)
             .addOnCompleteListener(object : OnCompleteListener<Void?> {
                 override fun onComplete(task: Task<Void?>) {
-                    Log.v(TAG, "Updated successfully")
                 }
             })
-    }
-
-    fun sendCarerAlertHighHR(newinfo: String) {
-        referenceAssignedCarer!!.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (key: DataSnapshot in snapshot.children) {
-                    val carerKey = key.key
-                    referenceAssignedCarer!!.child((carerKey)!!)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                for (key: DataSnapshot in snapshot.children) {
-                                    val key1 = key.key
-                                    referenceAssignedCarer!!.child((carerKey)).child((key1)!!)
-                                        .addListenerForSingleValueEvent(object :
-                                            ValueEventListener {
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                if (snapshot.hasChild("seniorID")) {
-                                                    val senior = snapshot.getValue(
-                                                        ReadWriteUserSenior::class.java
-                                                    )
-                                                    val seniorID = senior!!.getSeniorID()
-                                                    val mUser =
-                                                        FirebaseAuth.getInstance().currentUser
-                                                    if ((seniorID == mUser!!.uid)) {
-                                                        referenceCarer!!.child((carerKey))
-                                                            .addListenerForSingleValueEvent(object :
-                                                                ValueEventListener {
-                                                                override fun onDataChange(snapshot: DataSnapshot) {
-                                                                    if (snapshot.exists()) {
-                                                                        val carer =
-                                                                            snapshot.getValue(
-                                                                                ReadWriteUserDetails::class.java
-                                                                            )
-                                                                        val carerToken =
-                                                                            carer!!.getToken()
-                                                                        val notificationsSender =
-                                                                            FcmNotificationsSender(
-                                                                                carerToken,
-                                                                                "Alert! High Heart Rate of $newinfo",
-                                                                                ("WE DETECTED THAT " + senior.getFirstName()
-                                                                                    .uppercase(
-                                                                                        Locale.getDefault()
-                                                                                    ) +
-                                                                                        " " + senior.getLastName()
-                                                                                    .uppercase(
-                                                                                        Locale.getDefault()
-                                                                                    ) + " " +
-                                                                                        " HEART RATE ROSE ABOVE ⬆ 120 BPM "),
-                                                                                "hhr",
-                                                                                activity
-                                                                            )
-                                                                        notificationsSender.SendNotifications()
-                                                                    }
-                                                                }
-
-                                                                override fun onCancelled(error: DatabaseError) {
-                                                                    promptMessage!!.defaultErrorMessageContext(
-                                                                        activity
-                                                                    )
-                                                                }
-                                                            })
-                                                    }
-                                                }
-                                            }
-
-                                            override fun onCancelled(error: DatabaseError) {
-                                                promptMessage!!.defaultErrorMessageContext(activity)
-                                            }
-                                        })
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                promptMessage!!.defaultErrorMessageContext(activity)
-                            }
-                        })
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                promptMessage!!.defaultErrorMessageContext(activity)
-            }
-        })
-    }
-
-    fun sendCarerAlertLowHR(newinfo: String) {
-        referenceAssignedCarer!!.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (key: DataSnapshot in snapshot.children) {
-                    val carerKey = key.key
-                    referenceAssignedCarer!!.child((carerKey)!!)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                for (key: DataSnapshot in snapshot.children) {
-                                    val key1 = key.key
-                                    referenceAssignedCarer!!.child((carerKey)).child((key1)!!)
-                                        .addListenerForSingleValueEvent(object :
-                                            ValueEventListener {
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                if (snapshot.hasChild("seniorID")) {
-                                                    val senior = snapshot.getValue(
-                                                        ReadWriteUserSenior::class.java
-                                                    )
-                                                    val seniorID = senior!!.getSeniorID()
-                                                    val mUser =
-                                                        FirebaseAuth.getInstance().currentUser
-                                                    if ((seniorID == mUser!!.uid)) {
-                                                        referenceCarer!!.child((carerKey))
-                                                            .addListenerForSingleValueEvent(object :
-                                                                ValueEventListener {
-                                                                override fun onDataChange(snapshot: DataSnapshot) {
-                                                                    if (snapshot.exists()) {
-                                                                        val carer =
-                                                                            snapshot.getValue(
-                                                                                ReadWriteUserDetails::class.java
-                                                                            )
-                                                                        val carerToken =
-                                                                            carer!!.getToken()
-                                                                        val notificationsSender =
-                                                                            FcmNotificationsSender(
-                                                                                carerToken,
-                                                                                "Alert! Low Heart Rate of $newinfo",
-                                                                                ("WE DETECTED THAT " + senior.getFirstName()
-                                                                                    .uppercase(
-                                                                                        Locale.getDefault()
-                                                                                    ) + " " +
-                                                                                        senior.getLastName()
-                                                                                            .uppercase(
-                                                                                                Locale.getDefault()
-                                                                                            ) +
-                                                                                        " HEART RATE FELL BELOW ⬇ 40 BPM"),
-                                                                                "lhr",
-                                                                                activity
-                                                                            )
-                                                                        notificationsSender.SendNotifications()
-                                                                    }
-                                                                }
-
-                                                                override fun onCancelled(error: DatabaseError) {
-                                                                    promptMessage!!.defaultErrorMessageContext(
-                                                                        activity
-                                                                    )
-                                                                }
-                                                            })
-                                                    }
-                                                }
-                                            }
-
-                                            override fun onCancelled(error: DatabaseError) {
-                                                promptMessage!!.defaultErrorMessageContext(activity)
-                                            }
-                                        })
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                promptMessage!!.defaultErrorMessageContext(activity)
-                            }
-                        })
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                promptMessage!!.defaultErrorMessageContext(activity)
-            }
-        })
     }
 
     fun callEmergencyCarer() {

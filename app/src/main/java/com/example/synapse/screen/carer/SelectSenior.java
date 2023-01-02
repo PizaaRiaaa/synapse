@@ -47,6 +47,8 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SelectSenior extends AppCompatActivity {
 
+    DatabaseReference referenceSeniors;
+
     RecyclerView recyclerView;
     ImageView carerImage;
     private FirebaseUser user;
@@ -90,24 +92,24 @@ public class SelectSenior extends AppCompatActivity {
                             FirebaseRecyclerAdapter<ReadWriteUserSenior, SeniorViewHolder> adapter = new FirebaseRecyclerAdapter<ReadWriteUserSenior, SeniorViewHolder>(options) {
                                 @Override
                                 protected void onBindViewHolder(@NonNull SeniorViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull ReadWriteUserSenior model) {
-                                    String name = model.getFirstName() + " " + model.getLastName();
-                                    String barangay = model.getBarangay();
-                                    String city = model.getCity();
-                                    String dob = model.getDob();
+                                   // String name = model.getFirstName() + " " + model.getLastName();
+                                   // String barangay = model.getBarangay();
+                                   // String city = model.getCity();
+                                   // String dob = model.getDob();
 
-                                    Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
+                                   // Calendar cal = Calendar.getInstance();
+                                   // SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
 
-                                    try {
-                                        cal.setTime(Objects.requireNonNull(format.parse(dob)));
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                   // try {
+                                   //     cal.setTime(Objects.requireNonNull(format.parse(dob)));
+                                   // } catch (ParseException e) {
+                                   //     e.printStackTrace();
+                                   // }
 
-                                    holder.fullName.setText(name);
-                                    holder.barangay.setText(barangay);
-                                    holder.city.setText(city);
-                                    holder.dob.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
+                                   // holder.fullName.setText(name);
+                                   // holder.barangay.setText(barangay);
+                                   // holder.city.setText(city);
+                                   // holder.dob.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
 
                                     Picasso.get()
                                             .load(model.getImage())
@@ -130,6 +132,38 @@ public class SelectSenior extends AppCompatActivity {
                                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                         }
                                     });
+
+                                    referenceSeniors.child(model.getSeniorID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
+                                            String name = senior.getFirstName();
+                                            String lastname = senior.getLastName();
+                                            String dob = senior.getDob();
+                                            String barangay = model.getBarangay();
+                                            String city = model.getCity();
+
+                                            Calendar cal = Calendar.getInstance();
+                                            SimpleDateFormat format = new SimpleDateFormat("MM dd yyyy", Locale.ENGLISH);
+
+                                            try {
+                                                cal.setTime(Objects.requireNonNull(format.parse(dob)));
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            holder.fullName.setText(name + " " + lastname);
+                                            holder.barangay.setText(barangay);
+                                            holder.city.setText(city);
+                                            holder.dob.setText(Integer.toString(calculateAge(cal.getTimeInMillis()))+ " yrs");
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -215,6 +249,8 @@ public class SelectSenior extends AppCompatActivity {
 
        // SharedPreferences myPrefs = getApplicationContext().getSharedPreferences("seniorKey", Context.MODE_PRIVATE);
        // myPrefs.edit().remove("seniorKey").apply();
+
+        referenceSeniors = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         mAuth = FirebaseAuth.getInstance();
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();

@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public class AuditTrail {
 
-    DatabaseReference referenceAuditTrail = FirebaseDatabase.getInstance().getReference("Audit Trail");
+    DatabaseReference referenceAuditTrail = FirebaseDatabase.getInstance().getReference("Audit Trail").child("logs");
 
     public void auditTrail(String action, String newInfo, String type, String madeBy,
                     DatabaseReference db_profile, FirebaseUser user){

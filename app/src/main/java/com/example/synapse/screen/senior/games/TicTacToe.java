@@ -8,7 +8,12 @@ import com.example.synapse.R;
 import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.senior.modules.fragments.GamesFragment;
+import com.example.synapse.screen.util.AuditTrail;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.app.Dialog;
 import android.app.FragmentManager;
@@ -36,6 +41,10 @@ public class TicTacToe extends AppCompatActivity {
     ImageButton btnExit;
 
     MediaPlayer bgMusic;
+
+    AuditTrail auditTrail = new AuditTrail();
+    DatabaseReference referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
+    FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     // initially, the state of the game is none. Empty represents by 2, so in our array, let's put nine 2s
     // 0 - Yellow, 1 - Red, 2 - Empty
@@ -117,6 +126,11 @@ public class TicTacToe extends AppCompatActivity {
     /* onClick function for Retry Button */
     public void playAgain(){
 
+        auditTrail.auditTrail(
+                "Finished Playing Tic-tac-toe",
+                "Tic-tac-toe",
+                "Game", "Senior", referenceSenior, mUser);
+
         // remove all the imageview if retry button is clicked
         androidx.gridlayout.widget.GridLayout boardGridLayout = findViewById(R.id.boardGridLayoutId);
         for(int i = 0; i < boardGridLayout.getChildCount(); i++) {
@@ -196,7 +210,6 @@ public class TicTacToe extends AppCompatActivity {
         MaterialButton btnQuit = dialog.findViewById(R.id.btnQuit);
         btnQuit.setOnClickListener(v -> {
             bgMusic.stop();
-            startActivity(new Intent(this, SeniorMainActivity.class));
             finish();
         });
 

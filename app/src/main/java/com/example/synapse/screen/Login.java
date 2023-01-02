@@ -48,7 +48,7 @@ public class Login extends AppCompatActivity {
     private final PromptMessage promptMessage = new PromptMessage();
     private static final String TAG = "loginActivity";
     private DatabaseReference referenceCarer, referenceSenior,
-            referenceAssignedSeniors, referenceAdmin;
+            referenceAssignedSeniors;
     private FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     EditText etEmail, etPassword;
@@ -123,6 +123,25 @@ public class Login extends AppCompatActivity {
 
                                         }
                                     });
+                                }else{
+                                    // senior
+                                    referenceSenior.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.exists()){
+                                                progressDialog.dismiss();
+                                                startActivity(new Intent(Login.this, SeniorMainActivity.class));
+                                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                finish();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                 }
                             }
 
@@ -132,23 +151,6 @@ public class Login extends AppCompatActivity {
                             }
                         });
 
-                        // senior
-                        referenceSenior.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    progressDialog.dismiss();
-                                    startActivity(new Intent(Login.this, SeniorMainActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
 
                     }else{
                         firebaseUser.sendEmailVerification();

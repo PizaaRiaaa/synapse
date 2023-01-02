@@ -99,7 +99,7 @@ public class SeniorInfoFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                if(snapshot.exists()){
                    ReadWriteUserSenior senior = snapshot.getValue(ReadWriteUserSenior.class);
-                   etFullName.setText("Name: " + senior.getFirstName() + " " + senior.getMiddle() + " " + senior.getLastName());
+                   etFullName.setText("Name: " + senior.getFirstName() + " " + senior.getMiddle() + ". " + senior.getLastName());
                    etGender.setText("Gender: " + senior.getGender());
                    etDOB.setText("Date of Birth: " + senior.getDob());
                    etBarangay.setText("Barangay: " + senior.getAddress());

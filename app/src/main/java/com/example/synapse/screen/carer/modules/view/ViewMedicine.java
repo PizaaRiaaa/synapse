@@ -62,18 +62,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
 import org.aviran.cookiebar2.CookieBar;
+import org.w3c.dom.Text;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class ViewMedicine extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 
     private FirebaseUser mUser;
     private DatabaseReference referenceReminders;
     private DatabaseReference referenceCarer;
+    private DatabaseReference referenceSenior;
     private DatabaseReference referenceAuditTrail;
     private AuditTrail auditTrail;
 
@@ -88,6 +96,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     private AppCompatEditText etPillName;
     private AppCompatEditText etPillDosage;
     private AppCompatEditText etPillDescription;
+    private TextView tvSeniorFullName;
+    private ImageView ivSeniorProfilePic;
 
     private int count = 0;
     private Intent intent;
@@ -104,6 +114,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
     String time;
     String description;
     String quantity;
+    String imageURL;
 
     RequestQueue requestQueue;
     MaterialCardView btnChangeTime;
@@ -133,6 +144,8 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         etPillDosage = findViewById(R.id.etDosageSub);
         etDose = findViewById(R.id.etDose);
         etPillDescription = findViewById(R.id.tvDescriptionSub);
+        tvSeniorFullName = findViewById(R.id.tvSeniorName);
+        ivSeniorProfilePic = findViewById(R.id.ivSeniorProfilePic);
         tvAlarm = findViewById(R.id.tvAlarmSub);
         btnUpdate = findViewById(R.id.btnUpdate);
         ibBin = findViewById(R.id.ibBin);
@@ -155,6 +168,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
 
         referenceReminders = FirebaseDatabase.getInstance().getReference("Medication Reminders");
         referenceCarer = FirebaseDatabase.getInstance().getReference("Users").child("Carers");
+        referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
         referenceAuditTrail = FirebaseDatabase.getInstance().getReference("Audit Trail");
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -173,6 +187,7 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         btnUpdate.setOnClickListener(v -> updatePill(medicineID));
 
         deleteMedicine();
+        showSeniorProfile(getDefaults("seniorKey",getApplicationContext()));
 
         btnBack.setOnClickListener(v -> finish());
         ibMinus.setOnClickListener(this::decrement);
@@ -181,6 +196,31 @@ public class ViewMedicine extends AppCompatActivity implements AdapterView.OnIte
         btnChangeTime.setOnClickListener(v -> {
                 DialogFragment timePicker = new TimePickerFragment(this::onTimeSet);
                 timePicker.show(getSupportFragmentManager(), "time picker");
+        });
+    }
+
+    // display assigned senior info
+    void showSeniorProfile(String seniorKey){
+        referenceSenior.child(seniorKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    ReadWriteUserDetails senior = snapshot.getValue(ReadWriteUserDetails.class);
+                    String fullName = senior.firstName + " " + senior.lastName;
+
+                    tvSeniorFullName.setText(fullName);
+
+                    imageURL = Objects.requireNonNull(snapshot.child("imageURL").getValue()).toString();
+                    Picasso.get()
+                            .load(imageURL)
+                            .transform(new CropCircleTransformation())
+                            .into(ivSeniorProfilePic);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                promptMessage.defaultErrorMessage(ViewMedicine.this);
+            }
         });
     }
 

@@ -11,26 +11,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
 import com.example.synapse.screen.Landing;
 import com.example.synapse.screen.Login;
-import com.example.synapse.screen.Onboarding;
-import com.example.synapse.screen.admin.AdminMainActivity;
-import com.example.synapse.screen.admin.LoadingScreen;
-import com.example.synapse.screen.carer.CarerMainActivity;
 import com.example.synapse.screen.carer.SelectSenior;
-import com.example.synapse.screen.carer.SendRequest;
-import com.example.synapse.screen.carer.verification.OTP;
 import com.example.synapse.screen.senior.SeniorMainActivity;
 import com.example.synapse.screen.util.PromptMessage;
-import com.example.synapse.screen.util.readwrite.ReadWriteUserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.Objects;
 
 @SuppressLint("CustomSplashScreen")
 public class Splashscreen extends AppCompatActivity {

@@ -51,7 +51,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/redhat_display_bold"
-                    android:text="Rikki Mae Martinez"
                     android:textColor="@color/grey5"
                     android:textSize="15sp" />
 
@@ -61,7 +60,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/redhat_display_medium"
-                    android:text="Brgy. Daang Bakal"
                     android:textColor="@color/grey5"
                     android:textSize="13sp" />
 
@@ -71,7 +69,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/redhat_display_semibold"
-                    android:text="Mandaluyong City"
                     android:textColor="@color/grey5"
                     android:textSize="13sp" />
 
@@ -82,7 +79,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/redhat_display_semibold"
-                    android:text="76 yrs"
                     android:textColor="@color/grey5"
                     android:textSize="15sp" />
 

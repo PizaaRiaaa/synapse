@@ -15,7 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.synapse.R;
+import com.example.synapse.screen.util.AuditTrail;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,13 +47,23 @@ public class MathGame extends AppCompatActivity {
     MediaPlayer bgCorrect;
     MediaPlayer bgWrong;
 
+    AuditTrail auditTrail = new AuditTrail();
+    DatabaseReference referenceSenior = FirebaseDatabase.getInstance().getReference("Users").child("Seniors");
+    FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+
     ConstraintLayout gameTransitionLayout; // property that will hold the constraint that will give the illusion that no one is beneath the constraint; pantakip sa loob
     androidx.gridlayout.widget.GridLayout gridLayout; // property that will hold the grid layout
     ArrayList<View> layoutButtons;
 
     /* ONCLICK LISTENER THAT WILL ALLOW USERS TO PLAY THE GAME AGAIN*/
     public void playAgain(View view){
+
         playAgainBtn.setVisibility(View.INVISIBLE);
+
+        auditTrail.auditTrail(
+                "Finished Playing Math Quiz",
+                "Math Quiz",
+                "Game", "Senior", referenceSenior, mUser);
 
         // reset the game
         enableButtons(); // enable the buttons again

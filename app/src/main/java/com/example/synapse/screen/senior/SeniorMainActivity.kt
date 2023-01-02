@@ -95,51 +95,6 @@ class SeniorMainActivity : AppCompatActivity() {
 
         floatingActionButton = findViewById(R.id.fabLocateSenior)
 
-        // key for notification button content intent
-        val med_key = intent.getStringExtra("med_key")
-        val phy_key = intent.getStringExtra("phy_key")
-        val game_tag = intent.getStringExtra("game_tag")
-        val medicationFragment = MedicationFragment()
-
-        val args1 = Bundle()
-        args1.putString("key", med_key)
-        medicationFragment.arguments = args1
-
-        val physicalActivityFragment = PhysicalActivityFragment()
-        val args2 = Bundle()
-        args2.putString("key", phy_key)
-        physicalActivityFragment.arguments = args2
-
-        if (med_key != null) {
-            val fragmentManager = (this as FragmentActivity).supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.frame_layout, medicationFragment)
-            fragmentTransaction.commit()
-        }
-
-        if (phy_key != null) {
-            val fragmentManager = (this as FragmentActivity).supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.frame_layout, physicalActivityFragment)
-            fragmentTransaction.commit()
-        }
-
-        if (game_tag != null) {
-            if (game_tag == "Tic-tac-toe") startActivity(
-                Intent(
-                    this@SeniorMainActivity,
-                    TicTacToeHome::class.java
-                )
-            ) else if (game_tag == "TriviaQuiz") startActivity(
-                Intent(this@SeniorMainActivity, TriviaQuiz::class.java)
-            ) else if (game_tag == "MathGame") startActivity(
-                Intent(
-                    this@SeniorMainActivity,
-                    MathGame::class.java
-                )
-            )
-        }
-
         // build a set of permissions for required data types
         if (HealthConnectClient.isAvailable(applicationContext)) {
             // health connect is available
@@ -156,7 +111,7 @@ class SeniorMainActivity : AppCompatActivity() {
         }
 
             FirebaseMessaging.getInstance().subscribeToTopic("hello")
-            floatingActionButton.setOnClickListener { v: View? ->
+            floatingActionButton.setOnClickListener {
                 startActivity(
                     Intent(
                         this,
@@ -186,7 +141,50 @@ class SeniorMainActivity : AppCompatActivity() {
         val granted = healthConnectClient.permissionController.getGrantedPermissions(PERMISSIONS)
         if (granted.containsAll(PERMISSIONS)) {
             // Permissions already granted, proceed with inserting or reading data.
-            replaceFragment.replaceFragment(HomeFragment(), this@SeniorMainActivity)
+
+            val med_key = intent.getStringExtra("med_key")
+            val medicationFragment = MedicationFragment()
+            val args1 = Bundle()
+            args1.putString("key", med_key)
+            medicationFragment.arguments = args1
+
+            val phy_key = intent.getStringExtra("phy_key")
+            val physicalActivityFragment = PhysicalActivityFragment()
+            val args2 = Bundle()
+            args2.putString("key", phy_key)
+            physicalActivityFragment.arguments = args2
+
+            if (med_key != null) {
+                val fragmentManager = (this as FragmentActivity).supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.frame_layout, medicationFragment)
+                fragmentTransaction.commit()
+            }
+
+            if (phy_key != null) {
+                val fragmentManager = (this as FragmentActivity).supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.frame_layout, physicalActivityFragment)
+                fragmentTransaction.commit()
+            }
+
+            val game_tag = intent.getStringExtra("game_tag")
+            if (game_tag != null) {
+                if (game_tag == "Tic-tac-toe") startActivity(
+                    Intent(
+                        this@SeniorMainActivity,
+                        TicTacToeHome::class.java
+                    )
+                ) else if (game_tag == "TriviaQuiz") startActivity(
+                    Intent(this@SeniorMainActivity, TriviaQuiz::class.java)
+                ) else if (game_tag == "MathGame") startActivity(
+                    Intent(
+                        this@SeniorMainActivity,
+                        MathGame::class.java
+                    )
+                )
+            }
+
         } else {
             requestPermissions.launch(PERMISSIONS)
         }

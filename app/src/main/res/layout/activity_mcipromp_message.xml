@@ -41,9 +41,20 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="50dp"
             android:textSize="20sp"
-            android:text="Hello there! \n You need to answer and pass \n the MCI test before you can \n register your senior\'s account"/>
+            android:text="Hello there!"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_margin="18dp"
+                android:textSize="20sp"
+                android:text="A screening test using AD8 is required for seniors to register;
+adult children or any of the familjy members who knew the older individual
+are required to complete the screening questionnaire."/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnProceed"
