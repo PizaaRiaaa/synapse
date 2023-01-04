@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_gravity="center_vertical"
+    android:background="@color/white"
+    android:layout_marginBottom="?actionBarSize"
+    tools:context=".views.SeniorInfoActivity">
+
+    <!-- top nav -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:paddingTop="15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:layout_marginStart="25dp"
+            android:text="Senior Info"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/ivSeniorProfilePic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="@drawable/carer_profile_pic_edit"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_profile_edit" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvUploadProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:textColor="#3B91E0"
+            android:text="Update Image"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fadeScrollbars="false"
+        android:fillViewport="true"
+        android:layout_marginTop="30dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarThumbVertical="@color/dark_green">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="?actionBarSize"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <!-- id -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:focusable="false"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:background="@drawable/rounded_text_login"
+                    android:backgroundTint="@color/grey2"
+                    android:focusable="false"
+                    android:hint="ID"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="15sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- date created -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDateCreated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tilID"
+                android:layout_marginTop="15dp"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:focusable="false"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDateCreated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:background="@drawable/rounded_text_login"
+                    android:backgroundTint="@color/grey2"
+                    android:focusable="false"
+                    android:hint="Date Created"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="15sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- full name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/tilDateCreated"
+                app:boxStrokeColor="@color/light_green"
+                app:boxStrokeErrorColor="@color/red_decline_request"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="First Name"
+                    android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/tilMiddleAndLast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilFirstName"
+                android:layout_gravity="center_horizontal"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- middle -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMiddle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red_decline_request"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSeniorMiddle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Middle"
+                        android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                        android:paddingTop="35dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- lastname -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLastName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red_decline_request"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSeniorLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Last Name"
+                        android:inputType="textCapWords|textNoSuggestions|textVisiblePassword"
+                        android:paddingTop="35dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tilDOBAndGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tilMiddleAndLast"
+                android:layout_gravity="center_horizontal"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- DOB dropdown -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDOB"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1.2"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dropdown_dob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:drawableEnd="@drawable/ic_dropdown"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Date of Birth"
+                        android:inputType="none"
+                        android:padding="20dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- gender dropdown -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilGender"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColorHint="@color/grey4"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+                    app:boxStrokeErrorColor="@color/mtrl_textinput_default_box_stroke_color"
+                    app:errorEnabled="true"
+                    app:hintEnabled="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/drop_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_login"
+                        android:fontFamily="@font/redhat_display_regular"
+                        android:hint="Gender"
+                        android:inputType="none"
+                        android:padding="20dp"
+                        android:textColorHint="@color/grey4"
+                        android:textSize="18sp"
+                        app:boxStrokeWidthFocused="0dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- email address -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tilDOBAndGender"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:backgroundTint="@color/grey2"
+                    android:focusable="false"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Email"
+                    android:inputType="textVisiblePassword|textEmailAddress"
+                    android:paddingTop="35dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- barangay -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menuDrop"
+                android:layout_below="@id/tilEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintEnabled="true"
+                app:errorEnabled="true"
+                app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                android:textColorHint="@color/grey5">
+
+                <AutoCompleteTextView
+                    android:id="@+id/drop_barangay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rounded_text_login"
+                    android:cursorVisible="false"
+                    android:dropDownHeight="200dp"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Barangay *"
+                    android:inputType="none"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey5"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- mobile number -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/menuDrop"
+                android:layout_marginBottom="15dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSeniorMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_text_login"
+                    android:fontFamily="@font/redhat_display_regular"
+                    android:hint="Mobile Number"
+                    android:focusable="false"
+                    android:backgroundTint="@color/grey2"
+                    android:inputType="textVisiblePassword|number"
+                    android:padding="20dp"
+                    android:textColorHint="@color/grey4"
+                    android:textSize="18sp"
+                    app:boxStrokeWidthFocused="0dp" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tilMobileNumber"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUpdateSenior"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tilPassword"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="?actionBarSize"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_button_login"
+                    android:enabled="true"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="Update"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="3dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteSenior"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="?actionBarSize"
+                    android:background="@drawable/rounded_button_login"
+                    app:backgroundTint="@color/red1"
+                    android:enabled="true"
+                    android:fontFamily="@font/redhat_display_bold"
+                    android:text="Delete"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="20dp">
+
+                <ProgressBar
+                    android:id="@+id/progressBarRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

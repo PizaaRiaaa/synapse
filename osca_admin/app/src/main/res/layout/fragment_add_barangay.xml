@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginBottom="?actionBarSize"
+    tools:context=".fragments.AddBarangayFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <!-- top nav -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:paddingTop="15dp"
+        android:orientation="horizontal">
+        
+        <ImageView
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:fontFamily="@font/redhat_display_bold"
+            android:layout_marginStart="25dp"
+            android:text="Add Barangay"/>
+
+    </LinearLayout>
+
+    <!-- input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAddBarangay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textVisiblePassword"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="Barangay"
+                android:drawablePadding="15dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:padding="20dp"
+                android:textColorHint="@color/grey4"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAdd"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:backgroundTint="#8BD18D"
+                android:elevation="0dp"
+                android:fontFamily="@font/redhat_display_bold"
+                android:text="add"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                app:cornerRadius="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClear"
+                android:fontFamily="@font/redhat_display_bold"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:backgroundTint="#707070"
+                android:elevation="0dp"
+                android:text="clear"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                app:cornerRadius="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/grey2"
+        android:layout_margin="15dp"
+        android:layout_height="2dp"/>
+
+    <!-- recycleview of barangay -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:textSize="15sp"
+                android:text="Mandaluyong City Barangays"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvTotalBarangay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:layout_marginStart="9dp"
+                    android:textSize="16sp"
+                    android:text="Brgys"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_height="wrap_content">
+            
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_barangay"/>
+            
+        </LinearLayout>
+        
+    </LinearLayout>
+
+        <!-- recycle view for all carer users -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_barangay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="5dp"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarThumbVertical="@color/dark_green"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:orientation="horizontal"/>
+
+</LinearLayout>

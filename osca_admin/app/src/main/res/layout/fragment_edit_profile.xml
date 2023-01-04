@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.EditProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageButton
+        android:id="@+id/ibBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/ic_back" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey5"
+        android:textSize="23sp"
+        android:text="Account"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/redhat_display_bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey4"
+        android:fontFamily="@font/redhat_display_bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="17sp"
+        android:text="Photo"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/ivCarerProfilePic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="@drawable/carer_profile_pic_edit"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_profile_edit" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/redhat_display_bold"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:textColor="#3B91E0"
+            android:text="Upload Image"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:fadeScrollbars="false"
+        android:fillViewport="true"
+        android:layout_marginBottom="?actionBarSize"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarThumbVertical="@color/dark_green">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+    <!-- username -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="true"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:background="@drawable/rounded_text_login"
+            android:fontFamily="@font/redhat_display_regular"
+            android:hint="Username"
+            android:drawableStart="@drawable/ic_profile"
+            android:drawablePadding="15dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:padding="20dp"
+            android:textColorHint="@color/grey4"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- email -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="true"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textVisiblePassword"
+                android:background="@drawable/rounded_text_login"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="Email"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="15dp"
+                app:boxStrokeWidthFocused="0dp"
+                android:padding="20dp"
+                android:textColorHint="@color/grey4"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- mobile number -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilMobileNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="11"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCarerMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_text_login"
+                android:drawableStart="@drawable/ic_ph_flag"
+                android:drawablePadding="10dp"
+                android:fontFamily="@font/redhat_display_regular"
+                android:hint="+63   Mobile Number *"
+                android:inputType="textVisiblePassword|number"
+                android:padding="20dp"
+                android:textColorHint="@color/grey4"
+                android:textSize="18sp"
+                app:boxStrokeWidthFocused="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etCarerMobileNumber"
+                android:text="* e.g. 09166992880"
+                android:textSize="12sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#4C8E5A"
+        app:cardCornerRadius="10dp"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@color/white"
+            android:text="Update"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

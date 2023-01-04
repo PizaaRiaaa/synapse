@@ -35,4 +35,8 @@ To get the local copy of this repository, please run the following commands on y
 
 ```$ git clone https://github.com/PizaaRiaaa/Synapse.git```
 
+* project files for wearable: [click here](synapsewear)
+
+* project files for admin: [click here](osca_admin)
+
 ## Usage
