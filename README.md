@@ -7,7 +7,7 @@ Please cite the capstone project if this repository is useful for your research.
 
 ## Capstone Overview
 Synapse is a mobile application with integration of Android wear smartwatch. The aim of this project
-was t create memory support for senior citizens with Mild Cognitive Impairment or [MIC](https://www.alz.org/alzheimers-dementia/what-is-dementia/related_conditions/mild-cognitive-impairment).
+was t create memory support for senior citizens with Mild Cognitive Impairment or [MCI](https://www.alz.org/alzheimers-dementia/what-is-dementia/related_conditions/mild-cognitive-impairment).
 
 Target organization: Office for Senior Citizens Affair Mandaluyong (OSCA)
 
@@ -40,3 +40,23 @@ To get the local copy of this repository, please run the following commands on y
 * project files for admin: [click here](osca_admin)
 
 ## Usage
+if you want to use Synapse, you will need the following libraries:
+* [Firebase database](https://firebase.google.com/products/realtime-database?gclsrc=ds&gclsrc=ds&gclid=COyivcbyq_wCFRUFvAodkAQPtw) for realtime database
+* [Firebase storage](https://firebase.google.com/products/storage?gclsrc=ds&gclsrc=ds&gclid=CJ3a1IXzq_wCFYK5vAod-kUE_A) to store user's images
+* [Firebase messaging](https://firebase.google.com/docs/cloud-messaging) or FCM for sending push notification
+* [Picasso](https://square.github.io/picasso/) for image loading
+* [CookieBar 2](https://github.com/AviranAbady/CookieBar2) for displaying interactive message on the screen
+* [Volley](https://google.github.io/volley/) for HTTP library
+* [Google Map API](https://developers.google.com/maps/documentation/android-sdk/get-api-key) to locate carer and senior location
+* [Health Connect API](https://developer.android.com/guide/health-and-fitness/health-connect) for realtime heart rate and step counts
+* [Gif drawable](https://github.com/koral--/android-gif-drawable) for gif extension support
+* [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) chart library for admin's data visualization
+
+## Development Environment
+
+* __windows 11 22H2 64bit
+* __android studio dolphin 2021.3.1 Patch 1
+* __java 18.0.2.1
+
+## Preview
+
