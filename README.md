@@ -33,6 +33,6 @@ times, specifically medication, appointmentsm, physical activity, and game remin
 ## Getting started
 To get the local copy of this repository, please run the following commands on your terminal:
 
-``` $ git clone https://github.com/PizaaRiaaa/Synapse.git
+```$ git clone https://github.com/PizaaRiaaa/Synapse.git```
 
 ## Usage
