@@ -59,4 +59,5 @@ if you want to use Synapse, you will need the following libraries:
 * _java 18.0.2.1_
 
 ## Preview
+![Login](preview/login.png)
 
