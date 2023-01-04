@@ -68,3 +68,5 @@ if you want to use Synapse, you will need the following libraries:
 ![list_of_medicines](preview/list_of_medicines.png)
 ![notification](preview/notification.png)
 
+## License
+This project is [MIT](LICENSE) Licensed.
