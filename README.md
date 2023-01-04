@@ -65,7 +65,7 @@ if you want to use Synapse, you will need the following libraries:
 ![Homescreen](preview/senior-homescreen.png)
 ![Smartwatch](preview/smartwatch.png)
 ![GPS](preview/GPS.png)
-![list of medicines](preview/list of medicines.png)
+![list of medicines](preview/list_of_medicines.png)
 ![notification](preview/notification.png)
 ![medication](preview/medication module.png)
 ![info](preview/medicine info.png)
