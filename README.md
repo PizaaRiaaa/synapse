@@ -54,9 +54,9 @@ if you want to use Synapse, you will need the following libraries:
 
 ## Development Environment
 
-*_windows 11 22H2 64bit_
-*_android studio dolphin 2021.3.1 Patch 1_
-*_java 18.0.2.1_
+* _windows 11 22H2 64bit_
+* _android studio dolphin 2021.3.1 Patch 1_
+* _java 18.0.2.1_
 
 ## Preview
 
