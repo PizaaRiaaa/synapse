@@ -69,6 +69,8 @@ if you want to use Synapse, you will need the following libraries:
 ![notification](preview/notification.png)
 ![medication](preview/medication module.png)
 ![info](preview/medicine info.png)
+![physical 1](preview/physical 1.png)
+![physical 2](preview/physical 2.png)
 ![Games](preview/games.png)
 ![tic-tac-toe](preview/tic-tac-toe.png)
 ![trivia-quiz](preview/trivia-quiz.png)
