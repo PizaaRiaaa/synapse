@@ -60,4 +60,16 @@ if you want to use Synapse, you will need the following libraries:
 
 ## Preview
 ![Login](preview/login.png)
+![Register](preview/senior-registration.png)
+![OTP](preview/OTP.png)
+![Homescreen](preview/senior-homescreen.png)
+![Smartwatch](preview/smartwatch.png)
+![GPS](preview/GPS.png)
+![list of medicines](preview/list of medicines.png)
+![notification](preview/notification.png)
+![medication](preview/medication module.png)
+![info](preview/medicine info.png)
+![Games](preview/games.png)
+![tic-tac-toe](preview/tic-tac-toe.png)
+![trivia-quiz](preview/trivia-quiz.png)
 
