@@ -7,7 +7,7 @@ Please cite the capstone project if this repository is useful for your research.
 
 ## Capstone Overview
 Synapse is a mobile application with integration of Android wear smartwatch. The aim of this project
-was t create memory support for senior citizens with Mild Cognitive Impairment or [MCI](https://www.alz.org/alzheimers-dementia/what-is-dementia/related_conditions/mild-cognitive-impairment).
+was to create memory support for senior citizens with Mild Cognitive Impairment or [MCI](https://www.alz.org/alzheimers-dementia/what-is-dementia/related_conditions/mild-cognitive-impairment).
 
 Target organization: Office for Senior Citizens Affair Mandaluyong (OSCA)
 
