@@ -5,6 +5,8 @@ These are the project files for capstone project carried out at José Rizal Univ
 has been made available as a reference if anyone would like to reproduce the results of the capstone.
 Please cite the capstone project if this repository is useful for your research.
 
+```Please cite this  project if this repository is useful for your research.```
+
 ## Capstone Overview
 Synapse is a mobile application with integration of Android wear smartwatch. The aim of this project
 was to create memory support for senior citizens with Mild Cognitive Impairment or [MCI](https://www.alz.org/alzheimers-dementia/what-is-dementia/related_conditions/mild-cognitive-impairment).
