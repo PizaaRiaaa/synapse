@@ -20,7 +20,7 @@ Senior Citizens with Mild Cognitive Impairment"](fullpaper/Semaphore_FinalChapte
 :wrench: v9
 * Carers can set notification reminders that remind senior citizens of actions needed at particular
 times, specifically medication, appointment, physical activity, and game reminders
-* Senior citizens has three choices of games to play: tic-tac-toe, math quiz, trivia quiz
+* Cognitive games for Senior citizens: tic-tac-toe, math quiz, trivia quiz
 * GPS tracking both for carers and seniors
 * Admin access: dashboard of OSCA for data visualization and audit trail
 * In sync heart rate and step counts for both mobile and smart watch
