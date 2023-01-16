@@ -71,4 +71,4 @@ if you want to use Synapse, you will need the following libraries:
 ![notification](preview/notification.png)
 
 ## License
-This project is [MIT](LICENSE) Licensed.
+This project is [GPL](LICENSE) Licensed.
