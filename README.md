@@ -66,10 +66,10 @@ if you want to use Synapse, you will need the following libraries:
 ![OTP](preview/OTP.png)
 ![list_of_medicines](preview/list_of_medicines.png)
 ![notification](preview/notification.png)
-![Games](preview/games2.png)
 ![Smartwatch](preview/smartwatch.png)
-![Physical](preview/physical3.png)
 ![GPS](preview/GPS.png)
+![Physical](preview/physical3.png)
+![Games](preview/games2.png)
 
 ## License
 This project is [GPL](LICENSE) Licensed.
