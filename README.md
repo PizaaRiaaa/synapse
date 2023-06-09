@@ -64,11 +64,12 @@ if you want to use Synapse, you will need the following libraries:
 ![Login](preview/login.png)
 ![Register](preview/senior-registration.png)
 ![OTP](preview/OTP.png)
-![Smartwatch](preview/smartwatch.png)
-![Homescreen](preview/senior-homescreen.png)
-![GPS](preview/GPS.png)
 ![list_of_medicines](preview/list_of_medicines.png)
 ![notification](preview/notification.png)
+![Games](preview/games2.png)
+![Smartwatch](preview/smartwatch.png)
+![Physical](preview/physical3.png)
+![GPS](preview/GPS.png)
 
 ## License
 This project is [GPL](LICENSE) Licensed.
