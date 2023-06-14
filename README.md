@@ -1,5 +1,5 @@
 # Synapse
-<center><a href="https://ibb.co/ckpqjCY"><img src="https://i.ibb.co/ckpqjCY/Ic-logo-with-text.png" alt="Ic-logo-with-text" border="0"></a></center>
+<p align="center"><a href="https://ibb.co/ckpqjCY"><img src="https://i.ibb.co/ckpqjCY/Ic-logo-with-text.png" alt="Ic-logo-with-text" border="0"></a></p>
 
 These are the project files for capstone project carried out at José Rizal University. The code
 has been made available as a reference if anyone would like to reproduce the results of the capstone.
